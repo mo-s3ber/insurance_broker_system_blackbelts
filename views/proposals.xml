@@ -1,0 +1,93 @@
+<odoo>
+    <data>
+        <record id="tree_proposal_opp" model="ir.ui.view">
+            <field name="name">proposals_opp_tree</field>
+            <field name="model">proposal.opp.bb</field>
+            <field name="arch" type="xml">
+                <tree>
+
+                    <field name="Company"/>
+                    <field name="product_pol"/>
+                    <field name="premium"/>
+                    <button name="select_proposal" string="Select" class="oe_highlight" type="object"/>
+
+                </tree>
+
+            </field>
+        </record>
+
+        <record id="form_proposal_opp" model="ir.ui.view">
+            <field name="name">proposals.opp</field>
+            <field name="model">proposal.opp.bb</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div class="o_row">
+                        <label for="Company"/>
+                        <field name="Company"/>
+                        <label for="product_pol"/>
+                        <field name="product_pol"/>
+                        <label for="premium"/>
+                        <field name="premium"/>
+                        <field name="test" invisible="1"/>
+                        <field name="group"  invisible="1"/>
+                    </div>
+                    <field name="car_proposal_test" mode="tree"  attrs="{'invisible': ['|',('test', '!=', 'vehicle'),('group', '=', True)]}">
+                        <tree >
+                            <field name="Man"/>
+                            <field name="model"/>
+                            <field name="motor_cc"/>
+                            <field name="year_of_made"/>
+                        </tree>
+                    </field>
+                    <field name="person_proposal_test"  attrs="{'invisible': ['|',('test', '!=', 'person'),('group', '=', True)]}" >
+
+                        <tree>
+                            <field name="name"  />
+                            <field name="DOB"  />
+                            <field name="job"  />
+                        </tree>
+                    </field>
+                    <field name="cargo_proposal_test"  attrs="{'invisible': ['|',('test', '!=', 'cargo'),('group', '=', True)]}" >
+
+                        <tree>
+                            <field name="From"  />
+                            <field name="To"  />
+                            <field name="cargo_type"  />
+                            <field name="weight"  />
+                        </tree>
+                    </field>
+                    <field name="group_proposal"  attrs="{'invisible': [('group', '!=', True)]}" >
+
+                        <tree>
+                            <field name="group_name"   />
+                            <field name="count"  widget="float" type="char"   />
+                            <field name="file"    />
+                        </tree>
+                    </field>
+                    <field name="proposals_covers" >
+                        <tree>
+                            <field name="check" invisible="1"  />
+                            <field name="name" attrs="{'readonly': [('check', '=', True)]}" force_save="1"  />
+                            <field name="sum_insure"  attrs="{'readonly': [('check', '=', True)]}"  force_save="1" />
+                            <field name="rate" attrs="{'readonly': [('check', '=', True)]}"  force_save="1" />
+                            <field name="net_perimum" attrs="{'readonly': [('check', '=', True)]}"   force_save="1"  />
+
+                        </tree>
+                        <form>
+                            <group>
+                                <field name="check" invisible="0" />
+                                <field name="name" attrs="{'readonly': [('check', '=', True)]}"  force_save="1"  />
+                                <field name="sum_insure"  attrs="{'readonly': [('check', '=', True)]}"  force_save="1"/>
+                                <field name="rate" attrs="{'readonly': [('check', '=', True)]}"   force_save="1" />
+                                <field name="net_perimum"  attrs="{'readonly': [('check', '=', True)]}" force_save="1"/>
+
+                            </group>
+                        </form>
+                    </field>
+                </form>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

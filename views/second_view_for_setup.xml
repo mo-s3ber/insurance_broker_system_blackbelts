@@ -1,0 +1,70 @@
+<odoo>
+    <data>
+        <record id="my_view_for_commision_form" model="ir.ui.view">
+            <field name="name">commision Form</field>
+            <field name="model">commision.setup</field>
+            <field name="arch" type="xml">
+                <form string="my policy form">
+                     <sheet>
+                         <group string="Commision Setup">
+                            <group>
+                                <field name="agency"/>
+                                <field name="date"/>
+                                <field name="insrance_policy_type"/>
+                                <field name="insurer_id"/>
+
+                                <!--<field name="product_id"/>-->
+
+
+                            </group>
+                            <group>
+                                <field name="product_commision" />
+                                <field name="layer1" />
+                                <field name="layer2" />
+                                <field name="layer3" />
+                                <field name="layer4" />
+                                <field name="layer5" />
+                                <field name="layer6" />
+                                <field name="layer7" />
+                                <field name="layer8" />
+
+                            </group>
+                         </group>
+                     </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="my_view_for_commision_tree" model="ir.ui.view">
+            <field name="name">commision</field>
+            <field name="model">commision.setup</field>
+            <field name="arch" type="xml">
+                <tree string="my_tree_for_commision">
+                               <field name="agency"/>
+                               <field name="date"/>
+                               <!--<field name="product_id"/>-->
+                               <!--<field name="insurer_id"/>-->
+                               <field name="product_commision"/>
+                               <field name="layer1"/>
+                               <field name="layer2"/>
+                               <field name="layer3"/>
+                               <field name="layer4" />
+                               <field name="layer5" />
+                               <field name="layer6" />
+                               <field name="layer7" />
+                               <field name="layer8" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="my_action_for_third_menu" model="ir.actions.act_window">
+            <field name="name">Commision form</field>
+            <field name="res_model">commision.setup</field>
+            <field name="view_mode">tree,form,search</field>
+            <field name="view_type">form</field>
+        </record>
+
+
+
+
+    </data>
+</odoo>

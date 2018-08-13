@@ -1,0 +1,199 @@
+<odoo>
+
+    <!--policy info-->
+    <record model="ir.ui.view" id="tree_line_business">
+        <field name="name">tree.line.business</field>
+        <field name="model">insurance.line.business</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <tree string="list">
+                <field name="insurance_type"/>
+                <field name="line_of_business"/>
+                <field name="object"/>
+                <field name="policy_desc"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="form_line_business">
+        <field name="name">form.line.business</field>
+        <field name="model">insurance.line.business</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <form string="Idea form">
+                <group colspan="4">
+                    <separator string="Create Line of Business" colspan="2"/>
+                    <field name="insurance_type"/>
+                    <field name="line_of_business"/>
+                    <field name="object"/>
+                    <field name="policy_desc"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="insurance_line_business_action">
+        <field name="name">Line of Business</field>
+        <field name="res_model">insurance.line.business</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Create Line of Business
+            </p>
+        </field>
+    </record>
+
+
+
+    <!--Product info-->
+    <record model="ir.ui.view" id="tree_product">
+        <field name="name">tree.product</field>
+        <field name="model">insurance.product</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <tree string="list">
+                <field name="product_name"/>
+                <field name="insurer"/>
+                <field name="line_of_bus"/>
+                <field name="coverage"/>
+                <field name="brokerage"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="form_product">
+        <field name="name">form.product</field>
+        <field name="model">insurance.product</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <form string="Idea form">
+                <group colspan="4">
+                    <separator string="Create Product" colspan="2"/>
+                    <group>
+                        <div class="o_row">
+                            <label for="product_name" class="oe_edit_only"/>
+                            <field name="product_name"/>
+                            <label for="line_of_bus" class="oe_edit_only"/>
+                            <field name="line_of_bus"/>
+                            <label for="insurer" class="oe_edit_only"/>
+                            <field name="insurer"/>
+                            <label for="commision_id" class="oe_edit_only"/>
+                            <field name="commision_id"/>
+                        </div>
+                    </group>
+                    <group>
+                        <separator string="Accounts" colspan="2"/>
+                        <field name="income_account"/>
+                        <field name="expense_account"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Coverage">
+                            <field name="coverage"/>
+                        </page>
+                        <page string="Brokerage">
+                            <field name="brokerage"/>
+                        </page>
+                    </notebook>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="insurance_Products_action">
+        <field name="name">Product</field>
+        <field name="res_model">insurance.product</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Create New Product
+            </p>
+        </field>
+    </record>
+
+
+    <!--coverage info-->
+    <record model="ir.ui.view" id="tree_coverage">
+        <field name="name">tree.coverage</field>
+        <field name="model">insurance.product.coverage</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <tree string="Idea list">
+                <field name="Name"/>
+                <field name="defaultvalue"/>
+                <field name="required"/>
+                <field name="limit"/>
+                <field name="readonly"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="form_coverage">
+        <field name="name">form.coverage</field>
+        <field name="model">insurance.product.coverage</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <form string="Idea form">
+                <group colspan="4">
+                    <separator string="Coverages" colspan="2"/>
+                    <field name="Name"/>
+                    <field name="defaultvalue"/>
+                    <field name="required"/>
+                    <field name="limit"/>
+                    <field name="readonly"/>
+                    <field name="lop_id"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="insurance_coverage_action">
+        <field name="name">Coverage</field>
+        <field name="res_model">insurance.product.coverage</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Create the Coverages
+            </p>
+        </field>
+    </record>
+    <!--brokerage info-->
+    <record model="ir.ui.view" id="tree_brokerage">
+        <field name="name">tree.brokerage</field>
+        <field name="model">insurance.product.brokerage</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <tree string="Idea list">
+                <field name="datefrom"/>
+                <field name="dateto"/>
+                <field name="perorfixed"/>
+                <field name="basic_commission"/>
+                <field name="complementary_commission"/>
+                <field name="fixed_commission"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="form_brokerage">
+        <field name="name">form.Brokerage</field>
+        <field name="model">insurance.product.brokerage</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <form string="Idea form">
+                <group colspan="4">
+                    <separator string="Brokerage" colspan="2"/>
+                    <field name="datefrom"/>
+                    <field name="dateto"/>
+                    <field name="perorfixed"/>
+                    <field name="basic_commission"/>
+                    <field name="complementary_commission"/>
+                    <field name="fixed_commission"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="insurance_brokerage_action">
+        <field name="name">brokerage</field>
+        <field name="res_model">insurance.product.brokerage</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Create the Brokerage
+            </p>
+        </field>
+    </record>
+
+
+</odoo>
