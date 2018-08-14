@@ -32,14 +32,15 @@
                   action="action_customer_view"/>
         <menuitem id="insurer_view_menu" name="Insurer" parent="partners_views_menu"
                   action="action_insurer_view"/>
-        <menuitem id="channel_view_menu" name="Sales Channels" parent="partners_views_menu"
-                  action="sales_team.crm_team_salesteams_act"/>
+
         <menuitem id="agent_view_menu" name="Agent" parent="partners_views_menu"
                   action="base.action_res_users"/>
         <menuitem id="print_out_partners_view_menu" name="Print out" parent="partners_views_menu"/>
         <menuitem id="configuration_partners_view_menu" name="Configuration" parent="partners_views_menu"/>
         <menuitem id="production_management_views_menu" name="Production Management"
                   parent="main_ibs_menu"/>
+        <menuitem id="channel_view_menu" name="Sales Channels" parent="production_management_views_menu"
+                  action="sales_team.crm_team_salesteams_act"/>
         <menuitem id="leads_view_menu" name="Leads" parent="production_management_views_menu"
                   action="crm.crm_lead_all_leads"/>
         <menuitem id="sales_funnel_view_menu" name="Sales Funnel" parent="production_management_views_menu"

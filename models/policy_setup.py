@@ -8,14 +8,14 @@ class Policy_Info(models.Model):
     insurance_type = fields.Selection([('life', 'Life'),
                           ('p&c', 'P&C'),
                           ('health', 'Health'), ],
-                         'Insurance Type', track_visibility='onchange', required=True)
+                         'Insured Type', track_visibility='onchange', required=True)
     line_of_business = fields.Char(string='Line of Business', required=True)
     object= fields.Selection([('person', 'Person'),
                           ('vehicle', 'Vehicle'),
                           ('cargo', 'Cargo'),
                           ('location', 'Location'),],
-                         'Object', track_visibility='onchange', required=True)
-    policy_desc = fields.Char(string='Description')
+                         'Insured Object', track_visibility='onchange', required=True)
+    desc = fields.Char(string='Description')
 
 
 class Product(models.Model):
@@ -34,10 +34,12 @@ class Product(models.Model):
 class coverage(models.Model):
     _name='insurance.product.coverage'
 
-    Name=fields.Char('Name')
-    defaultvalue=fields.Char('Default Value')
+    Name=fields.Char('Cover Name')
+    defaultvalue=fields.Char('Default Sum Insured')
     required=fields.Boolean('Required')
-    limit=fields.Integer('Limit')
+    deductible = fields.Integer('Deductible')
+    limitone=fields.Integer('Limit in One')
+    limittotal=fields.Integer('Limit in Total')
     readonly=fields.Boolean('Read Only')
     product_id=fields.Many2one('insurance.product')
     lop_id=fields.Many2one('insurance.line.business',string='Line of Business')
@@ -50,7 +52,9 @@ class Brokerage(models.Model):
     dateto=fields.Date('Date to')
     basic_commission = fields.Float('Basic Commission')
     complementary_commission = fields.Float('Complementary Commission')
-    fixed_commission = fields.Float('Fixed Commission')
+    early_collection = fields.Float('Early Collection Commission')
+    fixed_commission = fields.Monetary(default=0.0, currency_field='company_currency_id',string='Fixed Commission')
+    company_currency_id = fields.Many2one('res.currency', related='product_id.insurer.currency_id', string="Company Currency", readonly=True,store=True)
     product_id = fields.Many2one('insurance.product')
 
     @api.constrains('datefrom')
@@ -64,3 +68,6 @@ class inhertResPartner(models.Model):
     _inherit = 'res.partner'
 
     insurer_type=fields.Boolean('Insurer')
+    # holding=field.Boolean("Holding")
+    # holding_comapny=field.Many2one("res.partner",string="Holding Company")
+    # insurer_branch=field.Many2one("res.partner",string="Insurer Branch")

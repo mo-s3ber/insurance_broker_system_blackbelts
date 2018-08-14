@@ -10,7 +10,7 @@
                 <field name="insurance_type"/>
                 <field name="line_of_business"/>
                 <field name="object"/>
-                <field name="policy_desc"/>
+                <field name="desc"/>
             </tree>
         </field>
     </record>
@@ -21,11 +21,11 @@
         <field name="arch" type="xml">
             <form string="Idea form">
                 <group colspan="4">
-                    <separator string="Create Line of Business" colspan="2"/>
+                    <separator string="Create New Line of Business" colspan="2"/>
                     <field name="insurance_type"/>
                     <field name="line_of_business"/>
                     <field name="object"/>
-                    <field name="policy_desc"/>
+                    <field name="desc"/>
                 </group>
             </form>
         </field>
@@ -64,27 +64,18 @@
         <field name="priority" eval="16"/>
         <field name="arch" type="xml">
             <form string="Idea form">
-                <group colspan="4">
-                    <separator string="Create Product" colspan="2"/>
-                    <group>
-                        <div class="o_row">
-                            <label for="product_name" class="oe_edit_only"/>
-                            <field name="product_name"/>
-                            <label for="line_of_bus" class="oe_edit_only"/>
-                            <field name="line_of_bus"/>
-                            <label for="insurer" class="oe_edit_only"/>
-                            <field name="insurer"/>
-                            <label for="commision_id" class="oe_edit_only"/>
-                            <field name="commision_id"/>
-                        </div>
-                    </group>
-                    <group>
-                        <separator string="Accounts" colspan="2"/>
-                        <field name="income_account"/>
-                        <field name="expense_account"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Coverage">
+                <group>
+                    <separator string="Create New Product" colspan="2"/>
+                    <field name="insurer"/>
+                    <field name="line_of_bus"/>
+                    <field name="product_name"/>
+                    <notebook>
+                        <page string="Accounts">
+                             <separator string="Accounts"/>
+                             <field name="income_account"/>
+                             <field name="expense_account"/>
+                        </page>
+                        <page string="Coverage Definition">
                             <field name="coverage"/>
                         </page>
                         <page string="Brokerage">
@@ -117,7 +108,9 @@
                 <field name="Name"/>
                 <field name="defaultvalue"/>
                 <field name="required"/>
-                <field name="limit"/>
+                <field name="deductible"/>
+                <field name="limittotal"/>
+                <field name="limitone"/>
                 <field name="readonly"/>
             </tree>
         </field>
@@ -129,13 +122,14 @@
         <field name="arch" type="xml">
             <form string="Idea form">
                 <group colspan="4">
-                    <separator string="Coverages" colspan="2"/>
+                    <separator string="Create New Coverages" colspan="2"/>
                     <field name="Name"/>
                     <field name="defaultvalue"/>
                     <field name="required"/>
-                    <field name="limit"/>
+                    <field name="deductible"/>
+                    <field name="limittotal"/>
+                    <field name="limitone"/>
                     <field name="readonly"/>
-                    <field name="lop_id"/>
                 </group>
             </form>
         </field>
@@ -161,6 +155,7 @@
                 <field name="dateto"/>
                 <field name="basic_commission"/>
                 <field name="complementary_commission"/>
+                <field name="early_collection"/>
                 <field name="fixed_commission"/>
             </tree>
         </field>
@@ -171,13 +166,32 @@
         <field name="priority" eval="16"/>
         <field name="arch" type="xml">
             <form string="Idea form">
-                <group colspan="4">
-                    <separator string="Brokerage" colspan="2"/>
+                <group>
+                    <separator string="Brokerage"/>
                     <field name="datefrom"/>
                     <field name="dateto"/>
-                    <field name="basic_commission"/>
-                    <field name="complementary_commission"/>
-                    <field name="fixed_commission"/>
+                    <group>
+                        <div class="o_row">
+                        <label for="basic_commission" string="Basic Commission" class="oe_edit_only"/>
+                        <field name="basic_commission"/>
+                        <span>%%</span>
+                    </div>
+                    <div class="o_row">
+                        <label for="complementary_commission" string="Complementary Commission" class="oe_edit_only"/>
+                        <field name="complementary_commission"/>
+                        <span>%%</span>
+                    </div>
+                    <div class="o_row">
+                        <label for="early_collection" string="Early Collection" class="oe_edit_only"/>
+                        <field name="early_collection"/>
+                        <span>%%</span>
+                    </div>
+                    <div class="o_row">
+                        <label for="fixed_commission" string="Fixed Commission" class="oe_edit_only"/>
+                        <field name="fixed_commission"/>
+                        <field name="company_currency_id"/>
+                    </div>
+                    </group>
                 </group>
             </form>
         </field>
