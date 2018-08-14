@@ -159,7 +159,6 @@
             <tree string="Idea list">
                 <field name="datefrom"/>
                 <field name="dateto"/>
-                <field name="perorfixed"/>
                 <field name="basic_commission"/>
                 <field name="complementary_commission"/>
                 <field name="fixed_commission"/>
@@ -176,7 +175,6 @@
                     <separator string="Brokerage" colspan="2"/>
                     <field name="datefrom"/>
                     <field name="dateto"/>
-                    <field name="perorfixed"/>
                     <field name="basic_commission"/>
                     <field name="complementary_commission"/>
                     <field name="fixed_commission"/>

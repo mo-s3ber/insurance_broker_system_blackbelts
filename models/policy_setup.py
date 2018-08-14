@@ -48,7 +48,6 @@ class Brokerage(models.Model):
 
     datefrom=fields.Date('Date from')
     dateto=fields.Date('Date to')
-    perorfixed=fields.Boolean('% or Fixed')
     basic_commission = fields.Float('Basic Commission')
     complementary_commission = fields.Float('Complementary Commission')
     fixed_commission = fields.Float('Fixed Commission')
