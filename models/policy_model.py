@@ -1,8 +1,9 @@
 import random
 import string
 from odoo import api, fields, models
-from odoo.exceptions import  ValidationError
-from datetime import datetime,timedelta
+from odoo.exceptions import ValidationError
+from datetime import datetime, timedelta
+
 
 class PolicyBroker(models.Model):
     _name = "policy.broker"
@@ -13,15 +14,15 @@ class PolicyBroker(models.Model):
         res = super(PolicyBroker, self).default_get(fields)
         lead = self.env['crm.lead'].browse(self._context.get('active_id'))
 
-
-        #pass car new
+        # pass car
         recordvehile = self.env['vehicle.object.opp'].search([('id', 'in', lead.objectcar.ids)])
         records_car = []
         for rec in recordvehile:
-            objectvehicle = (0, 0, {'Man': rec.Man, ' model': rec.model, 'motor_cc': rec.motor_cc,"year_of_made":rec.year_of_made })
+            objectvehicle = (
+            0, 0, {'Man': rec.Man, ' model': rec.model, 'motor_cc': rec.motor_cc, "year_of_made": rec.year_of_made})
             records_car.append(objectvehicle)
 
-        #.........
+        # .........
 
         # passing persons......
         recordperson = self.env['person.object.opp'].search([('id', 'in', lead.objectperson.ids)])
@@ -29,26 +30,25 @@ class PolicyBroker(models.Model):
         for rec in recordperson:
             objectperson = (0, 0, {'name': rec.name, 'DOB': rec.DOB, 'job': rec.job})
             records_person.append(objectperson)
-        #.........
-
+        # .........
 
         # passing cargo...
         recordcargo = self.env['cargo.object.opp'].search([('id', 'in', lead.objectcargo.ids)])
         records_cargo = []
         for rec in recordcargo:
             objectcargo = (
-            0, 0, {'From': rec.From, 'To': rec.To, 'cargo_type': rec.cargo_type, "weight": rec.weight})
+                0, 0, {'From': rec.From, 'To': rec.To, 'cargo_type': rec.cargo_type, "weight": rec.weight})
             records_cargo.append(objectcargo)
-        #.......
+        # .......
 
         recordproposal = self.env['proposal.opp.bb'].search([('id', 'in', lead.proposal_opp.ids)])
         records_proposal = []
         for rec in recordproposal:
-            proposal_opp = (0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
+            proposal_opp = (
+            0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
             records_proposal.append(proposal_opp)
 
-        
-        res['insurance_type']=lead.insurance_type
+        res['insurance_type'] = lead.insurance_type
         res['line_of_bussines'] = lead.LOB.id
         res['ins_type'] = lead.ins_type
         res['objectperson'] = records_person
@@ -60,17 +60,122 @@ class PolicyBroker(models.Model):
         res['std_id'] = lead.policy_number
         return res
 
+    @api.model
+    def default_get(self, fields):
+        res = super(PolicyBroker, self).default_get(fields)
+        lead = self.env['renewal.again'].browse(self._context.get('active_id'))
+        # pass car
+        recordvehile = self.env['vehicle.object'].search([('id', 'in', lead.old_number.objectvehicle.ids)])
+        records_car = []
+        for rec in recordvehile:
+            objectvehicle = (
+                0, 0, {'Man': rec.Man, ' model': rec.model, 'motor_cc': rec.motor_cc, "year_of_made": rec.year_of_made})
+            records_car.append(objectvehicle)
 
+        # .........
 
+        # passing persons......
+        recordperson = self.env['person.object'].search([('id', 'in', lead.old_number.objectperson.ids)])
+        records_person = []
+        for rec in recordperson:
+            objectperson = (0, 0, {'name': rec.name, 'DOB': rec.DOB, 'job': rec.job})
+            records_person.append(objectperson)
+        # # .........
+        #
+        # # passing cargo...
+        recordcargo = self.env['cargo.object'].search([('id', 'in', lead.old_number.objectcargo.ids)])
+        records_cargo = []
+        for rec in recordcargo:
+            objectcargo = (
+                0, 0, {'From': rec.From, 'To': rec.To, 'cargo_type': rec.cargo_type, "weight": rec.weight})
+            records_cargo.append(objectcargo)
+        # # .......
+        #
+        recordproposal = self.env['proposal.bb'].search([('id', 'in', lead.old_number.propoasl_ids.ids)])
+        records_proposal = []
+        for rec in recordproposal:
+            proposal_opp = (
+                0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
+            records_proposal.append(proposal_opp)
 
-    @api.onchange("term","number")
+        res['policy_number'] = lead.old_number.std_id
+        res['std_id'] = lead.new_number
+        res['issue_date'] = lead.issue_date
+        res['start_date'] = lead.start_date
+        res['end_date'] = lead.end_date
+        res['insurance_type'] = lead.old_number.insurance_type
+        res['line_of_bussines'] = lead.old_number.line_of_bussines.id
+        res['ins_type'] = lead.old_number.ins_type
+
+        res['objectperson'] = records_person
+        res['objectvehicle'] = records_car
+        res['objectcargo'] = records_cargo
+        res['propoasl_ids'] = records_proposal
+        return res
+
+    @api.model
+    def default_get(self, fields):
+        res = super(PolicyBroker, self).default_get(fields)
+        lead = self.env['endorsement.edit'].browse(self._context.get('active_id'))
+        # pass car
+        recordvehile = self.env['vehicle.object'].search([('id', 'in', lead.number_policy.objectvehicle.ids)])
+        records_car = []
+        for rec in recordvehile:
+            objectvehicle = (
+                0, 0, {'Man': rec.Man, ' model': rec.model, 'motor_cc': rec.motor_cc, "year_of_made": rec.year_of_made})
+            records_car.append(objectvehicle)
+
+        # .........
+
+        # passing persons......
+        recordperson = self.env['person.object'].search([('id', 'in', lead.number_policy.objectperson.ids)])
+        records_person = []
+        for rec in recordperson:
+            objectperson = (0, 0, {'name': rec.name, 'DOB': rec.DOB, 'job': rec.job})
+            records_person.append(objectperson)
+        # # .........
+        #
+        # # passing cargo...
+        recordcargo = self.env['cargo.object'].search([('id', 'in', lead.number_policy.objectcargo.ids)])
+        records_cargo = []
+        for rec in recordcargo:
+            objectcargo = (
+                0, 0, {'From': rec.From, 'To': rec.To, 'cargo_type': rec.cargo_type, "weight": rec.weight})
+            records_cargo.append(objectcargo)
+        # # .......
+        #
+        recordproposal = self.env['proposal.bb'].search([('id', 'in', lead.number_policy.propoasl_ids.ids)])
+        records_proposal = []
+        for rec in recordproposal:
+            proposal_opp = (
+                0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
+            records_proposal.append(proposal_opp)
+
+        res['policy_number'] = lead.number_policy.std_id
+        res['std_id'] = lead.newone
+        res['customer'] = lead.number_policy.customer.id
+
+        res['edit_number'] = lead.number_edit
+        res['edit_decr'] = lead.reasonedit
+        res['issue_date'] = lead.issue_date
+        res['start_date'] = lead.start_date
+        res['end_date'] = lead.end_date
+        res['insurance_type'] = lead.number_policy.insurance_type
+        res['line_of_bussines'] = lead.number_policy.line_of_bussines.id
+        res['ins_type'] = lead.number_policy.ins_type
+
+        res['objectperson'] = records_person
+        res['objectvehicle'] = records_car
+        res['objectcargo'] = records_cargo
+        res['propoasl_ids'] = records_proposal
+        return res
+
+    @api.onchange("term", "number")
     def _cmpute_date_and_amount(self):
         if self.term == "onetime":
-            self.rella_installment_id=[(0,0,{
-                "date":self.start_date,
-                "amount":self.t_permimum,
-
-
+            self.rella_installment_id = [(0, 0, {
+                "date": self.start_date,
+                "amount": self.t_permimum,
 
             })]
         elif self.term == "year":
@@ -81,25 +186,25 @@ class PolicyBroker(models.Model):
             for i in range(int(self.number)):
                 x = (0, 0, {
                     "date": start + duration,
-                    "amount": self.t_permimum / int(self.number)
+                    "amount": self.t_permimum / 1
 
                 })
                 phone_numbers.append(x)
                 duration = duration + timedelta(days=365)
             self.rella_installment_id = phone_numbers
         elif self.term == "quarter":
-            start =fields.Datetime.from_string(self.start_date)
+            start = fields.Datetime.from_string(self.start_date)
             duration = timedelta(days=90)
             phone_numbers = []
             for i in range(4):
                 x = (0, 0, {
-                        "date": start + duration,
-                        "amount": self.t_permimum / 4
+                    "date": start + duration,
+                    "amount": self.t_permimum / 4
 
                 })
                 phone_numbers.append(x)
                 duration = duration + timedelta(days=90)
-            self.rella_installment_id=phone_numbers
+            self.rella_installment_id = phone_numbers
         elif self.term == "month":
             start = fields.Datetime.from_string(self.start_date)
             duration = timedelta(days=30)
@@ -115,27 +220,23 @@ class PolicyBroker(models.Model):
             self.rella_installment_id = phone_numbers
 
     def proposalselected(self):
-        ids = self.env['proposal.bb'].search([('id', '=',self.prop_id)]).ids
+        ids = self.env['proposal.bb'].search([('id', '=', self.prop_id)]).ids
         self.selected_proposal = [(6, 0, ids)]
-
-
 
     @api.onchange('line_of_bussines')
     def _compute_comment(self):
         for record in self:
             record.test = record.line_of_bussines.object
 
-
     @api.multi
     @api.constrains('share_policy_rel_ids')
     def _check_something(self):
         total = 0.0
         for rec in self.share_policy_rel_ids:
-            total +=rec.share_commition
+            total += rec.share_commition
 
         if total > 100:
-                raise ValidationError("Your share percentage must be under percentage")
-
+            raise ValidationError("Your share percentage must be under percentage")
 
     _sql_constraints = [('std_id_uniq', 'unique(std_id)', 'This policy number already exists !')]
 
@@ -145,97 +246,112 @@ class PolicyBroker(models.Model):
     #     vals['std_id'] = seq
     #     return super(PolicyBroker, self).create(vals)
 
+    edit_number = fields.Integer(string="Edit Number", readonly=True)
+    edit_decr = fields.Text(string='Edit Description', readonly=True)
 
+    policy_number = fields.Char(string="New Policy Number")
+    renwal_check = fields.Boolean(string="Renewal")
+    holding_cam = fields.Char(string="Holding Campany")
 
     std_id = fields.Char(string="Policy Number")
     issue_date = fields.Date(string="Issue Date")
-    start_date = fields.Date(string="Coverage Start On" , required=True)
+    start_date = fields.Date(string="Coverage Start On", required=True)
     end_date = fields.Date(string="Coverage End On")
-    term = fields.Selection([("onetime", "One Time"), ("year", "yearly"),("quarter", "Quarterly"), ("month", "Monthly")],  string="payment frequency")
+    term = fields.Selection(
+        [("onetime", "One Time"), ("year", "yearly"), ("quarter", "Quarterly"), ("month", "Monthly")],
+        string="payment frequency")
     number = fields.Integer(string="No Of Years", default=1)
 
     gross_perimum = fields.Float(string="Gross Perimum")
     t_permimum = fields.Float(string="Net Permium", compute="_compute_t_premium")
 
-    commision = fields.Float(string="Brokerage", compute="_compute_brokerage")
     salesperson = fields.Many2one('res.users', string='Salesperson', index=True, default=lambda self: self.env.user)
     onlayer = fields.Selection(related="salesperson.layer", string="Sales Layer")
     personcom = fields.Integer(string="commition", compute="_compute_personcom")
     rel_com_detail_id = fields.One2many("layers.layer", "policy_rel_do_id")
     rella_installment_id = fields.One2many("installment.installment", "installment_rel_id")
     share_policy_rel_ids = fields.One2many("share.commition", "share_commition_rel_id")
-    customer=fields.Many2one('res.partner','Customer')
-
-
+    customer = fields.Many2one('res.partner', 'Customer')
 
     insurance_type = fields.Selection([('life', 'Life'),
-                            ('p&c', 'P&C'),
-                            ('health', 'Health'), ],
-                           'Insurance Type', track_visibility='onchange')
+                                       ('p&c', 'P&C'),
+                                       ('health', 'Health'), ],
+                                      'Insurance Type', track_visibility='onchange')
     ins_type = fields.Selection([('Individual', 'Individual'),
                                  ('Group', 'Group'), ],
                                 'insured State', track_visibility='onchange')
     policy_dur = fields.Selection([('Every 6 Months', 'Every 6 Months'),
                                    ('Every Year', 'Every Year'), ],
                                   'Policy Duration', track_visibility='onchange')
-    line_of_bussines = fields.Many2one('insurance.line.business', string='Line of business', domain="[('insurance_type','=',insurance_type)]")
+    line_of_bussines = fields.Many2one('insurance.line.business', string='Line of business',
+                                       domain="[('insurance_type','=',insurance_type)]")
 
-
-
-    objectvehicle = fields.One2many('vehicle.object', 'object_vehicle', string='Vehicle')#where you are using this fiedl ? in xml
+    objectvehicle = fields.One2many('vehicle.object', 'object_vehicle',
+                                    string='Vehicle')  # where you are using this fiedl ? in xml
     objectperson = fields.One2many('person.object', 'object_person', string='person')
     objectcargo = fields.One2many('cargo.object', 'object_cargo', string='cargo')
     objectgroup = fields.One2many('group.group', 'object_group', string='Group')
     test = fields.Char()
     group = fields.Boolean()
 
-
     propoasl_ids = fields.One2many("proposal.bb", "proposal_policy")
     selected_proposal = fields.One2many('proposal.bb', 'select', compute='proposalselected')
     prop_id = fields.Integer(readonly=True)
     covers = fields.One2many(related='selected_proposal.covers_rel_ids')
 
-
+    commision = fields.Float(string="Basic Brokerage", compute="_compute_brokerage")
+    com_commision = fields.Float(string="Complementary  Brokerage", compute="_compute_com_commision")
+    fixed_commision = fields.Float(string="Fixed Brokerage", compute="_compute_fixed_commision")
+    # earl_commision = fields.Float(string="Basic Brokerage")
+    total_commision = fields.Float(string="total Brokerage", compute="_compute_sum")
 
     @api.multi
     # @api.onchange("selected_proposal.premium")
     def _compute_t_premium(self):
         for rec in self:
             if rec.selected_proposal:
-
                 rec.t_permimum = rec.selected_proposal.premium
 
     @api.multi
-    # @api.onchange("selected_proposal.product_pol.brokerage", "selected_proposal.premium")
     def _compute_brokerage(self):
         for rec in self:
             if rec.selected_proposal:
+                rec.commision = (
+                                        rec.selected_proposal.product_pol.brokerage.basic_commission * rec.selected_proposal.premium) / 100
 
-                 rec.commision = (rec.selected_proposal.product_pol.brokerage.basic_commission*rec.selected_proposal.premium)/100
+    @api.multi
+    def _compute_com_commision(self):
+        for rec in self:
+            if rec.selected_proposal:
+                rec.com_commision = (
+                                            rec.selected_proposal.product_pol.brokerage.complementary_commission * rec.selected_proposal.premium) / 100
 
+    @api.multi
+    def _compute_fixed_commision(self):
+        for rec in self:
+            if rec.selected_proposal:
+                rec.fixed_commision = (
+                                              rec.selected_proposal.product_pol.brokerage.fixed_commission * rec.selected_proposal.premium) / 100
 
-
+    @api.multi
+    def _compute_sum(self):
+        for rec in self:
+            rec.total_commision = rec.commision + rec.com_commision + rec.fixed_commision
 
     @api.multi
     # @api.onchange("salesperson","onlayer","commision")
     def _compute_personcom(self):
         for rec in self:
             if rec.onlayer == "l1":
-                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer1 * rec.commision) / 100
+                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer1 * rec.t_permimum) / 100
             elif rec.onlayer == "l2":
-                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer2 * rec.commision) / 100
+                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer2 * rec.t_permimum) / 100
             elif rec.onlayer == "l3":
-                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer3 * rec.commision) / 100
+                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer3 * rec.t_permimum) / 100
             elif rec.onlayer == "l4":
-                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer4 * rec.commision) / 100
+                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer4 * rec.t_permimum) / 100
             elif rec.onlayer == "l5":
-                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer5 * rec.commision) / 100
-            elif rec.onlayer == "l6":
-                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer6 * rec.commision) / 100
-            elif rec.onlayer == "l7":
-                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer7 * rec.commision) / 100
-            else:
-                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer8 * rec.commision) / 100
+                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer5 * rec.t_permimum) / 100
 
     # @api.multi
     # @api.onchange('selected_proposal ')
@@ -255,10 +371,10 @@ class PolicyBroker(models.Model):
         for rec in self:
             self.rel_com_detail_id = [
                 (0, 0, {
-                        "agent": rec.salesperson,
-                           "l1": rec.salesperson.layer,
-                               "allocation_layer1": rec.rel_com_detail_id.allocation_layer1,
-                                  "portion1": rec.rel_com_detail_id.portion1
+                    "agent": rec.salesperson,
+                    "l1": rec.salesperson.layer,
+                    "allocation_layer1": rec.rel_com_detail_id.allocation_layer1,
+                    "portion1": rec.rel_com_detail_id.portion1
                 })]
 
     @api.multi
@@ -272,39 +388,29 @@ class PolicyBroker(models.Model):
                     "amount": rec.share_policy_rel_ids.amount
                 })]
 
-class ExtraModel(models.Model):
-    _name ="name.covers"
 
+class ExtraModel(models.Model):
+    _name = "name.covers"
 
     name = fields.Char(string='Name')
-    check1 =fields.Many2one('insurance.product')
+    check1 = fields.Many2one('insurance.product')
     check = fields.Boolean()
     sum_insure = fields.Float(string="SI")
     rate = fields.Float(string="Rate")
     net_perimum = fields.Float(string="Net Perimum")
     rel_policy_broker_id = fields.Many2one("proposal.bb")
+    rel_policy_brokerd_id = fields.Many2one("proposal.opp.bb")
 
     @api.multi
     def _nameget(self):
-          for rec in self:
-              if rec.check == True:
-                  rec.net_perimum = rec.sum_insure
+        for rec in self:
+            if rec.check == True:
+                rec.net_perimum = rec.sum_insure
 
-
-
-
-    @api.onchange("sum_insure","rate")
+    @api.onchange("sum_insure", "rate")
     def _onchangerate(self):
         for rec in self:
-            rec.net_perimum = (rec.sum_insure*rec.rate)/100
-
-
-
-
-            # else:
-            #     rec.net_perimum = rec.name.limit
-
-
+            rec.net_perimum = (rec.sum_insure * rec.rate) / 100
 
     @api.multi
     def unlink(self):
@@ -315,44 +421,32 @@ class ExtraModel(models.Model):
             return super(ExtraModel, self).unlink()
 
 
-
-
 class ShareCommition(models.Model):
-    _name="share.commition"
+    _name = "share.commition"
 
-    agent= fields.Many2one("res.users", string="Agent")
+    agent = fields.Many2one("res.users", string="Agent")
     share_commition = fields.Float(string="Share")
-    amount = fields.Float(string="Amount" , compute="_compute_amount")
+    amount = fields.Float(string="Amount", compute="_compute_amount")
     share_commition_rel_id = fields.Many2one("policy.broker")
-
-
 
     @api.one
     def _compute_amount(self):
-        self.amount = (self.share_commition_rel_id.personcom * self.share_commition)/100
-
-
+        self.amount = (self.share_commition_rel_id.personcom * self.share_commition) / 100
 
 
 class InstallmentClass(models.Model):
-    _name= "installment.installment"
+    _name = "installment.installment"
     _rec_name = "date"
 
     date = fields.Date(string="Date")
     # enddate = fields.Date(string="End of premium")
     amount = fields.Float(string="Amount")
-    paid = fields.Selection([('inv', 'Paid Invoice'),
-                            ('bill', 'Paid Bill'),
-                            ('brok', 'Paid Brokerage'),
-                             ('comm', 'Paid Commission'),
-                             ('draft', 'Draft'),],
-                           'Paid Status',defualt='draft')
+    paid = fields.Boolean(string="paid")
     installment_rel_id = fields.Many2one("policy.broker")
 
     @api.multi
     def create_inv(self):
         form_id = self.env.ref('account.invoice_form')
-        self.write({'paid': 'inv'})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -365,23 +459,23 @@ class InstallmentClass(models.Model):
                         'default_type': 'out_invoice',
                         'default_account_id': self.installment_rel_id.customer.property_account_receivable_id.id,
                         'default_partner_id': self.installment_rel_id.customer.id,
-                        'default_invoice_line_ids':[(0, 0, {
-                                            'name': self.installment_rel_id.selected_proposal.product_pol.product_name,
-                                            'account_id': self.installment_rel_id.selected_proposal.product_pol.income_account.id,
-                                            'price_unit': self.amount,
-                                            'quantity': 1.0,
-                                            'sale_line_ids': False,
-                                            'invoice_line_tax_ids': False,
-                                            'account_analytic_id': False,
-                                        })],},
+                        'default_invoice_line_ids': [(0, 0, {
+                            'name': self.installment_rel_id.selected_proposal.product_pol.product_name,
+                            'origin': 'Insurance',
+                            'account_id': self.installment_rel_id.selected_proposal.product_pol.income_account.id,
+                            'price_unit': self.amount,
+                            'quantity': 1.0,
+                            # 'product_id': self.installment_rel_id.selected_proposal.product_pol.id,
+                            'sale_line_ids': False,
+                            'invoice_line_tax_ids': False,
+                            'account_analytic_id': False,
+                        })], },
             'flags': {'tree': {'action_buttons': True}, 'form': {'action_buttons': True}, 'action_buttons': True},
         }
-
 
     @api.multi
     def create_bill(self):
         form_id = self.env.ref('account.invoice_supplier_form')
-        self.write({'paid': 'bill'})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -390,97 +484,75 @@ class InstallmentClass(models.Model):
             'target': 'new',
             'type': 'ir.actions.act_window',
             'context': {'default_name': self.installment_rel_id.std_id,
-                        'default_origin': 'Insurer Bill',
+                        'default_origin': 'Insarer Bill',
                         'default_type': 'in_invoice',
                         'default_account_id': self.installment_rel_id.selected_proposal.Company.property_account_receivable_id.id,
                         'default_partner_id': self.installment_rel_id.selected_proposal.Company.id,
-                        'default_invoice_line_ids':[(0, 0, {
-                                            'name': self.installment_rel_id.selected_proposal.product_pol.product_name,
-                                            'account_id': self.installment_rel_id.selected_proposal.product_pol.expense_account.id,
-                                            'price_unit': self.amount,
-                                            'quantity': 1.0,
-                                            'sale_line_ids': False,
-                                            'invoice_line_tax_ids': False,
-                                            'account_analytic_id': False,
-                                        })],},
+                        'default_invoice_line_ids': [(0, 0, {
+                            'name': self.installment_rel_id.selected_proposal.product_pol.product_name,
+                            'origin': 'Insurance',
+                            'account_id': self.installment_rel_id.selected_proposal.product_pol.expense_account.id,
+                            'price_unit': self.amount,
+                            'quantity': 1.0,
+                            # 'product_id': self.installment_rel_id.selected_proposal.product_pol.id,
+                            'sale_line_ids': False,
+                            'invoice_line_tax_ids': False,
+                            'account_analytic_id': False,
+                        })], },
             'flags': {'tree': {'action_buttons': True}, 'form': {'action_buttons': True}, 'action_buttons': True},
         }
 
     @api.multi
-    def create_brok(self):
-        form_id = self.env.ref('account.invoice_form')
-        self.write({'paid': 'brok'})
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'views': [(form_id.id, 'form')],
-            'res_model': 'account.invoice',
-            'target': 'new',
-            'type': 'ir.actions.act_window',
-            'context': {'default_name': self.installment_rel_id.std_id,
-                        'default_origin': 'Brokerage Invoice',
-                        'default_type': 'out_invoice',
-                        'default_account_id': self.installment_rel_id.selected_proposal.Company.property_account_receivable_id.id,
-                        'default_partner_id': self.installment_rel_id.selected_proposal.Company.id,
-                        'default_invoice_line_ids':[(0, 0, {
-                                            'name': self.installment_rel_id.selected_proposal.product_pol.product_name,
-                                            'account_id': self.installment_rel_id.selected_proposal.product_pol.income_account.id,
-                                            'price_unit': self.amount,
-                                            'quantity': 1.0,
-                                            'sale_line_ids': False,
-                                            'invoice_line_tax_ids': False,
-                                            'account_analytic_id': False,
-                                        })],},
-            'flags': {'tree': {'action_buttons': True}, 'form': {'action_buttons': True}, 'action_buttons': True},
-        }
+    def create_invoice(self):
+        inv_obj = self.env['account.invoice']
+        # pol_obj= self.env['policy.broker'].browse([self.policy_id.id]).commission
+        # premium=self.total_premium
 
-    @api.multi
-    def create_commission_bills(self):
-        bill_obj = self.env['account.invoice']
-        comm=self.installment_rel_id.share_policy_rel_ids
-        for record in comm:
-            bill = bill_obj.create({
-                'name': self.installment_rel_id.std_id,
-                'origin': 'Commission Bill',
-                'type': 'out_invoice',
-                'reference': False,
-                'account_id': record.agent.property_account_receivable_id.id,
-                'partner_id': record.agent.id,
-                'partner_shipping_id': False,
-                'invoice_line_ids': [(0, 0, {
-                    'name': self.installment_rel_id.selected_proposal.product_pol.product_name,
-                    'account_id': self.installment_rel_id.selected_proposal.product_pol.expense_account.id,
-                    'price_unit': record.amount,
-                    'quantity': 1.0,
-                    'discount': 0.0,
-                    'uom_id': False,
-                    'sale_line_ids': False,
-                    'invoice_line_tax_ids': False,
-                    'account_analytic_id': False,
-                })],
-            })
-            return bill
+        invoice = inv_obj.create({
+            # 'policy_many2one':self.installment_rel_id.id,
+            'name': self.installment_rel_id.std_id,
+            'origin': 'Customer Invoice',
+            'type': 'out_invoice',
+            'reference': False,
+            'account_id': self.installment_rel_id.customer.property_account_receivable_id.id,
+            'partner_id': self.installment_rel_id.customer.id,
+            'partner_shipping_id': False,
+            'invoice_line_ids': [(0, 0, {
+                'name': self.installment_rel_id.selected_proposal.product_pol.product_name,
+                'origin': 'Insurance',
+                'account_id': self.installment_rel_id.selected_proposal.Company.property_account_payable_id.id,
+                'price_unit': self.amount,
+                'quantity': 1.0,
+                'discount': 0.0,
+                'uom_id': False,
+                # 'product_id': self.installment_rel_id.selected_proposal.product_pol.id,
+                'sale_line_ids': False,
+                'invoice_line_tax_ids': False,
+                'account_analytic_id': False,
+            })],
+            # 'currency_id': False,
+            # 'payment_term_id': False,
+            # 'fiscal_position_id': False,
+            # 'team_id': False,
+            # 'user_id': False,
+            # 'comment': False,
+        })
 
-
-
-
-
+        return invoice
 
 
 class Layers(models.Model):
     _name = "layers.layer"
-    _rec_name="agent"
-
+    _rec_name = "agent"
 
     agent = fields.Many2one("res.users", string="Agent")
     l1 = fields.Char(string="Layer")
-    allocation_layer1 = fields.Float(string="allocation",compute="_com_sum_one_name")
+    allocation_layer1 = fields.Float(string="allocation", compute="_com_sum_one_name")
 
-    portion1 = fields.Float(string="portion",compute="_com_sum_two_name")
+    portion1 = fields.Float(string="portion", compute="_com_sum_two_name")
     com_rel_ids = fields.Many2one("commision.setup")
 
     policy_rel_do_id = fields.Many2one("policy.broker")
-
 
     @api.multi
     @api.onchange("agent")
@@ -505,16 +577,6 @@ class Layers(models.Model):
             elif record.l1 == 'l5':
 
                 record.allocation_layer1 = record.policy_rel_do_id.propoasl_ids.product_pol.commision_id.layer5
-            elif record.l1 == 'l6':
-
-                record.allocation_layer1 = record.policy_rel_do_id.propoasl_ids.product_pol.commision_id.layer6
-            elif record.l1 == 'l7':
-
-                record.allocation_layer1 = record.policy_rel_do_id.propoasl_ids.product_pol.commision_id.layer7
-            else:
-
-                record.allocation_layer1 = record.policy_rel_do_id.propoasl_ids.product_pol.commision_id.layer8
-
 
     @api.multi
     def _com_sum_two_name(self):
@@ -529,38 +591,29 @@ class Layers(models.Model):
                 record.portion1 = (record.allocation_layer1 * record.policy_rel_do_id.commision) / 100
             elif record.l1 == 'l5':
                 record.portion1 = (record.allocation_layer1 * record.policy_rel_do_id.commision) / 100
-            elif record.l1 == 'l6':
-                    record.portion1 = (record.allocation_layer1 * record.policy_rel_do_id.commision) / 100
-            elif record.l1 == 'l7':
-                record.portion1 = (record.allocation_layer1 * record.policy_rel_do_id.commision) / 100
-            else:
-                record.portion1 = (record.allocation_layer1 * record.policy_rel_do_id.commision) / 100
+
 
 class CommisionSetup(models.Model):
     _name = "commision.setup"
-    _rec_name="date"
+    _rec_name = "date_from"
 
-
-    agency=fields.Char(string="Agency")
-    date = fields.Date(string="Date")
-    policy_relation_id = fields.Many2one("policy.broker")
-    insrance_policy_type = fields.Selection(related="policy_relation_id.insurance_type" ,string="Insurance_Type")
-    # product_id = fields.Many2one("insurance.product", string="Product type ")
-    insurer_id = fields.Many2one("res.partner",string="Insurer")
-    product_commision = fields.Float(string="Product Commision")
+    date_from = fields.Date(string="Date From")
+    date_to = fields.Date(string="Date To")
+    policy_relation_id = fields.Many2one("insurance.product")
     layer1 = fields.Float(string="L1 ")
     layer2 = fields.Float(string="L2 ")
     layer3 = fields.Float(string="L3 ")
     layer4 = fields.Float(string="L4 ")
     layer5 = fields.Float(string="L5 ")
-    layer6 = fields.Float(string="L6 ")
-    layer7 = fields.Float(string="L7 ")
-    layer8 = fields.Float(string="L8 ")
+
 
 class InheritUsers(models.Model):
     _inherit = "res.users"
 
-    layer = fields.Selection([("l1", "Layer 1"), ("l2", "Layer 2"), ("l3", "Layer 3"), ("l4", "Layer 4"), ("l5", "Layer 5"), ("l6", "Layer 6"),("l7", "Layer 7"), ("l8", "Layer 8")], string="Layer" , required=True)
+    layer = fields.Selection(
+        [("l1", "Layer 1"), ("l2", "Layer 2"), ("l3", "Layer 3"), ("l4", "Layer 4"), ("l5", "Layer 5"),
+         ("l6", "Layer 6"), ("l7", "Layer 7"), ("l8", "Layer 8")], string="Layer", required=True)
+
 
 class InheritSale(models.Model):
     _inherit = "crm.lead"
