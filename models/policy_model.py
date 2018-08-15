@@ -14,7 +14,7 @@ class PolicyBroker(models.Model):
         lead = self.env['crm.lead'].browse(self._context.get('active_id'))
 
 
-        #pass car
+        #pass car new
         recordvehile = self.env['vehicle.object.opp'].search([('id', 'in', lead.objectcar.ids)])
         records_car = []
         for rec in recordvehile:
