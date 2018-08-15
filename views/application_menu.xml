@@ -60,7 +60,7 @@
         <menuitem id="endorsement_view_menu" name="Endorsement" parent="portfolio_management_views_menu"/>
         <menuitem id="renewal_view_menu" name="Renewal" parent="portfolio_management_views_menu"/>
         <menuitem id="claim_view_menu" name="Claim" parent="portfolio_management_views_menu"
-                   action="insurance_claim_action"/>
+                  action="policy_insurance_claim_action"/>
         <menuitem id="Print_out_portfolio_view_menu" name="Print out" parent="portfolio_management_views_menu"/>
         <menuitem id="configuration_portfolio_view_menu" name="Configuration" parent="portfolio_management_views_menu"/>
         <menuitem id="accounting_management_views_menu" name="Accounting Management"
