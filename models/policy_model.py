@@ -302,7 +302,7 @@ class PolicyBroker(models.Model):
     commision = fields.Float(string="Basic Brokerage", compute="_compute_brokerage")
     com_commision = fields.Float(string="Complementary  Brokerage", compute="_compute_com_commision")
     fixed_commision = fields.Float(string="Fixed Brokerage", compute="_compute_fixed_commision")
-    # earl_commision = fields.Float(string="Basic Brokerage")
+    earl_commision = fields.Float(string="Early Collection" , compute="_compute_earl_commision")
     total_commision = fields.Float(string="total Brokerage", compute="_compute_sum")
 
     @api.multi
@@ -325,6 +325,14 @@ class PolicyBroker(models.Model):
             if rec.selected_proposal:
                 rec.com_commision = (
                                             rec.selected_proposal.product_pol.brokerage.complementary_commission * rec.selected_proposal.premium) / 100
+
+    @api.multi
+    def _compute_earl_commision(self):
+        for rec in self:
+            if rec.selected_proposal:
+                rec.earl_commision = (
+                                             rec.selected_proposal.product_pol.brokerage.early_collection * rec.selected_proposal.premium) / 100
+
 
     @api.multi
     def _compute_fixed_commision(self):

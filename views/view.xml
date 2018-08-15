@@ -256,6 +256,11 @@
 
                                         <label string="Complementary Brokerage"/>
                                         <field name="com_commision" nolabel="1"/>
+
+                                        <label string="Early Brokerage"/>
+                                        <field name="earl_commision" nolabel="1"/>
+
+
                                     </group>
                                     <group>
                                         <label string="Fixed Brokerage"/>
