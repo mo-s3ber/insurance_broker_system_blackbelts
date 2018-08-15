@@ -37,7 +37,7 @@
         "views/application_menu.xml",
         "views/installments_view.xml",
         "views/views.xml",
-
+        "views/claim_view.xml",
 
     ],
     # only loaded in demonstration mode
