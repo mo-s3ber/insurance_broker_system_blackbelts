@@ -151,7 +151,7 @@ class PolicyBroker(models.Model):
                 0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
             records_proposal.append(proposal_opp)
 
-        res['policy_number'] = lead.number_policy.std_id
+        res['ediet_number'] = lead.number_policy.std_id
         res['std_id'] = lead.newone
         res['customer'] = lead.number_policy.customer.id
 
@@ -248,8 +248,9 @@ class PolicyBroker(models.Model):
 
     edit_number = fields.Integer(string="Edit Number", readonly=True)
     edit_decr = fields.Text(string='Edit Description', readonly=True)
+    ediet_number = fields.Char(string='Edit Policy Number')
 
-    policy_number = fields.Char(string="New Policy Number")
+    policy_number = fields.Char(string="Renewal Policy Number")
     renwal_check = fields.Boolean(string="Renewal")
     holding_cam = fields.Char(string="Holding Campany")
 
