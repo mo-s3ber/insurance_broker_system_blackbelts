@@ -23,6 +23,8 @@
                                 <field name="term"/>
                                 <field name="number"  attrs="{'invisible': [('term', '!=', 'year')]}"/>
                                 <field name="edit_number"/>
+                                <field name="ediet_number" attrs="{'invisible': [('edit_number', '=', 0)]}"/>
+
                                 <field name="edit_decr"  attrs="{'invisible': [('edit_number', '=', True)]}"/>
 
 
