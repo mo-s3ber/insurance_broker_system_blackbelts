@@ -443,18 +443,24 @@ class ShareCommition(models.Model):
 
 
 class InstallmentClass(models.Model):
-    _name = "installment.installment"
+    _name= "installment.installment"
     _rec_name = "date"
 
     date = fields.Date(string="Date")
     # enddate = fields.Date(string="End of premium")
     amount = fields.Float(string="Amount")
-    paid = fields.Boolean(string="paid")
+    paid = fields.Selection([('inv', 'Paid Invoice'),
+                            ('bill', 'Paid Bill'),
+                            ('brok', 'Paid Brokerage'),
+                             ('comm', 'Paid Commission'),
+                             ('draft', 'Draft'),],
+                           'Paid Status',defualt='draft')
     installment_rel_id = fields.Many2one("policy.broker")
 
     @api.multi
     def create_inv(self):
         form_id = self.env.ref('account.invoice_form')
+        self.write({'paid': 'inv'})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -467,23 +473,23 @@ class InstallmentClass(models.Model):
                         'default_type': 'out_invoice',
                         'default_account_id': self.installment_rel_id.customer.property_account_receivable_id.id,
                         'default_partner_id': self.installment_rel_id.customer.id,
-                        'default_invoice_line_ids': [(0, 0, {
-                            'name': self.installment_rel_id.selected_proposal.product_pol.product_name,
-                            'origin': 'Insurance',
-                            'account_id': self.installment_rel_id.selected_proposal.product_pol.income_account.id,
-                            'price_unit': self.amount,
-                            'quantity': 1.0,
-                            # 'product_id': self.installment_rel_id.selected_proposal.product_pol.id,
-                            'sale_line_ids': False,
-                            'invoice_line_tax_ids': False,
-                            'account_analytic_id': False,
-                        })], },
+                        'default_invoice_line_ids':[(0, 0, {
+                                            'name': self.installment_rel_id.selected_proposal.product_pol.product_name,
+                                            'account_id': self.installment_rel_id.selected_proposal.product_pol.income_account.id,
+                                            'price_unit': self.amount,
+                                            'quantity': 1.0,
+                                            'sale_line_ids': False,
+                                            'invoice_line_tax_ids': False,
+                                            'account_analytic_id': False,
+                                        })],},
             'flags': {'tree': {'action_buttons': True}, 'form': {'action_buttons': True}, 'action_buttons': True},
         }
+
 
     @api.multi
     def create_bill(self):
         form_id = self.env.ref('account.invoice_supplier_form')
+        self.write({'paid': 'bill'})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -492,61 +498,76 @@ class InstallmentClass(models.Model):
             'target': 'new',
             'type': 'ir.actions.act_window',
             'context': {'default_name': self.installment_rel_id.std_id,
-                        'default_origin': 'Insarer Bill',
+                        'default_origin': 'Insurer Bill',
                         'default_type': 'in_invoice',
                         'default_account_id': self.installment_rel_id.selected_proposal.Company.property_account_receivable_id.id,
                         'default_partner_id': self.installment_rel_id.selected_proposal.Company.id,
-                        'default_invoice_line_ids': [(0, 0, {
-                            'name': self.installment_rel_id.selected_proposal.product_pol.product_name,
-                            'origin': 'Insurance',
-                            'account_id': self.installment_rel_id.selected_proposal.product_pol.expense_account.id,
-                            'price_unit': self.amount,
-                            'quantity': 1.0,
-                            # 'product_id': self.installment_rel_id.selected_proposal.product_pol.id,
-                            'sale_line_ids': False,
-                            'invoice_line_tax_ids': False,
-                            'account_analytic_id': False,
-                        })], },
+                        'default_invoice_line_ids':[(0, 0, {
+                                            'name': self.installment_rel_id.selected_proposal.product_pol.product_name,
+                                            'account_id': self.installment_rel_id.selected_proposal.product_pol.expense_account.id,
+                                            'price_unit': self.amount,
+                                            'quantity': 1.0,
+                                            'sale_line_ids': False,
+                                            'invoice_line_tax_ids': False,
+                                            'account_analytic_id': False,
+                                        })],},
             'flags': {'tree': {'action_buttons': True}, 'form': {'action_buttons': True}, 'action_buttons': True},
         }
 
     @api.multi
-    def create_invoice(self):
-        inv_obj = self.env['account.invoice']
-        # pol_obj= self.env['policy.broker'].browse([self.policy_id.id]).commission
-        # premium=self.total_premium
+    def create_brok(self):
+        form_id = self.env.ref('account.invoice_form')
+        self.write({'paid': 'brok'})
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'views': [(form_id.id, 'form')],
+            'res_model': 'account.invoice',
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+            'context': {'default_name': self.installment_rel_id.std_id,
+                        'default_origin': 'Brokerage Invoice',
+                        'default_type': 'out_invoice',
+                        'default_account_id': self.installment_rel_id.selected_proposal.Company.property_account_receivable_id.id,
+                        'default_partner_id': self.installment_rel_id.selected_proposal.Company.id,
+                        'default_invoice_line_ids':[(0, 0, {
+                                            'name': self.installment_rel_id.selected_proposal.product_pol.product_name,
+                                            'account_id': self.installment_rel_id.selected_proposal.product_pol.income_account.id,
+                                            'price_unit': self.amount,
+                                            'quantity': 1.0,
+                                            'sale_line_ids': False,
+                                            'invoice_line_tax_ids': False,
+                                            'account_analytic_id': False,
+                                        })],},
+            'flags': {'tree': {'action_buttons': True}, 'form': {'action_buttons': True}, 'action_buttons': True},
+        }
 
-        invoice = inv_obj.create({
-            # 'policy_many2one':self.installment_rel_id.id,
-            'name': self.installment_rel_id.std_id,
-            'origin': 'Customer Invoice',
-            'type': 'out_invoice',
-            'reference': False,
-            'account_id': self.installment_rel_id.customer.property_account_receivable_id.id,
-            'partner_id': self.installment_rel_id.customer.id,
-            'partner_shipping_id': False,
-            'invoice_line_ids': [(0, 0, {
-                'name': self.installment_rel_id.selected_proposal.product_pol.product_name,
-                'origin': 'Insurance',
-                'account_id': self.installment_rel_id.selected_proposal.Company.property_account_payable_id.id,
-                'price_unit': self.amount,
-                'quantity': 1.0,
-                'discount': 0.0,
-                'uom_id': False,
-                # 'product_id': self.installment_rel_id.selected_proposal.product_pol.id,
-                'sale_line_ids': False,
-                'invoice_line_tax_ids': False,
-                'account_analytic_id': False,
-            })],
-            # 'currency_id': False,
-            # 'payment_term_id': False,
-            # 'fiscal_position_id': False,
-            # 'team_id': False,
-            # 'user_id': False,
-            # 'comment': False,
-        })
-
-        return invoice
+    @api.multi
+    def create_commission_bills(self):
+        bill_obj = self.env['account.invoice']
+        comm=self.installment_rel_id.share_policy_rel_ids
+        for record in comm:
+            bill = bill_obj.create({
+                'name': self.installment_rel_id.std_id,
+                'origin': 'Commission Bill',
+                'type': 'out_invoice',
+                'reference': False,
+                'account_id': record.agent.property_account_receivable_id.id,
+                'partner_id': record.agent.id,
+                'partner_shipping_id': False,
+                'invoice_line_ids': [(0, 0, {
+                    'name': self.installment_rel_id.selected_proposal.product_pol.product_name,
+                    'account_id': self.installment_rel_id.selected_proposal.product_pol.expense_account.id,
+                    'price_unit': record.amount,
+                    'quantity': 1.0,
+                    'discount': 0.0,
+                    'uom_id': False,
+                    'sale_line_ids': False,
+                    'invoice_line_tax_ids': False,
+                    'account_analytic_id': False,
+                })],
+            })
+            return bill
 
 
 class Layers(models.Model):

@@ -31,6 +31,7 @@
         'views/policy_setup_view.xml',
         'views/endorsement.xml',
         'views/renewal_view.xml',
+        'views/claimform_view.xml',
         'views/proposals.xml',
         "views/users_views.xml",
         "views/view.xml",

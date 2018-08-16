@@ -1,0 +1,49 @@
+<odoo>
+    <data>
+         <!--claim info-->
+        <record model="ir.ui.view" id="tree_insurance_claim">
+            <field name="name">tree.insurance.claim</field>
+            <field name="model">insurance.claim</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <tree string="list">
+                    <field name="policy_number"/>
+                    <field name="renewal"/>
+                    <field name="endorsement"/>
+                    <field name="details"/>
+                    <field name="amount"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="form_insurance_claim">
+            <field name="name">form.insurance.claim</field>
+            <field name="model">insurance.claim</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <form string="Idea form">
+                    <group colspan="4">
+                        <separator string="Create New Claim" colspan="2"/>
+                        <field name="policy_number"/>
+                        <field name="renewal"/>
+                        <field name="endorsement"/>
+                        <field name="risk_person"/>
+                        <field name="risk_vehicle"/>
+                        <field name="risk_cargo"/>
+                        <field name="coverage"/>
+                        <field name="details"/>
+                        <field name="amount"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="claim_view_action" model="ir.actions.act_window">
+            <field name="name">Claim</field>
+            <field name="res_model">insurance.claim</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <!--&lt;!&ndash;<field name="search_view_id" ref="my_view_search_view"/>&ndash;&gt;-->
+            <!--<field name='domain'>[('salesperson','=',uid)]</field>-->
+            <!--<field name="context" >{'search_default_by_salesperson':1}</field>-->
+        </record>
+    </data>
+</odoo>
