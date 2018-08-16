@@ -29,7 +29,7 @@ class Product(models.Model):
     expense_account = fields.Many2one('account.account','Expense Account')
     coverage=fields.One2many('insurance.product.coverage','product_id',string='Coverage')
     brokerage=fields.One2many('insurance.product.brokerage','product_id',string='Brokerage')
-    commision_id = fields.Many2one("commision.setup")
+    commision_id = fields.One2many("commision.setup","policy_relation_id")
 
 class coverage(models.Model):
     _name='insurance.product.coverage'

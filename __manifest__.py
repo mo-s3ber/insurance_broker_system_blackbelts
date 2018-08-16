@@ -29,16 +29,15 @@
     # always loaded
     'data': [
         'views/policy_setup_view.xml',
+        'views/endorsement.xml',
+        'views/renewal_view.xml',
         'views/proposals.xml',
-        "views/second_view_for_setup.xml",
         "views/users_views.xml",
         "views/view.xml",
         "views/insurer_partner.xml",
-        "views/application_menu.xml",
         "views/installments_view.xml",
         "views/views.xml",
-        "views/claim_view.xml",
-
+        "views/application_menu.xml",
     ],
     # only loaded in demonstration mode
     'demo': [

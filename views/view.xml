@@ -13,13 +13,18 @@
                                 <field name="start_date"/>
                                 <field name="end_date"/>
                                 <field name="customer"/>
+                                <field name="holding_cam"/>
+                                <field name="renwal_check" readonly="1"/>
+                                <field name="policy_number" attrs="{'invisible': [('renwal_check', '!=', True)]}"/>
                             </group>
                             <group string="commision">
                                 <field name="gross_perimum"/>
                                 <field name="t_permimum"/>
-                                <field name="commision"/>
                                 <field name="term"/>
                                 <field name="number"  attrs="{'invisible': [('term', '!=', 'year')]}"/>
+                                <field name="edit_number"/>
+                                <field name="edit_decr"  attrs="{'invisible': [('edit_number', '=', True)]}"/>
+
 
                             </group>
                             <group string="person">
@@ -243,6 +248,29 @@
                                 </field>
 
                             </page>
+                            <page string='Brokerage'>
+                                <group>
+                                    <group >
+                                        <label string="Basic Brokerage"/>
+                                        <field name="commision" nolabel="1"/>
+
+                                        <label string="Complementary Brokerage"/>
+                                        <field name="com_commision" nolabel="1"/>
+
+                                        <label string="Early Brokerage"/>
+                                        <field name="earl_commision" nolabel="1"/>
+
+
+                                    </group>
+                                    <group>
+                                        <label string="Fixed Brokerage"/>
+                                        <field name="fixed_commision" nolabel="1"/>
+
+                                        <label string="total Brokerage"/>
+                                        <field name="total_commision" nolabel="1"/>
+                                    </group>
+                                </group>
+                            </page>
                             <!--<page string='commision details'>-->
                             <!--<field name="rel_com_detail_id" nolabel="1"  >-->
                             <!--<tree editable="bottom">-->
@@ -289,16 +317,9 @@
                                 </field>
                             </page>
                             <page string='Invoice'>
-
                             </page>
                         </notebook>
-
-
-
-
                     </sheet>
-
-
                 </form>
             </field>
         </record>
@@ -317,6 +338,17 @@
                 </tree>
             </field>
         </record>
+        <record id="my_view_search_view" model="ir.ui.view" >
+            <field name="name">policy.broker</field>
+            <field name="model">policy.broker</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="holding_cam"/>
+                    <filter string="Salesperson" name="by_salesperson" domain="[('salesperson','=',uid)]"/>
+
+                </search>
+            </field>
+        </record>
 
 
         <record id="my_action_for_second_menu" model="ir.actions.act_window">
@@ -324,6 +356,9 @@
             <field name="res_model">policy.broker</field>
             <field name="view_mode">tree,form,search</field>
             <field name="view_type">form</field>
+            <field name="search_view_id" ref="my_view_search_view"/>
+            <!--&lt;!&ndash;<field name='domain'>[('salesperson','=',uid)]</field>&ndash;&gt;'search_default_by_salesperson':1-->
+            <field name="context" >{}</field>
         </record>
 
     </data>

@@ -78,6 +78,31 @@
                         <page string="Brokerage">
                             <field name="brokerage"/>
                         </page>
+                        <page string="Commision">
+                            <field name="commision_id">
+                                <tree>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="layer1"/>
+                                    <field name="layer2"/>
+                                    <field name="layer3"/>
+                                    <field name="layer4"/>
+                                    <field name="layer5"/>
+
+                                </tree>
+                                <form>
+                                    <group>
+                                        <field name="date_from"/>
+                                        <field name="date_to"/>
+                                        <field name="layer1"/>
+                                        <field name="layer2"/>
+                                        <field name="layer3"/>
+                                        <field name="layer4"/>
+                                        <field name="layer5"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
                     </notebook>
                 </group>
             </form>
