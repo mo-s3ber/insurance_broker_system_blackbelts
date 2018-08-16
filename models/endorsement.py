@@ -2,7 +2,7 @@ from odoo import api, fields, models
 
 class Endorsement_edit(models.Model):
     _name="endorsement.edit"
-    _rec_name="number_policy"
+    _rec_name="newone"
 
 
     number_policy=fields.Many2one("policy.broker", string="Edit policy number")
