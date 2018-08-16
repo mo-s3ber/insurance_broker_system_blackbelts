@@ -14,7 +14,7 @@
                     <field name="amount"/>
                 </tree>
             </field>
-        </record>
+        </record
         <record model="ir.ui.view" id="form_insurance_claim">
             <field name="name">form.insurance.claim</field>
             <field name="model">insurance.claim</field>
