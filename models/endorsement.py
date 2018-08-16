@@ -16,7 +16,7 @@ class Endorsement_edit(models.Model):
 
     @api.multi
     def create_endorsement(self):
-        form_view = self.env.ref('insurance_broker_blackbelts.my_view_for_policy_form_kmlo1')
+        form_view = self.env.ref('insurance_broker_system_blackbelts.my_view_for_policy_form_kmlo1')
         if self.number_edit:
             return {
                 'name': ('Policy'),

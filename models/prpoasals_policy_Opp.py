@@ -12,8 +12,7 @@ class Proposals_opp(models.Model):
     test=fields.Char(string='type')
     group = fields.Boolean('Groups')
     # ben=fields.One2many(related='product_pol.coverage', invisible=True)
-    proposals_covers = fields.One2many('name.covers','rel_policy_broker_id')
-
+    proposals_covers = fields.One2many('name.covers','rel_policy_brokerd_id')
     @api.multi
     @api.onchange("proposals_covers")
     def _check_preimum_opp(self):
@@ -101,50 +100,6 @@ class Proposals_opp(models.Model):
     def select_proposal(self):
         self.proposal_crm.test1 = True
         self.proposal_crm.prop_id = self.id
-
-
-class ExtraModel(models.Model):
-    _name ="name.covers"
-
-
-    name = fields.Char(string='Name' )
-    check1 =fields.Many2one('insurance.product')
-    check = fields.Boolean()
-    sum_insure = fields.Float(string="SI")
-    rate = fields.Float(string="Rate")
-    net_perimum = fields.Float(string="Net Perimum")
-    rel_policy_broker_id = fields.Many2one("proposal.opp.bb")
-
-    # @api.multi
-    # def _nameget(self):
-    #       for rec in self:
-    #           if rec.check == True:
-    #               rec.net_perimum = rec.sum_insure
-
-
-
-
-    @api.onchange("sum_insure","rate")
-    def _onchangerate(self):
-        for rec in self:
-            rec.net_perimum = (rec.sum_insure*rec.rate)/100
-
-
-
-
-            # else:
-            #     rec.net_perimum = rec.name.limit
-
-
-
-    # @api.multi
-    # def unlink(self):
-    #     for rec in self:
-    #         if rec.name.required:
-    #             raise ValidationError(
-    #                 ('You cannot delete this record .'))
-    #         return super(ExtraModel, self).unlink()
-
 
 
 

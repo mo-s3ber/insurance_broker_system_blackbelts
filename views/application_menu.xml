@@ -99,15 +99,11 @@
                   action="account.action_account_bank_journal_form"/>
         <menuitem id="Journals_view_menu" name="Journals" parent="accounting_configuration_view_menu"
                   action="account.action_account_journal_form"/>
-
-
         <menuitem id="configuration_view_menu" name="Configuration" parent="main_ibs_menu"/>
         <menuitem id="line_of_business_view_menu" name="Line of Business" parent="configuration_view_menu"
                   action="insurance_line_business_action"/>
         <menuitem id="product_view_menu" name="Products" parent="configuration_view_menu"
                   action="insurance_Products_action"/>
-
-
 
     </data>
 </odoo>
