@@ -98,19 +98,19 @@ class PolicyBroker(models.Model):
                 0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
             records_proposal.append(proposal_opp)
 
-        res['policy_number'] = lead.old_number.std_id
-        res['std_id'] = lead.new_number
-        res['issue_date'] = lead.issue_date
-        res['start_date'] = lead.start_date
-        res['end_date'] = lead.end_date
-        res['insurance_type'] = lead.old_number.insurance_type
-        res['line_of_bussines'] = lead.old_number.line_of_bussines.id
-        res['ins_type'] = lead.old_number.ins_type
-
-        res['objectperson'] = records_person
-        res['objectvehicle'] = records_car
-        res['objectcargo'] = records_cargo
-        res['propoasl_ids'] = records_proposal
+        # res['policy_number'] = lead.old_number
+        # res['std_id'] = lead.new_number
+        # res['issue_date'] = lead.issue_date
+        # res['start_date'] = lead.start_date
+        # res['end_date'] = lead.end_date
+        # res['insurance_type'] = lead.old_number.insurance_type
+        # res['line_of_bussines'] = lead.old_number.line_of_bussines.id
+        # res['ins_type'] = lead.old_number.ins_type
+        #
+        # res['objectperson'] = records_person
+        # res['objectvehicle'] = records_car
+        # res['objectcargo'] = records_cargo
+        # res['propoasl_ids'] = records_proposal
         return res
 
     @api.model
@@ -151,15 +151,15 @@ class PolicyBroker(models.Model):
                 0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
             records_proposal.append(proposal_opp)
 
-        res['ediet_number'] = lead.number_policy.std_id
-        res['std_id'] = lead.newone
+        res['std_id'] = lead.number_policy.std_id
+        # res['std_id'] = lead.newone
         res['customer'] = lead.number_policy.customer.id
 
         res['edit_number'] = lead.number_edit
         res['edit_decr'] = lead.reasonedit
-        res['issue_date'] = lead.issue_date
-        res['start_date'] = lead.start_date
-        res['end_date'] = lead.end_date
+        # res['issue_date'] = lead.issue_date
+        # res['start_date'] = lead.start_date
+        # res['end_date'] = lead.end_date
         res['insurance_type'] = lead.number_policy.insurance_type
         res['line_of_bussines'] = lead.number_policy.line_of_bussines.id
         res['ins_type'] = lead.number_policy.ins_type
@@ -238,7 +238,7 @@ class PolicyBroker(models.Model):
         if total > 100:
             raise ValidationError("Your share percentage must be under percentage")
 
-    _sql_constraints = [('std_id_uniq', 'unique(std_id)', 'This policy number already exists !')]
+    # _sql_constraints = [('std_id_uniq', 'unique(std_id)', 'This policy number already exists !')]
 
     # @api.model
     # def create(self, vals):
@@ -246,7 +246,7 @@ class PolicyBroker(models.Model):
     #     vals['std_id'] = seq
     #     return super(PolicyBroker, self).create(vals)
 
-    edit_number = fields.Integer(string="Edit Number", readonly=True)
+    edit_number = fields.Integer(string="Edit Number", readonly=True, index=True)
     edit_decr = fields.Text(string='Edit Description', readonly=True)
     ediet_number = fields.Char(string='Edit Policy Number')
 

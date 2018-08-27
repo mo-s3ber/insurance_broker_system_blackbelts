@@ -2,16 +2,16 @@ from odoo import api, fields, models
 
 class Endorsement_edit(models.Model):
     _name="endorsement.edit"
-    _rec_name="newone"
+    _rec_name="number_policy"
 
 
     number_policy=fields.Many2one("policy.broker", string="Edit policy number")
     newone=fields.Char(string="new number")
-    number_edit = fields.Integer(string="Edit Number")
-    reasonedit = fields.Text(string="Edit Reason")
-    issue_date = fields.Date(string="Issue Date")
-    start_date = fields.Date(string="Coverage Start On")
-    end_date = fields.Date(string="Coverage End On")
+    number_edit = fields.Integer(string="Endorsement Number")
+    reasonedit = fields.Text(string="Endorsement Reason")
+    issue_date = fields.Date(string="Effective Date")
+    start_date = fields.Date(string="Effective Start On")
+    end_date = fields.Date(string="Effective End On")
 
 
     @api.multi

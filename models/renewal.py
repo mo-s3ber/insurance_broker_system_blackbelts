@@ -2,13 +2,13 @@ from odoo import api, fields, models
 
 class Renewal_Again(models.Model):
     _name = "renewal.again"
-    _rec_name="new_number"
+    _rec_name="old_number"
 
     old_number = fields.Many2one("policy.broker", string="Old Policy Number")
     new_number = fields.Char(string="New Policy Number")
-    issue_date = fields.Date(string="Issue Date")
-    start_date = fields.Date(string="Coverage Start On")
-    end_date = fields.Date(string="Coverage End On")
+    issue_date = fields.Date(string="Effective Date")
+    start_date = fields.Date(string="Effective Start On")
+    end_date = fields.Date(string="Effective End On")
 
     @api.multi
     def create_renewal(self):

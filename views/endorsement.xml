@@ -12,7 +12,7 @@
                         <group>
 
                             <field name="number_policy"/>
-                            <field name="newone"/>
+                            <!--<field name="newone"/>-->
                             <field name="number_edit"/>
                             <field name="reasonedit"/>
                             <field name="issue_date"/>
@@ -29,7 +29,7 @@
             <field name="arch" type="xml">
                 <tree string="my_tree_for_endorsement">
                     <field name="number_policy"/>
-                    <field name="newone"/>
+                    <!--<field name="newone"/>-->
                     <field name="number_edit"/>
                     <field name="issue_date"/>
                     <field name="start_date"/>
