@@ -23,7 +23,7 @@
                                 <field name="term"/>
                                 <field name="number"  attrs="{'invisible': [('term', '!=', 'year')]}"/>
                                 <field name="edit_number"/>
-                                <field name="ediet_number" attrs="{'invisible': [('edit_number', '=', 0)]}"/>
+                                <!--<field name="ediet_number" attrs="{'invisible': [('edit_number', '=', 0)]}"/>-->
 
                                 <field name="edit_decr"  attrs="{'invisible': [('edit_number', '=', True)]}"/>
 
@@ -55,6 +55,7 @@
                             <field name="objectvehicle"  string ='car' mode="tree,kanban" attrs="{'invisible': ['&amp;','|',('test', '!=', 'vehicle'),('ins_type', '!=', 'Individual'),'|',('test', '!=', 'vehicle'),'|',('ins_type', '!=', 'Group'),('group', '=', True)]}" >
 
                                 <tree >
+                                    <field name="car_tybe"  />
                                     <field name="motor_cc"  />
                                     <field name="year_of_made"  />
                                     <field name="Man"  />
@@ -63,6 +64,7 @@
                                 </tree>
                                 <form>
                                     <group>
+                                        <field name="car_tybe"  />
                                         <field name="motor_cc"  />
                                         <field name="year_of_made"  />
                                         <field name="Man"  />

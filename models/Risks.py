@@ -7,14 +7,29 @@ class car_object(models.Model):
 
 
     # car# ok now
+    car_tybe = fields.Many2one("car.tybe" , string="Vehicle Type")
     motor_cc = fields.Char("Motor cc")
     year_of_made = fields.Date("Year of Made")
     model = fields.Char("Motor Model")
-    Man = fields.Char('Manifactor')
+    Man = fields.Many2one("car.brande", string='Vehicle Brande')
     proposal_car = fields.Many2one('proposal.bb', string='proposal')
     # covers_car=fields.One2many(related='proposal_car.product_pol.TOB')
     vehicle_model=fields.Many2one('insurance.claim')
 
+class car_tybe(models.Model):
+    _name="car.tybe"
+    _rec_name ="vt"
+
+    vt = fields.Char(string="Vehicle Type")
+
+
+
+
+class car_brand(models.Model):
+    _name="car.brande"
+    _rec_name="vt"
+
+    vt = fields.Char(string="Vehicle Brande")
 
 
 
