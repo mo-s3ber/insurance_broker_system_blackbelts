@@ -62,6 +62,63 @@ class PolicyBroker(models.Model):
 
     @api.model
     def default_get(self, fields):
+        ress = super(PolicyBroker, self).default_get(fields)
+        lead = self.env['endorsement.edit'].browse(self._context.get('active_id'))
+        # pass car
+        recordvehile = self.env['vehicle.object'].search([('id', 'in', lead.number_policy.objectvehicle.ids)])
+        records_car = []
+        for rec in recordvehile:
+            objectvehicle = (
+                0, 0, {'Man': rec.Man, ' model': rec.model, 'motor_cc': rec.motor_cc, "year_of_made": rec.year_of_made})
+            records_car.append(objectvehicle)
+
+        # .........
+
+        # passing persons......
+        recordperson = self.env['person.object'].search([('id', 'in', lead.number_policy.objectperson.ids)])
+        records_person = []
+        for rec in recordperson:
+            objectperson = (0, 0, {'name': rec.name, 'DOB': rec.DOB, 'job': rec.job})
+            records_person.append(objectperson)
+        # # .........
+        #
+        # # passing cargo...
+        recordcargo = self.env['cargo.object'].search([('id', 'in', lead.number_policy.objectcargo.ids)])
+        records_cargo = []
+        for rec in recordcargo:
+            objectcargo = (
+                0, 0, {'From': rec.From, 'To': rec.To, 'cargo_type': rec.cargo_type, "weight": rec.weight})
+            records_cargo.append(objectcargo)
+        # # .......
+        #
+        recordproposal = self.env['proposal.bb'].search([('id', 'in', lead.number_policy.propoasl_ids.ids)])
+        records_proposal = []
+        for rec in recordproposal:
+            proposal_opp = (
+                0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
+            records_proposal.append(proposal_opp)
+
+        ress['std_id'] = lead.number_policy.std_id
+        # res['std_id'] = lead.newone
+        ress['customer'] = lead.number_policy.customer.id
+
+        ress['edit_number'] = lead.number_edit
+        ress['edit_decr'] = lead.reasonedit
+        # res['issue_date'] = lead.issue_date
+        # res['start_date'] = lead.start_date
+        # res['end_date'] = lead.end_date
+        ress['insurance_type'] = lead.number_policy.insurance_type
+        ress['line_of_bussines'] = lead.number_policy.line_of_bussines.id
+        ress['ins_type'] = lead.number_policy.ins_type
+
+        ress['objectperson'] = records_person
+        ress['objectvehicle'] = records_car
+        ress['objectcargo'] = records_cargo
+        ress['propoasl_ids'] = records_proposal
+        return ress
+
+    @api.model
+    def default_get(self, fields):
         res = super(PolicyBroker, self).default_get(fields)
         lead = self.env['renewal.again'].browse(self._context.get('active_id'))
         # pass car
@@ -98,77 +155,23 @@ class PolicyBroker(models.Model):
                 0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
             records_proposal.append(proposal_opp)
 
-        # res['policy_number'] = lead.old_number
-        # res['std_id'] = lead.new_number
-        # res['issue_date'] = lead.issue_date
-        # res['start_date'] = lead.start_date
-        # res['end_date'] = lead.end_date
-        # res['insurance_type'] = lead.old_number.insurance_type
-        # res['line_of_bussines'] = lead.old_number.line_of_bussines.id
-        # res['ins_type'] = lead.old_number.ins_type
-        #
-        # res['objectperson'] = records_person
-        # res['objectvehicle'] = records_car
-        # res['objectcargo'] = records_cargo
-        # res['propoasl_ids'] = records_proposal
-        return res
-
-    @api.model
-    def default_get(self, fields):
-        res = super(PolicyBroker, self).default_get(fields)
-        lead = self.env['endorsement.edit'].browse(self._context.get('active_id'))
-        # pass car
-        recordvehile = self.env['vehicle.object'].search([('id', 'in', lead.number_policy.objectvehicle.ids)])
-        records_car = []
-        for rec in recordvehile:
-            objectvehicle = (
-                0, 0, {'Man': rec.Man, ' model': rec.model, 'motor_cc': rec.motor_cc, "year_of_made": rec.year_of_made})
-            records_car.append(objectvehicle)
-
-        # .........
-
-        # passing persons......
-        recordperson = self.env['person.object'].search([('id', 'in', lead.number_policy.objectperson.ids)])
-        records_person = []
-        for rec in recordperson:
-            objectperson = (0, 0, {'name': rec.name, 'DOB': rec.DOB, 'job': rec.job})
-            records_person.append(objectperson)
-        # # .........
-        #
-        # # passing cargo...
-        recordcargo = self.env['cargo.object'].search([('id', 'in', lead.number_policy.objectcargo.ids)])
-        records_cargo = []
-        for rec in recordcargo:
-            objectcargo = (
-                0, 0, {'From': rec.From, 'To': rec.To, 'cargo_type': rec.cargo_type, "weight": rec.weight})
-            records_cargo.append(objectcargo)
-        # # .......
-        #
-        recordproposal = self.env['proposal.bb'].search([('id', 'in', lead.number_policy.propoasl_ids.ids)])
-        records_proposal = []
-        for rec in recordproposal:
-            proposal_opp = (
-                0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
-            records_proposal.append(proposal_opp)
-
-        res['std_id'] = lead.number_policy.std_id
-        # res['std_id'] = lead.newone
-        res['customer'] = lead.number_policy.customer.id
-
-        res['edit_number'] = lead.number_edit
-        res['edit_decr'] = lead.reasonedit
-        # res['issue_date'] = lead.issue_date
-        # res['start_date'] = lead.start_date
-        # res['end_date'] = lead.end_date
-        res['insurance_type'] = lead.number_policy.insurance_type
-        res['line_of_bussines'] = lead.number_policy.line_of_bussines.id
-        res['ins_type'] = lead.number_policy.ins_type
+        res['policy_number'] = lead.new_number
+        res['std_id'] = lead.old_number.std_id
+        res['issue_date'] = lead.issue_date
+        res['start_date'] = lead.start_date
+        res['end_date'] = lead.end_date
+        res['customer'] = lead.old_number.customer.id
+        res['holding_cam'] = lead.old_number.holding_cam
+        res['insurance_type'] = lead.old_number.insurance_type
+        res['line_of_bussines'] = lead.old_number.line_of_bussines.id
+        res['ins_type'] = lead.old_number.ins_type
 
         res['objectperson'] = records_person
         res['objectvehicle'] = records_car
         res['objectcargo'] = records_cargo
         res['propoasl_ids'] = records_proposal
         return res
+
 
     @api.onchange("term", "number")
     def _cmpute_date_and_amount(self):
@@ -246,9 +249,8 @@ class PolicyBroker(models.Model):
     #     vals['std_id'] = seq
     #     return super(PolicyBroker, self).create(vals)
 
-    edit_number = fields.Integer(string="Edit Number", readonly=True, index=True)
-    edit_decr = fields.Text(string='Edit Description', readonly=True)
-    ediet_number = fields.Char(string='Edit Policy Number')
+    edit_number = fields.Integer(string="Endorsement Number", readonly=True, index=True)
+    edit_decr = fields.Text(string='Endorsement Description', readonly=True)
 
     policy_number = fields.Char(string="Renewal Policy Number")
     renwal_check = fields.Boolean(string="Renewal")
