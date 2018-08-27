@@ -13,6 +13,7 @@ class car_object(models.Model):
     Man = fields.Char('Manifactor')
     proposal_car = fields.Many2one('proposal.bb', string='proposal')
     # covers_car=fields.One2many(related='proposal_car.product_pol.TOB')
+    vehicle_model=fields.Many2one('insurance.claim')
 
 
 
@@ -81,6 +82,7 @@ class person_object(models.Model):
     job = fields.Char('Job Tiltle')
     btn1 = fields.Boolean('')
     proposal_person = fields.Many2one('proposal.bb', string='proposal')
+    person_model=fields.Many2one('insurance.claim')
     # covers_person = fields.One2many(related='proposal_person.product_pol.TOB')
     # # ..........#
 
@@ -110,6 +112,7 @@ class cargo_object(models.Model):
     weight = fields.Float('Weight')
     #
     proposal_cargo = fields.Many2one('proposal.bb', string='proposal')
+    cargo_model = fields.Many2one('insurance.claim')
     # covers_cargo = fields.One2many(related='proposal_cargo.product_pol.TOB')
     # # ......#
 
