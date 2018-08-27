@@ -5,7 +5,7 @@ class claimPolicy(models.Model):
     _name ="insurance.claim"
 
 
-    policy_number = fields.Many2one('policy.broker',string='Policy Number',required=True,domain="[('edit_number','=',0)]")
+    policy_number = fields.Many2one('policy.broker',string='Policy Number',required=True,domain="[('edit_number','=',False)]")
     endorsement= fields.Many2one('policy.broker',string='Endorsement', required=True,domain="[('edit_number','!=',0)]")
     risk_object=fields.Char(string='Risk Object')
     risk_person = fields.Many2one('person.object',string='Person Risk',domain="[('object_person','=',policy_number)]")

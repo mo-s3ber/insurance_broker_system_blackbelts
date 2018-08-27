@@ -6,7 +6,6 @@ class Endorsement_edit(models.Model):
 
 
     number_policy=fields.Many2one("policy.broker", string="Edit policy number")
-    newone=fields.Char(string="new number")
     number_edit = fields.Integer(string="Endorsement Number")
     reasonedit = fields.Text(string="Endorsement Reason")
     issue_date = fields.Date(string="Effective Date")

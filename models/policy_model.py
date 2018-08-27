@@ -249,7 +249,7 @@ class PolicyBroker(models.Model):
     #     vals['std_id'] = seq
     #     return super(PolicyBroker, self).create(vals)
 
-    edit_number = fields.Integer(string="Endorsement Number", readonly=True, index=True)
+    edit_number = fields.Integer(string="Endorsement Number",readonly=True, index=True)
     edit_decr = fields.Text(string='Endorsement Description', readonly=True)
 
     policy_number = fields.Char(string="Renewal Policy Number")
