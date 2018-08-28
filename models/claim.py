@@ -9,11 +9,11 @@ class claimPolicy(models.Model):
     related_policy=fields.Char(related='policy_number.std_id',store=True,readonly=True)
     endorsement= fields.Many2one('policy.broker',string='Endorsement', required=True,domain="['&',('edit_number','!=',False),('std_id','=',related_policy)]")
     risk_object=fields.Char(string='Risk Object')
-    risk_person = fields.Many2one('person.object',string='Person Risk',domain="[('object_person','=',policy_number)]")
+    risk_person = fields.Many2one('person.object',string='Person Risk',domain="[('object_person','=',endorsement)]")
     risk_person_model = fields.One2many('person.object','person_model',string='Person')
-    risk_vehicle=fields.Many2one('vehicle.object',string='Vehicle Risk',domain="[('object_vehicle','=',policy_number)]")
+    risk_vehicle=fields.Many2one('vehicle.object',string='Vehicle Risk',domain="[('object_vehicle','=',endorsement)]")
     risk_vehicle_model=fields.One2many('vehicle.object','vehicle_model',string='Vehicle')
-    risk_cargo = fields.Many2one('cargo.object', string='Cargo Risk',domain="[('object_cargo','=',policy_number)]")
+    risk_cargo = fields.Many2one('cargo.object', string='Cargo Risk',domain="[('object_cargo','=',endorsement)]")
     risk_cargo_model = fields.One2many('cargo.object','cargo_model',string='Cargo')
     coverage = fields.Many2one('insurance.product.coverage',string='Coverage')
 
@@ -55,17 +55,6 @@ class claimPolicy(models.Model):
             index+=record.amount
         self.amount=index
 
-    # @api.model
-    # def create(self, values):
-    #     if values.get('amount', False):
-    #         values['amount']=self.amount
-    #     return super(claimPolicy, self).create(values)
-    #
-    # @api.multi
-    # def write(self, values):
-    #     if values.get('amount', False):
-    #         values['amount'] = self.amount
-    #     return super(claimPolicy, self).write(values)
 
 
 
@@ -74,7 +63,7 @@ class claimLine(models.Model):
     _name ="insurance.claim.line"
     _rec_name = "claim_item"
 
-    claim_item=fields.Many2one('insurance.claim.item',string='Claim Item',domain="[('risk_objects','=',related_claim)]")
+    claim_item=fields.Many2one('insurance.claim.item',string='Claim Item',required=True,domain="[('risk_objects','=',related_claim)]")
     amount=fields.Float(string='Amount')
     claim_object=fields.Many2one('insurance.claim')
     related_claim=fields.Char(related='claim_object.risk_object',store=True,readonly=True)

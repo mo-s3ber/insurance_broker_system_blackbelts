@@ -69,6 +69,6 @@ class inhertResPartner(models.Model):
 
     insurer_type=fields.Boolean('Insurer')
     insurer_branch=fields.Many2one("res.partner",string="Insurer Branch")
-    holding_type=fields.Boolean("Holding")
+    holding_type=fields.Boolean("Holding",default=True)
     holding_company=fields.Many2one("res.partner",string="Holding Company")
 

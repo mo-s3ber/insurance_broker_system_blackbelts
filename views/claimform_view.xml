@@ -35,6 +35,7 @@
                     </field>
                     <field name="risk_vehicle_model" attrs="{'invisible': [('risk_object', '!=', 'vehicle')]}" readonly="1" force_save="1">
                         <tree>
+                            <field name="car_tybe"/>
                             <field name="motor_cc"/>
                             <field name="year_of_made"/>
                             <field name="model"/>
@@ -101,4 +102,25 @@
         <field name="view_mode">tree,form</field>
         <field name="view_type">form</field>
     </record>
+    <record id="view_claim_line_wizard_form" model="ir.ui.view">
+            <field name="name">Claim Line form</field>
+            <field name="model">insurance.claim.line</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                       <field name="claim_item"/>
+                       <field name="amount"/>
+                        <field name="claim_object" invisible="1"/>
+                       <field name="related_claim" invisible="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="claim_line_wizard_wizard"
+            name="claim_line"
+            src_model="insurance.claim.line"
+            res_model="insurance.claim.line"
+            view_mode="form"
+            target="new"/>
 </odoo>
