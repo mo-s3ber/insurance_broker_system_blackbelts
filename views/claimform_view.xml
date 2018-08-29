@@ -21,6 +21,7 @@
                     <separator string="Create New Claim" colspan="2"/>
                     <field name="policy_number" widget="selection"/>
                     <field name="related_policy" invisible="1"/>
+                    <field name="customer_policy" invisible="1"/>
                     <field name="endorsement" widget="selection"/>
                     <field name="risk_object" invisible="1"/>
                     <field name="risk_person" attrs="{'invisible': [('risk_object', '!=', 'person')]}" widget="selection"/>

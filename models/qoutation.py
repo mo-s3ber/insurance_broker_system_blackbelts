@@ -207,7 +207,6 @@ class partner(models.Model):
     C_industry = fields.Selection([('Software', 'Software'),
                                    ('Engineering', 'Engineering'), ],
                                   'Industry', track_visibility='onchange')
-    holding=fields.Many2one('res.partner',string='Holding Company')
 
 
 

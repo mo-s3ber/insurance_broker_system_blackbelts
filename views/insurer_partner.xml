@@ -6,10 +6,70 @@
         <field name="arch" type="xml">
             <xpath expr="//group/group/field[@name='type']" position="after">
                 <field name="insurer_type" readonly="1" force_save="1"/>
-                <field name="insurer_branch"/>
+                <field name="insurer_branch" attrs="{'invisible': [('insurer_type','=',False)]}"/>
                 <field name="holding_type" attrs="{'invisible': [('company_type','!=','company')]}" readonly="1" force_save="1"/>
-                <field name="holding_company" attrs="{'invisible': [('company_type','!=','company')]}"/>
+                <field name="holding_company" attrs="{'invisible': [('company_type','!=','company'),('holding_type','!=',False)]}"/>
             </xpath>
         </field>
     </record>
+    <record id="view_partners_form_policy" model="ir.ui.view">
+        <field name="name">view.res.partner.form.crm.inherited2</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field eval="18" name="priority"/>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="arch" type="xml">
+            <data>
+                <button name="toggle_active" position="before">
+                    <button class="oe_stat_button o_res_partner_tip_opp" type="object"
+                            name="show_partner_policies"
+                            icon="fa-star" attrs="{'invisible': [('customer','!=', True),('supplier','!=', False)]}">
+                        <field string="Policies " name="policy_count" widget="statinfo"/>
+                    </button>
+                </button>
+            </data>
+        </field>
+    </record>
+    <record id="view_partners_form_policy_claim" model="ir.ui.view">
+        <field name="name">view.res.partner.form.crm.inherited3</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field eval="18" name="priority"/>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="arch" type="xml">
+            <data>
+                <button name="toggle_active" position="before">
+                    <button class="oe_stat_button o_res_partner_tip_opp" type="object"
+                            name="show_partner_claim"
+                            icon="fa-usd" attrs="{'invisible': [('customer','!=', True),('supplier','!=', False)]}">
+                        <field string="Claims" name="claim_count" widget="statinfo"/>
+                    </button>
+                </button>
+            </data>
+        </field>
+    </record>
+    <!--<record id="res_partner_view_buttons" model="ir.ui.view">-->
+            <!--<field name="name">res.partner.view.buttons</field>-->
+            <!--<field name="model">res.partner</field>-->
+            <!--<field name="inherit_id" ref="base.view_partner_form" />-->
+            <!--<field name="priority" eval="20"/>-->
+            <!--<field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<button name="toggle_active" position="before">-->
+                    <!--<button class="oe_stat_button" type="action" name="%(sale.act_res_partner_2_sale_order)d"-->
+                        <!--attrs="{'invisible': [('customer', '!=', True)]}"-->
+                        <!--icon="fa-usd">-->
+                        <!--<field string="Sales" name="sale_order_count" widget="statinfo"/>-->
+                    <!--</button>-->
+                <!--</button>-->
+                <!--<page name="internal_notes" position="inside">-->
+                    <!--<group colspan="2" col="2" groups="sale.group_warning_sale">-->
+                        <!--<separator string="Warning on the Sales Order" colspan="4" />-->
+                            <!--<field name="sale_warn" nolabel="1" />-->
+                            <!--<field name="sale_warn_msg" colspan="3" nolabel="1"-->
+                                    <!--attrs="{'required':[('sale_warn','!=','no-message')],'readonly':[('sale_warn','=','no-message')]}"/>-->
+                    <!--</group>-->
+                <!--</page>-->
+            <!--</field>-->
+    <!--</record>-->
 </odoo>

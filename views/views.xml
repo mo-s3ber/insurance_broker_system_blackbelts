@@ -337,7 +337,6 @@
                     <field name="martiual_status"  attrs="{'invisible':[('is_company','=', True )]}"/>
                     <field name="last_time_insure"  attrs="{'invisible':[('is_company','=', True )]}"/>
                     <field name="C_industry"  attrs="{'invisible':[('is_company','!=', True )]}"/>
-                    <field name="holding"  attrs="{'invisible':[('is_company','!=', True )]}"/>
                 </xpath>
 
 
