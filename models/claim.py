@@ -1,14 +1,15 @@
-from odoo import models, fields, api
+from odoo import models, fields, api ,_
 from odoo.exceptions import ValidationError
 
 class claimPolicy(models.Model):
     _name ="insurance.claim"
 
-
+    name = fields.Char(string='Name', required=True, copy=False, readonly=True, index=True,
+                       default=lambda self: _('New'))
     policy_number = fields.Many2one('policy.broker',string='Policy Number',required=True,domain="[('edit_number','=',False)]")
     related_policy=fields.Char(related='policy_number.std_id',store=True,readonly=True)
-    customer_policy=fields.Many2one('res.partner',related='policy_number.customer',store=True,readonly=True)
-    endorsement= fields.Many2one('policy.broker',string='Endorsement', required=True,domain="['&',('edit_number','!=',False),('std_id','=',related_policy)]")
+    customer_policy=fields.Many2one('res.partner',related='policy_number.customer',string='Customer',store=True,readonly=True)
+    endorsement= fields.Many2one('policy.broker',string='Endorsement',domain="['&',('edit_number','!=',False),('std_id','=',related_policy)]")
     risk_object=fields.Char(string='Risk Object')
     risk_person = fields.Many2one('person.object',string='Person Risk',domain="[('object_person','=',endorsement)]")
     risk_person_model = fields.One2many('person.object','person_model',string='Person')
@@ -20,6 +21,12 @@ class claimPolicy(models.Model):
 
     claim_line= fields.One2many('insurance.claim.line','claim_object',string='Claim Lines')
     amount = fields.Float(string='Amount')
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code('insurance.claim') or 'New'
+        return super(claimPolicy, self).create(vals)
 
     @api.onchange('endorsement')
     def _onchange_policy_number(self):

@@ -5,6 +5,7 @@
         <field name="priority" eval="16"/>
         <field name="arch" type="xml">
             <tree string="list">
+                <field name="name"/>
                 <field name="policy_number"/>
                 <field name="endorsement"/>
                 <field name="amount"/>
@@ -17,49 +18,55 @@
         <field name="priority" eval="16"/>
         <field name="arch" type="xml">
             <form string="Idea form">
-                <group colspan="4">
-                    <separator string="Create New Claim" colspan="2"/>
-                    <field name="policy_number" widget="selection"/>
-                    <field name="related_policy" invisible="1"/>
-                    <field name="customer_policy" invisible="1"/>
-                    <field name="endorsement" widget="selection"/>
-                    <field name="risk_object" invisible="1"/>
-                    <field name="risk_person" attrs="{'invisible': [('risk_object', '!=', 'person')]}" widget="selection"/>
-                    <field name="risk_vehicle" attrs="{'invisible': [('risk_object', '!=', 'vehicle')]}" widget="selection"/>
-                    <field name="risk_cargo" attrs="{'invisible': [('risk_object', '!=', 'cargo')]}" widget="selection"/>
-                    <field name="risk_person_model" attrs="{'invisible': [('risk_object', '!=', 'person')]}" readonly="1" force_save="1">
-                        <tree>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
                             <field name="name"/>
-                            <field name="DOB"/>
-                            <field name="job"/>
-                        </tree>
-                    </field>
-                    <field name="risk_vehicle_model" attrs="{'invisible': [('risk_object', '!=', 'vehicle')]}" readonly="1" force_save="1">
-                        <tree>
-                            <field name="car_tybe"/>
-                            <field name="motor_cc"/>
-                            <field name="year_of_made"/>
-                            <field name="model"/>
-                            <field name="Man"/>
-                        </tree>
-                    </field>
-                    <field name="risk_cargo_model" attrs="{'invisible': [('risk_object', '!=', 'cargo')]}" readonly="1" force_save="1">
-                        <tree>
-                            <field name="From"/>
-                            <field name="To"/>
-                            <field name="cargo_type"/>
-                            <field name="weight"/>
-                        </tree>
-                    </field>
-                    <field name="coverage"/>
-                    <field name="claim_line">
-                        <tree>
-                            <field name="claim_item"/>
-                            <field name="amount"/>
-                        </tree>
-                    </field>
-                    <field name="amount" readonly="1" force_save="1"/>
-                </group>
+                        </h1>
+                    </div>
+                    <group colspan="4">
+                        <field name="policy_number" widget="selection"/>
+                        <field name="related_policy" invisible="1"/>
+                        <field name="customer_policy"/>
+                        <field name="endorsement" widget="selection"/>
+                        <field name="risk_object" invisible="1"/>
+                        <field name="risk_person" attrs="{'invisible': [('risk_object', '!=', 'person')]}" widget="selection"/>
+                        <field name="risk_vehicle" attrs="{'invisible': [('risk_object', '!=', 'vehicle')]}" widget="selection"/>
+                        <field name="risk_cargo" attrs="{'invisible': [('risk_object', '!=', 'cargo')]}" widget="selection"/>
+                        <field name="risk_person_model" attrs="{'invisible': [('risk_object', '!=', 'person')]}" readonly="1" force_save="1">
+                            <tree>
+                                <field name="name"/>
+                                <field name="DOB"/>
+                                <field name="job"/>
+                            </tree>
+                        </field>
+                        <field name="risk_vehicle_model" attrs="{'invisible': [('risk_object', '!=', 'vehicle')]}" readonly="1" force_save="1">
+                            <tree>
+                                <field name="car_tybe"/>
+                                <field name="motor_cc"/>
+                                <field name="year_of_made"/>
+                                <field name="model"/>
+                                <field name="Man"/>
+                            </tree>
+                        </field>
+                        <field name="risk_cargo_model" attrs="{'invisible': [('risk_object', '!=', 'cargo')]}" readonly="1" force_save="1">
+                            <tree>
+                                <field name="From"/>
+                                <field name="To"/>
+                                <field name="cargo_type"/>
+                                <field name="weight"/>
+                            </tree>
+                        </field>
+                        <field name="coverage"/>
+                        <field name="claim_line">
+                            <tree>
+                                <field name="claim_item"/>
+                                <field name="amount"/>
+                            </tree>
+                        </field>
+                        <field name="amount" readonly="1" force_save="1"/>
+                     </group>
+                </sheet>
             </form>
         </field>
     </record>
@@ -72,7 +79,14 @@
         <!--<field name='domain'>[('salesperson','=',uid)]</field>-->
         <!--<field name="context" >{'search_default_by_salesperson':1}</field>-->
     </record>
-        <record model="ir.ui.view" id="tree_claim_item">
+    <record id="seq_claim_details" model="ir.sequence">
+        <field name="name">Insurance Claim</field>
+        <field name="code">insurance.claim</field>
+        <field name="prefix">CLM/</field>
+        <field name="padding">3</field>
+        <field name="company_id" eval="False"/>
+    </record>
+    <record model="ir.ui.view" id="tree_claim_item">
         <field name="name">tree.insurance.claim.item</field>
         <field name="model">insurance.claim.item</field>
         <field name="priority" eval="16"/>
