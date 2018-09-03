@@ -23,7 +23,7 @@
                 <button name="toggle_active" position="before">
                     <button class="oe_stat_button o_res_partner_tip_opp" type="object"
                             name="show_partner_policies"
-                            icon="fa-star" attrs="{'invisible': [('customer','!=', True),('supplier','!=', False)]}">
+                            icon="fa-star" attrs="{'invisible': [('customer','=', False)]}">
                         <field string="Policies " name="policy_count" widget="statinfo"/>
                     </button>
                 </button>
@@ -41,7 +41,7 @@
                 <button name="toggle_active" position="before">
                     <button class="oe_stat_button o_res_partner_tip_opp" type="object"
                             name="show_partner_claim"
-                            icon="fa-usd" attrs="{'invisible': [('customer','!=', True),('supplier','!=', False)]}">
+                            icon="fa-usd" attrs="{'invisible': [('customer','=', False)]}">
                         <field string="Claims" name="claim_count" widget="statinfo"/>
                     </button>
                 </button>

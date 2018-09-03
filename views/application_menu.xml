@@ -115,8 +115,8 @@
                   action="insurance_line_business_action"/>
         <menuitem id="product_view_menu" name="Products" parent="configuration_view_menu"
                   action="insurance_Products_action"/>
-        <menuitem id="claim_item_view_menu" name="Claim Items" parent="configuration_view_menu"
-                  action="claim_item_view_action"/>
+        <!--<menuitem id="claim_item_view_menu" name="Claim Items" parent="configuration_view_menu"-->
+                  <!--action="claim_item_view_action"/>-->
 
     </data>
 </odoo>

@@ -30,6 +30,19 @@ class Product(models.Model):
     coverage=fields.One2many('insurance.product.coverage','product_id',string='Coverage')
     brokerage=fields.One2many('insurance.product.brokerage','product_id',string='Brokerage')
     commision_id = fields.One2many("commision.setup","policy_relation_id")
+    claim_action=fields.One2many('product.claim.action','product')
+
+class claimAction(models.Model):
+    _name='product.claim.action'
+
+    action=fields.Char('Claim Action')
+    completed=fields.Boolean(string='Completed')
+    comments=fields.Text(string='Comments')
+    product=fields.Many2one('insurance.product')
+    claim=fields.Many2one('insurance.claim')
+
+
+
 
 class coverage(models.Model):
     _name='insurance.product.coverage'
@@ -64,6 +77,23 @@ class Brokerage(models.Model):
                 raise ValidationError('Error! Date to Should be After Date from')
 
 
+
+
+class insuranceSetup(models.Model):
+    _name = 'insurance.setup'
+
+    setup_type=fields.Selection([('closs', 'Cause of Loss'),
+                          ('nloss', 'Nature of Loss'),
+                          ('goods', 'Goods'),
+                          ('cstatus', 'Claim Status'),
+                          ('setltype', 'Settlement'),
+                          ('ssta', 'Status'),
+                          ('clmitem', 'Claim Item'),],
+                         'Setup Type', track_visibility='onchange', required=True)
+    name=fields.Char(string='Name')
+
+
+
 class inhertResPartner(models.Model):
     _inherit = 'res.partner'
 
@@ -82,9 +112,6 @@ class inhertResPartner(models.Model):
                 [('customer', operator, partner.id)])
     @api.multi
     def show_partner_policies(self):
-        # form_view = self.env.ref('insurance_broker_blackbelts-master.my_view_for_policy_form_kmlo1')
-        # if self.policy_number:testtest
-
         return {
             'name': ('Policy'),
             'view_type': 'form',
@@ -103,9 +130,6 @@ class inhertResPartner(models.Model):
                 [('customer_policy', operator, partner.id)])
     @api.multi
     def show_partner_claim(self):
-        # form_view = self.env.ref('insurance_broker_blackbelts-master.my_view_for_policy_form_kmlo1')
-        # if self.policy_number:testtest
-
         return {
             'name': ('Claim'),
             'view_type': 'form',

@@ -86,6 +86,15 @@
                             <page string="Brokerage">
                                 <field name="brokerage"/>
                             </page>
+                            <page string="Claim Action">
+                                <field name="claim_action">
+                                    <tree>
+                                        <field name="action"/>
+                                        <field name="completed"/>
+                                        <field name="comments"/>
+                                    </tree>
+                                </field>
+                            </page>
                             <page string="Commision">
                                 <field name="commision_id">
                                     <tree>
@@ -252,6 +261,25 @@
             </p>
         </field>
     </record>
+    <record id="view_claim_action_wizard_form" model="ir.ui.view">
+        <field name="name">Claim Action form</field>
+        <field name="model">product.claim.action</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="action"/>
+                    <field name="completed"/>
+                    <field name="comments"/>
+                </group>
+            </form>
+        </field>
+    </record>
 
+    <act_window id="claim_action_wizard_wizard"
+        name="claim_action"
+        src_model="product.claim.action"
+        res_model="product.claim.action"
+        view_mode="form"
+        target="new"/>
 
 </odoo>
