@@ -1,69 +1,94 @@
-from odoo import models, fields, api
+from odoo import models, fields, api ,_
 from odoo.exceptions import ValidationError
 
 class claimPolicy(models.Model):
     _name ="insurance.claim"
 
-    policy_number = fields.Many2one('policy.broker',string='Policy Number',required=True)
-    risk_object=fields.Char(string='Risk Object')
-    # renewal = fields.Many2one('renewal.again',string='Renewal', required=True,domain="[('old_number','=',policy_number)]")
-    endorsement= fields.Many2one('endorsement.edit',string='Endorsement', required=True,domain="[('number_policy','=',policy_number)]")
-    risk_person = fields.Many2one('person.object',string='Person Risk',domain="[('object_person','=',policy_number)]")
-    risk_vehicle=fields.Many2one('vehicle.object',string='Vehicle Risk',domain="[('object_vehicle','=',policy_number)]")
-    risk_cargo = fields.Many2one('cargo.object', string='Cargo Risk',domain="[('object_cargo','=',policy_number)]")
-    coverage = fields.Many2one('insurance.product.coverage',string='Coverage')
+    name = fields.Char(string='Claim Number', required=True, copy=False, readonly=True, index=True,
+                       default=lambda self: _('New'))
+    intimation_date=fields.Date(string='Intimation Date')
+    intimation_no=fields.Char(string='Intimation No')
+    dateofloss=fields.Date(string='Date of Loss')
+    causeofloss=fields.Many2one('insurance.setup',string='Cause of Loss',domain="[('setup_type','=','closs')]")
+    natureofloss=fields.Many2one('insurance.setup',string='Nature of Loss',domain="[('setup_type','=','nloss')]")
+    lossdesc=fields.Text(string='Loss Desc.')
+    naturelossdesc = fields.Text(string='Nature of Loss Desc.')
+    typeofgoods = fields.Many2one('insurance.setup', string='Type of Goods',domain="[('setup_type','=','goods')]")
+    remarks=fields.Char(string='Close/Open Remarks')
+    totalloss=fields.Boolean(string='Total Loss')
+    totalclaimexp=fields.Float(string='Total Claim Expected')
+    totalsettled=fields.Float(string='Total Settled')
+    totalunpaid = fields.Float(string='Total Unpaid')
 
-    claim_line= fields.One2many('insurance.claim.line','claim_object',string='Claim Lines')
-    amount = fields.Float(string='Amount')
+    claimstatus=fields.Many2one('insurance.setup',string='Claim Status',domain="[('setup_type','=','cstatus')]")
+    policy_number = fields.Many2one('policy.broker',string='Policy Number',required=True,domain="[('edit_number','=',False)]")
+    endorsement= fields.Many2one('policy.broker',string='Endorsement Number',domain="['&',('edit_number','!=',False),('std_id','=',related_policy)]")
+    related_policy=fields.Char(related='policy_number.std_id',store=True,readonly=True)
+    customer_policy=fields.Many2one('res.partner',related='policy_number.customer',string='Customer',store=True,readonly=True)
+    insured=fields.Char(string='Insured',store=True)
+    beneficiary = fields.Char(string='Beneficiary', store=True,readonly=True)
+    currencycode = fields.Char(string='Currencycode', store=True,readonly=True)
+    lob = fields.Many2one('insurance.line.business',related='policy_number.line_of_bussines', string='Line of Business', store=True,readonly=True)
+    product = fields.Many2one('insurance.product',related='policy_number.selected_proposal.product_pol', string='Product', store=True,
+                              readonly=True)
+    insurer = fields.Many2one('res.partner',related='policy_number.selected_proposal.product_pol.insurer', string='Insurer', store=True,
+                              readonly=True)
+    insurer_branch= fields.Many2one('res.partner',related='insurer.insurer_branch', string='Insurer Branch', store=True,
+                              readonly=True)
+    insurer_contact= fields.Many2one('res.partner',string='Insurer Contact',domain="[('insurer_type','=',1)]")
+    total_paid_amount=fields.Float(string='Total Paid Amount')
+    settlement_type=fields.Many2one('insurance.setup',string='Settlement Type',domain="[('setup_type','=','setltype')]")
+    settle_history=fields.One2many('settle.history','claimheader',string='Settle History')
+    payment_history=fields.One2many('payment.history','header_payment',string='Payment History')
+    claim_action=fields.One2many('product.claim.action','claim',related='product.claim_action')
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', 'New') == 'New':
+            vals['name'] = self.env['ir.sequence'].next_by_code('insurance.claim') or 'New'
+        return super(claimPolicy, self).create(vals)
 
     @api.onchange('policy_number')
     def _onchange_policy_number(self):
         if self:
-            self.risk_object = self.policy_number.line_of_bussines.object
+            self.insured =self.policy_number.line_of_bussines.object
         else:
-            self.risk_object = 0
+            self.insured = False
 
-    @api.onchange('claim_line')
-    def _onchange_claim_line(self):
-        index=0
-        for record in self.claim_line:
-            index+=record.amount
-        self.amount=index
+class settleHistory(models.Model):
+    _name ="settle.history"
 
-
-    # @api.model
-    # def create(self, values):
-    #     if values.get('claim_line', False):
-    #         values['amount'] = self.amount
-    #     return super(claimPolicy, self).create(values)
-    #
-    # @api.multi
-    # def write(self, values):
-    #     if values.get('claim_line', False):
-    #         values['amount'] = self.amount
-    #     return super(claimPolicy, self).write(values)
+    risk_type=fields.Char(related='claimheader.insured',string='Risk Type',readonly=True,store=True)
+    risk_id = fields.Many2one('vehicle.object',string='Risk')
+    risk_details =fields.Char(string='Risk Details')
+    coverage = fields.Many2one('insurance.product.coverage',string='Coverage')
+    sum_insured=fields.Char(related='coverage.defaultvalue',string='Sum Insured',store=True,readonly=True)
+    settle_amount=fields.Float(string='Settle Amount')
+    settle_date=fields.Date(string='Settle Date')
+    status=fields.Many2one('insurance.setup',string='Status',domain="[('setup_type','=','ssta')]")
+    claimheader=fields.Many2one('insurance.claim')
+    claim_item=fields.One2many('insurance.claim.item','settle_history',string='Repair/Claim Items')
 
 
+class paymentHistory(models.Model):
+    _name ="payment.history"
 
-
-class claimLine(models.Model):
-    _name ="insurance.claim.line"
-    _rec_name = "claim_item"
-
-    claim_item=fields.Many2one('insurance.claim.item',string='Claim Item',domain="[('risk_objects','=',related_claim)]")
-    amount=fields.Float(string='Amount')
-    claim_object=fields.Many2one('insurance.claim')
-    related_claim=fields.Char(related='claim_object.risk_object',store=True,readonly=True)
+    payment_date=fields.Date(string='Payment Date')
+    paid_amount=fields.Float(string='Paid Amount')
+    currency=fields.Many2one('res.currency', string="Currency")
+    check_bank=fields.Char(string='Check Bank')
+    check_number=fields.Char(string='Check Number')
+    payee=fields.Char(string='Payee Name')
+    header_payment=fields.Many2one('insurance.claim')
 
 class claimItem(models.Model):
     _name ="insurance.claim.item"
-    _rec_name = "name"
+    _rec_name = "claim_item"
 
-    risk_objects= fields.Selection([('person', 'Person'),
-                          ('vehicle', 'Vehicle'),
-                          ('cargo', 'Cargo'),],
-                         'Insured Object',required=True)
-    name = fields.Char(string='Name',required=True)
+    claim_item=fields.Many2one('insurance.setup',string='Items',domain="[('setup_type','=','clmitem')]")
+    amount=fields.Float(string='Amount')
+    settle_history=fields.Many2one('settle.history')
+
 
 
 

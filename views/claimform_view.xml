@@ -5,9 +5,9 @@
         <field name="priority" eval="16"/>
         <field name="arch" type="xml">
             <tree string="list">
+                <field name="name"/>
                 <field name="policy_number"/>
                 <field name="endorsement"/>
-                <field name="amount"/>
             </tree>
         </field>
     </record>
@@ -17,18 +17,82 @@
         <field name="priority" eval="16"/>
         <field name="arch" type="xml">
             <form string="Idea form">
-                <group colspan="4">
-                    <separator string="Create New Claim" colspan="2"/>
-                    <field name="policy_number"/>
-                    <field name="risk_object" invisible="1"/>
-                    <field name="endorsement"/>
-                    <field name="risk_person" attrs="{'invisible': [('risk_object', '!=', 'person')]}"/>
-                    <field name="risk_vehicle" attrs="{'invisible': [('risk_object', '!=', 'vehicle')]}"/>
-                    <field name="risk_cargo" attrs="{'invisible': [('risk_object', '!=', 'cargo')]}"/>
-                    <field name="coverage"/>
-                    <field name="claim_line"/>
-                    <field name="amount"/>
-                </group>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group colspan="4">
+                        <group colspan="1" col="2">
+                            <field name="intimation_date"/>
+                            <field name="intimation_no"/>
+                            <field name="dateofloss"/>
+                            <field name="causeofloss"/>
+                            <field name="natureofloss"/>
+                            <field name="lossdesc"/>
+                            <field name="naturelossdesc"/>
+                            <field name="typeofgoods"/>
+                            <field name="remarks"/>
+                            <field name="totalloss"/>
+                            <field name="totalclaimexp"/>
+                            <field name="totalsettled"/>
+                            <field name="totalunpaid"/>
+                        </group>
+                        <group colspan="1" col="2">
+                            <field name="claimstatus"/>
+                            <field name="policy_number" widget="selection"/>
+                            <field name="endorsement" widget="selection"/>
+                            <field name="related_policy" invisible="1"/>
+                            <field name="customer_policy"/>
+                            <field name="insured" readonly="1" force_save="1"/>
+                            <field name="beneficiary"/>
+                            <field name="currencycode"/>
+                            <field name="lob"/>
+                            <field name="product"/>
+                            <field name="insurer"/>
+                            <field name="insurer_branch"/>
+                            <field name="insurer_contact"/>
+                            <field name="total_paid_amount"/>
+                            <field name="settlement_type"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="settle_history">
+                                <tree>
+                                    <field name="risk_type"/>
+                                    <field name="risk_id" />
+                                    <field name="risk_details"/>
+                                    <field name="coverage"/>
+                                    <field name="sum_insured"/>
+                                    <field name="settle_amount"/>
+                                    <field name="settle_date"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group colspan="2">
+                            <field name="payment_history">
+                                <tree>
+                                    <field name="payment_date"/>
+                                    <field name="paid_amount"/>
+                                    <field name="currency"/>
+                                    <field name="check_bank"/>
+                                    <field name="check_number"/>
+                                    <field name="payee"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group colspan="2">
+                            <field name="claim_action">
+                                <tree>
+                                    <field name="action"/>
+                                    <field name="completed"/>
+                                    <field name="comments"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>
@@ -41,35 +105,53 @@
         <!--<field name='domain'>[('salesperson','=',uid)]</field>-->
         <!--<field name="context" >{'search_default_by_salesperson':1}</field>-->
     </record>
-        <record model="ir.ui.view" id="tree_claim_item">
-        <field name="name">tree.insurance.claim.item</field>
-        <field name="model">insurance.claim.item</field>
-        <field name="priority" eval="16"/>
-        <field name="arch" type="xml">
-            <tree string="list">
-                <field name="risk_objects"/>
-                <field name="name"/>
-            </tree>
-        </field>
+    <record id="seq_claim_details" model="ir.sequence">
+        <field name="name">Insurance Claim</field>
+        <field name="code">insurance.claim</field>
+        <field name="prefix">CLM/</field>
+        <field name="padding">3</field>
+        <field name="company_id" eval="False"/>
     </record>
-    <record model="ir.ui.view" id="form_claim_item">
-        <field name="name">form.insurance.claim.item</field>
-        <field name="model">insurance.claim.item</field>
-        <field name="priority" eval="16"/>
+    <record id="view_payment_history_wizard_form" model="ir.ui.view">
+        <field name="name">Payment History form</field>
+        <field name="model">payment.history</field>
         <field name="arch" type="xml">
-            <form string="Idea form">
-                <group colspan="4">
-                    <separator string="Create Claim Item" colspan="2"/>
-                    <field name="risk_objects"/>
-                    <field name="name"/>
+            <form>
+                <group>
+                    <field name="payment_date"/>
+                    <field name="paid_amount"/>
+                    <field name="currency"/>
+                    <field name="check_bank"/>
+                    <field name="check_number"/>
+                    <field name="payee"/>
                 </group>
             </form>
         </field>
     </record>
-    <record id="claim_item_view_action" model="ir.actions.act_window">
-        <field name="name">Claim Item</field>
-        <field name="res_model">insurance.claim.item</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_type">form</field>
-    </record>
+
+    <act_window id="payment_history_wizard_wizard"
+        name="payment_history"
+        src_model="payment.history"
+        res_model="payment.history"
+        view_mode="form"
+        target="new"/>
+    <record id="view_claim_item_wizard_form" model="ir.ui.view">
+            <field name="name">Claim Item form</field>
+            <field name="model">insurance.claim.item</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                       <field name="claim_item"/>
+                       <field name="amount"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="claim_item_wizard_wizard"
+            name="claim_line"
+            src_model="insurance.claim.item"
+            res_model="insurance.claim.item"
+            view_mode="form"
+            target="new"/>
 </odoo>

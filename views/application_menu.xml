@@ -1,7 +1,7 @@
 <odoo>
     <data>
         <record model="ir.actions.act_window" id="action_customer_view">
-            <field name="name">customer</field>
+            <field name="name">Customer</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -14,15 +14,26 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_insurer_view">
-            <field name="name">insurer</field>
+            <field name="name">Insurer</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">[('insurer_type','=', True)]</field>
-            <field name="context">{"search_default_customer":1,"own_customer_only":1,'company_type':'company'}</field>
-            <field name="context">{"search_default_customer":1,"own_customer_only":1}</field>
+            <field name="context">{'search_default_supplier': 1,'default_customer': 0,'default_supplier': 1, 'default_insurer_type': 1,'default_company_type': 'company','default_is_company': 1}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">Create the Insurer
+                </p>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_agent_view">
+            <field name="name">Agent</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('customer','=', False),('supplier','=', False)]</field>
+            <field name="context">{'default_customer': 0,'default_supplier': 0}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create the Agent
                 </p>
             </field>
         </record>
@@ -33,10 +44,8 @@
                   action="action_customer_view"/>
         <menuitem id="insurer_view_menu" name="Insurer" parent="partners_views_menu"
                   action="action_insurer_view"/>
-        <menuitem id="channel_view_menu" name="Sales Channels" parent="partners_views_menu"
-                  action="sales_team.crm_team_salesteams_act"/>
         <menuitem id="agent_view_menu" name="Agent" parent="partners_views_menu"
-                  action="base.action_res_users"/>
+                  action="action_agent_view"/>
         <menuitem id="print_out_partners_view_menu" name="Print out" parent="partners_views_menu"/>
         <menuitem id="configuration_partners_view_menu" name="Configuration" parent="partners_views_menu"/>
         <menuitem id="production_management_views_menu" name="Production Management"
@@ -45,6 +54,8 @@
                   action="crm.crm_lead_all_leads"/>
         <menuitem id="sales_funnel_view_menu" name="Sales Funnel" parent="production_management_views_menu"
                   action="crm.crm_lead_opportunities"/>
+        <menuitem id="channel_view_menu" name="Sales Channels" parent="production_management_views_menu"
+                  action="sales_team.crm_team_salesteams_act" sequence="3"/>
         <menuitem id="collection_view_menu" name="Collection" parent="production_management_views_menu"
                   action="account.action_invoice_tree1"/>
         <menuitem id="commission_view_menu" name="Commission" parent="production_management_views_menu"
@@ -104,8 +115,8 @@
                   action="insurance_line_business_action"/>
         <menuitem id="product_view_menu" name="Products" parent="configuration_view_menu"
                   action="insurance_Products_action"/>
-        <menuitem id="claim_item_view_menu" name="Claim Items" parent="configuration_view_menu"
-                  action="claim_item_view_action"/>
+        <!--<menuitem id="claim_item_view_menu" name="Claim Items" parent="configuration_view_menu"-->
+                  <!--action="claim_item_view_action"/>-->
 
     </data>
 </odoo>

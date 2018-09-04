@@ -32,16 +32,23 @@ class crm_leads(models.Model):
         compute_sudo=True,
     )
 
+
+
+
+
+
+
     #pol=fields.Many2one(related='Policy_type.insured_type' , string='insured type')
     test=fields.Char('')
     group=fields.Boolean('Groups')
     individual = fields.Boolean('Item by Item')
     test1=fields.Boolean(readonly=True)
 
-    objectcar = fields.One2many('vehicle.object.opp', 'object_vehicle_crm', string='car')#where you are using this fiedl ? in xml
-    objectperson = fields.One2many('person.object.opp', 'object_person_crm', string='person')
-    objectcargo = fields.One2many('cargo.object.opp', 'object_cargo_crm', string='cargo')
-    objectgroup = fields.One2many('group.group.opp', 'object_group_crm', string='Group')
+    objectrisks = fields.One2many('risks.opp', 'risks_crm', string='car')#where you are using this fiedl ? in xml
+
+
+
+    # objectgroup = fields.One2many('group.group.opp', 'object_group_crm', string='Group')
 
     proposal_opp=fields.One2many('proposal.opp.bb','proposal_crm',string='Final proposla')
 
@@ -49,7 +56,7 @@ class crm_leads(models.Model):
     prop_id=fields.Integer('',readonly=True)
     my_notes=fields.Text('Under writting')
 
-    covers=fields.One2many(related='selected_proposal.proposals_covers')
+    # covers=fields.One2many(related='selected_proposal.proposals_covers')
 
     policy_opp=fields.Many2one('policy.broker')
 
@@ -64,6 +71,37 @@ class crm_leads(models.Model):
         print('5555555')
         ids = self.env['proposal.opp.bb'].search([('id', '=',self.prop_id)]).ids
         self.selected_proposal = [(6, 0, ids)]
+
+    @api.multi
+    def Insured_button(self):
+        form_view = self.env.ref('insurance_broker_system_blackbelts.Risks_form')
+
+        return {
+            'name': ('Risk Details'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'views': [(form_view.id, 'form')],
+            'res_model': 'risks.opp',
+            'target': 'current',
+            'type': 'ir.actions.act_window',
+            'context': {'default_risks_crm': self.id},
+        }
+
+    @api.multi
+    def proposal_button(self):
+            form_view = self.env.ref('insurance_broker_system_blackbelts.form_proposal_opp')
+
+            return {
+                'name': ('Proposals'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'views': [(form_view.id, 'form')],
+                'res_model': 'proposal.opp.bb',
+                'target': 'current',
+                'type': 'ir.actions.act_window',
+                'context': {'default_proposal_crm':self.id},
+            }
+
 
     # objectcar_selected = fields.Many2one('car.object', string='car')
     # objectperson_selected = fields.Many2one('person.object', string='Person')
@@ -103,7 +141,7 @@ class crm_leads(models.Model):
 
     @api.multi
     def create_policy(self):
-        form_view = self.env.ref('insurance_broker_blackbelts.my_view_for_policy_form_kmlo1')
+        form_view = self.env.ref('insurance_broker_system_blackbelts.my_view_for_policy_form_kmlo1')
         if self.policy_number:
             return {
                 'name': ('Policy'),

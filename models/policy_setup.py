@@ -30,6 +30,19 @@ class Product(models.Model):
     coverage=fields.One2many('insurance.product.coverage','product_id',string='Coverage')
     brokerage=fields.One2many('insurance.product.brokerage','product_id',string='Brokerage')
     commision_id = fields.One2many("commision.setup","policy_relation_id")
+    claim_action=fields.One2many('product.claim.action','product')
+
+class claimAction(models.Model):
+    _name='product.claim.action'
+
+    action=fields.Char('Claim Action')
+    completed=fields.Boolean(string='Completed')
+    comments=fields.Text(string='Comments')
+    product=fields.Many2one('insurance.product')
+    claim=fields.Many2one('insurance.claim')
+
+
+
 
 class coverage(models.Model):
     _name='insurance.product.coverage'
@@ -65,11 +78,67 @@ class Brokerage(models.Model):
                 raise ValidationError('Error! Date to Should be After Date from')
 
 
+
+
+class insuranceSetup(models.Model):
+    _name = 'insurance.setup'
+
+    setup_type=fields.Selection([('closs', 'Cause of Loss'),
+                          ('nloss', 'Nature of Loss'),
+                          ('goods', 'Goods'),
+                          ('cstatus', 'Claim Status'),
+                          ('setltype', 'Settlement'),
+                          ('ssta', 'Status'),
+                          ('clmitem', 'Claim Item'),],
+                         'Setup Type', track_visibility='onchange', required=True)
+    name=fields.Char(string='Name')
+
+
+
 class inhertResPartner(models.Model):
     _inherit = 'res.partner'
 
     insurer_type=fields.Boolean('Insurer')
     insurer_branch=fields.Many2one("res.partner",string="Insurer Branch")
-    holding_type=fields.Boolean("Holding")
+    holding_type=fields.Boolean("Holding",default=True)
     holding_company=fields.Many2one("res.partner",string="Holding Company")
+    policy_count=fields.Integer(compute='_compute_policy_count')
+    claim_count=fields.Integer(compute='_compute_claim_count')
+
+    @api.multi
+    def _compute_policy_count(self):
+        for partner in self:
+            operator = 'child_of' if partner.is_company else '='
+            partner.policy_count = self.env['policy.broker'].search_count(
+                [('customer', operator, partner.id)])
+    @api.multi
+    def show_partner_policies(self):
+        return {
+            'name': ('Policy'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'policy.broker',#model name ?yes true ok
+            'target': 'current',
+            'type': 'ir.actions.act_window',
+            'context': {'default_customer':self.id},
+            'domain': [('customer','=',self.id)]
+        }
+    @api.multi
+    def _compute_claim_count(self):
+        for partner in self:
+            operator = 'child_of' if partner.is_company else '='
+            partner.claim_count = self.env['insurance.claim'].search_count(
+                [('customer_policy', operator, partner.id)])
+    @api.multi
+    def show_partner_claim(self):
+        return {
+            'name': ('Claim'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'insurance.claim',#model name ?yes true ok
+            'target': 'current',
+            'type': 'ir.actions.act_window',
+            'context': {'default_customer_policy':self.id},
+            'domain': [('customer_policy','=',self.id)]
+        }
 

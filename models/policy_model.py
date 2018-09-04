@@ -49,34 +49,10 @@ class PolicyBroker(models.Model):
     @api.model
     def default_get(self, fields):
         res = super(PolicyBroker, self).default_get(fields)
+        if self._context.get('active_model') != 'crm.lead':
+            return res
         lead = self.env['crm.lead'].browse(self._context.get('active_id'))
 
-        # pass car
-        recordvehile = self.env['vehicle.object.opp'].search([('id', 'in', lead.objectcar.ids)])
-        records_car = []
-        for rec in recordvehile:
-            objectvehicle = (
-            0, 0, {'Man': rec.Man, ' model': rec.model, 'motor_cc': rec.motor_cc, "year_of_made": rec.year_of_made})
-            records_car.append(objectvehicle)
-
-        # .........
-
-        # passing persons......
-        recordperson = self.env['person.object.opp'].search([('id', 'in', lead.objectperson.ids)])
-        records_person = []
-        for rec in recordperson:
-            objectperson = (0, 0, {'name': rec.name, 'DOB': rec.DOB, 'job': rec.job})
-            records_person.append(objectperson)
-        # .........
-
-        # passing cargo...
-        recordcargo = self.env['cargo.object.opp'].search([('id', 'in', lead.objectcargo.ids)])
-        records_cargo = []
-        for rec in recordcargo:
-            objectcargo = (
-                0, 0, {'From': rec.From, 'To': rec.To, 'cargo_type': rec.cargo_type, "weight": rec.weight})
-            records_cargo.append(objectcargo)
-        # .......
 
         recordproposal = self.env['proposal.opp.bb'].search([('id', 'in', lead.proposal_opp.ids)])
         records_proposal = []
@@ -88,9 +64,6 @@ class PolicyBroker(models.Model):
         res['insurance_type'] = lead.insurance_type
         res['line_of_bussines'] = lead.LOB.id
         res['ins_type'] = lead.ins_type
-        res['objectperson'] = records_person
-        res['objectvehicle'] = records_car
-        res['objectcargo'] = records_cargo
         res['propoasl_ids'] = records_proposal
         res['customer'] = lead.partner_id.id
         res['salesperson'] = lead.user_id.id
@@ -98,6 +71,7 @@ class PolicyBroker(models.Model):
         return res
 
 
+<<<<<<< HEAD
     @api.model
     def default_get(self, fields):
         res = super(PolicyBroker, self).default_get(fields)
@@ -135,6 +109,8 @@ class PolicyBroker(models.Model):
         res['propoasl_ids'] = records_proposal
 
         return res
+=======
+>>>>>>> cb962d448862a8d489435064fcfef1ea333cafe1
 
 
     @api.onchange("term", "number")
@@ -205,9 +181,20 @@ class PolicyBroker(models.Model):
         if total > 100:
             raise ValidationError("Your share percentage must be under percentage")
 
+<<<<<<< HEAD
+=======
+    _sql_constraints = [('std_id_uniq', 'unique(std_id)', 'This policy number already exists !')]
 
-    edit_number = fields.Integer(string="Endorsement Number", readonly=True, index=True)
-    edit_decr = fields.Text(string='Endorsement Description', readonly=True)
+    # @api.model
+    # def create(self, vals):
+    #     seq = self.env['ir.sequence'].next_by_code('policy.broker') or '/'
+    #     vals['std_id'] = seq
+    #     return super(PolicyBroker, self).create(vals)
+>>>>>>> cb962d448862a8d489435064fcfef1ea333cafe1
+
+    edit_number = fields.Integer(string="Edit Number", readonly=True)
+    edit_decr = fields.Text(string='Edit Description', readonly=True)
+    ediet_number = fields.Char(string='Edit Policy Number')
 
     policy_number = fields.Char(string="Renewal Policy Number")
     renwal_check = fields.Boolean(string="Renewal")
@@ -344,7 +331,11 @@ class PolicyBroker(models.Model):
 class ExtraModel(models.Model):
     _name = "name.covers"
 
+<<<<<<< HEAD
     name = fields.Char(string='Name' )
+=======
+    name = fields.Char('')
+>>>>>>> cb962d448862a8d489435064fcfef1ea333cafe1
     check1 = fields.Many2one('insurance.product')
     check = fields.Boolean()
     sum_insure = fields.Float(string="SI")
@@ -352,10 +343,34 @@ class ExtraModel(models.Model):
     net_perimum = fields.Float(string="Net Perimum")
     risk_brokerd_id = fields.Many2one("new.risks")
     rel_policy_broker_id = fields.Many2one("proposal.bb")
-    rel_policy_brokerd_id = fields.Many2one("proposal.opp.bb")
+    # rel_policy_brokerd_id = fields.Many2one("proposal.opp.bb")
+    vechile=fields.Many2one('vehicle.object.opp')
+    person = fields.Many2one('person.object.opp')
+    cargo=fields.Many2one('cargo.object.opp')
+    selected=fields.Many2one('proposal.opp.bb')
+    risks=fields.Many2one('risks.opp')
 
 
 
+
+<<<<<<< HEAD
+
+=======
+    # @api.onchange('user_id')
+    # def onchange_user_id(self):
+    #   if self.user_id and self.env.uid != 1 :
+    #        return {'domain':{'user_id': [('id','in',[self.env.uid,1])]}}
+
+    # @api.multi
+    # @api.onchange('prod1')
+    # def coversname(self):
+    #     print('fvdsv')
+    #     if self.prod1:
+    #         print('vrennnnnnnn')
+    #         rec = self.env['insurance.product.coverage'].search(
+    #             [('product_id', '=', self.prod1.id)])
+    #         return  {'domain':{'name': [('id','in',rec.ids)]}}
+>>>>>>> cb962d448862a8d489435064fcfef1ea333cafe1
     @api.multi
     def _nameget(self):
         for rec in self:
