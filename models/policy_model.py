@@ -9,6 +9,43 @@ class PolicyBroker(models.Model):
     _name = "policy.broker"
     _rec_name = "std_id"
 
+    @api.multi
+    def create_proposal(self):
+        form_view = self.env.ref('insurance_broker_system_blackbelts.my_view_for_policy_form2')
+        return {
+            'name': ('policy Form2'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'views': [(form_view.id, 'form')],
+            'res_model': 'proposal.bb',
+            'target': 'current',
+            'type': 'ir.actions.act_window',
+            'context': {"default_proposal_policy":self.id
+
+            }
+        }
+
+    @api.multi
+    def Set_risks(self):
+        form_view = self.env.ref('insurance_broker_system_blackbelts.my_view_for_risk_form')
+        return {
+            'name': ('risk form'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'views': [(form_view.id, 'form')],
+            'res_model': "new.risks",
+            'target': 'current',
+            'type': 'ir.actions.act_window',
+            'context': {"default_policy_risk_id":self.id,"default_test":self.test
+
+                        }
+        }
+
+
+
+
+
+
     @api.model
     def default_get(self, fields):
         res = super(PolicyBroker, self).default_get(fields)
@@ -60,94 +97,20 @@ class PolicyBroker(models.Model):
         res['std_id'] = lead.policy_number
         return res
 
-    @api.model
-    def default_get(self, fields):
-        ress = super(PolicyBroker, self).default_get(fields)
-        lead = self.env['endorsement.edit'].browse(self._context.get('active_id'))
-        # pass car
-        recordvehile = self.env['vehicle.object'].search([('id', 'in', lead.number_policy.objectvehicle.ids)])
-        records_car = []
-        for rec in recordvehile:
-            objectvehicle = (
-                0, 0, {'Man': rec.Man, ' model': rec.model, 'motor_cc': rec.motor_cc, "year_of_made": rec.year_of_made})
-            records_car.append(objectvehicle)
-
-        # .........
-
-        # passing persons......
-        recordperson = self.env['person.object'].search([('id', 'in', lead.number_policy.objectperson.ids)])
-        records_person = []
-        for rec in recordperson:
-            objectperson = (0, 0, {'name': rec.name, 'DOB': rec.DOB, 'job': rec.job})
-            records_person.append(objectperson)
-        # # .........
-        #
-        # # passing cargo...
-        recordcargo = self.env['cargo.object'].search([('id', 'in', lead.number_policy.objectcargo.ids)])
-        records_cargo = []
-        for rec in recordcargo:
-            objectcargo = (
-                0, 0, {'From': rec.From, 'To': rec.To, 'cargo_type': rec.cargo_type, "weight": rec.weight})
-            records_cargo.append(objectcargo)
-        # # .......
-        #
-        recordproposal = self.env['proposal.bb'].search([('id', 'in', lead.number_policy.propoasl_ids.ids)])
-        records_proposal = []
-        for rec in recordproposal:
-            proposal_opp = (
-                0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
-            records_proposal.append(proposal_opp)
-
-        ress['std_id'] = lead.number_policy.std_id
-        # res['std_id'] = lead.newone
-        ress['customer'] = lead.number_policy.customer.id
-
-        ress['edit_number'] = lead.number_edit
-        ress['edit_decr'] = lead.reasonedit
-        # res['issue_date'] = lead.issue_date
-        # res['start_date'] = lead.start_date
-        # res['end_date'] = lead.end_date
-        ress['insurance_type'] = lead.number_policy.insurance_type
-        ress['line_of_bussines'] = lead.number_policy.line_of_bussines.id
-        ress['ins_type'] = lead.number_policy.ins_type
-
-        ress['objectperson'] = records_person
-        ress['objectvehicle'] = records_car
-        ress['objectcargo'] = records_cargo
-        ress['propoasl_ids'] = records_proposal
-        return ress
 
     @api.model
     def default_get(self, fields):
         res = super(PolicyBroker, self).default_get(fields)
         lead = self.env['renewal.again'].browse(self._context.get('active_id'))
-        # pass car
-        recordvehile = self.env['vehicle.object'].search([('id', 'in', lead.old_number.objectvehicle.ids)])
-        records_car = []
-        for rec in recordvehile:
-            objectvehicle = (
-                0, 0, {'Man': rec.Man, ' model': rec.model, 'motor_cc': rec.motor_cc, "year_of_made": rec.year_of_made})
-            records_car.append(objectvehicle)
 
-        # .........
+        riskrecord = self.env["new.risks"].search([('id', 'in', lead.old_number.new_risk_ids.ids)])
+        records_cargoo = []
+        for rec in riskrecord:
+            objectcargoo = (
+                0, 0, {'risk': rec.risk, 'risk_description': rec.risk_description})
+            records_cargoo.append(objectcargoo)
 
-        # passing persons......
-        recordperson = self.env['person.object'].search([('id', 'in', lead.old_number.objectperson.ids)])
-        records_person = []
-        for rec in recordperson:
-            objectperson = (0, 0, {'name': rec.name, 'DOB': rec.DOB, 'job': rec.job})
-            records_person.append(objectperson)
-        # # .........
-        #
-        # # passing cargo...
-        recordcargo = self.env['cargo.object'].search([('id', 'in', lead.old_number.objectcargo.ids)])
-        records_cargo = []
-        for rec in recordcargo:
-            objectcargo = (
-                0, 0, {'From': rec.From, 'To': rec.To, 'cargo_type': rec.cargo_type, "weight": rec.weight})
-            records_cargo.append(objectcargo)
-        # # .......
-        #
+
         recordproposal = self.env['proposal.bb'].search([('id', 'in', lead.old_number.propoasl_ids.ids)])
         records_proposal = []
         for rec in recordproposal:
@@ -160,16 +123,17 @@ class PolicyBroker(models.Model):
         res['issue_date'] = lead.issue_date
         res['start_date'] = lead.start_date
         res['end_date'] = lead.end_date
+        res['test'] = lead.old_number.test
+
         res['customer'] = lead.old_number.customer.id
         res['holding_cam'] = lead.old_number.holding_cam
         res['insurance_type'] = lead.old_number.insurance_type
         res['line_of_bussines'] = lead.old_number.line_of_bussines.id
         res['ins_type'] = lead.old_number.ins_type
 
-        res['objectperson'] = records_person
-        res['objectvehicle'] = records_car
-        res['objectcargo'] = records_cargo
+        res['new_risk_ids'] = records_cargoo
         res['propoasl_ids'] = records_proposal
+
         return res
 
 
@@ -241,13 +205,6 @@ class PolicyBroker(models.Model):
         if total > 100:
             raise ValidationError("Your share percentage must be under percentage")
 
-    # _sql_constraints = [('std_id_uniq', 'unique(std_id)', 'This policy number already exists !')]
-
-    # @api.model
-    # def create(self, vals):
-    #     seq = self.env['ir.sequence'].next_by_code('policy.broker') or '/'
-    #     vals['std_id'] = seq
-    #     return super(PolicyBroker, self).create(vals)
 
     edit_number = fields.Integer(string="Endorsement Number", readonly=True, index=True)
     edit_decr = fields.Text(string='Endorsement Description', readonly=True)
@@ -288,16 +245,10 @@ class PolicyBroker(models.Model):
                                   'Policy Duration', track_visibility='onchange')
     line_of_bussines = fields.Many2one('insurance.line.business', string='Line of business',
                                        domain="[('insurance_type','=',insurance_type)]")
-
-    objectvehicle = fields.One2many('vehicle.object', 'object_vehicle',
-                                    string='Vehicle')  # where you are using this fiedl ? in xml
-    objectperson = fields.One2many('person.object', 'object_person', string='person')
-    objectcargo = fields.One2many('cargo.object', 'object_cargo', string='cargo')
-    objectgroup = fields.One2many('group.group', 'object_group', string='Group')
     test = fields.Char()
     group = fields.Boolean()
 
-    propoasl_ids = fields.One2many("proposal.bb", "proposal_policy")
+    propoasl_ids = fields.One2many("proposal.bb", "proposal_policy", readonly=True)
     selected_proposal = fields.One2many('proposal.bb', 'select', compute='proposalselected')
     prop_id = fields.Integer(readonly=True)
     covers = fields.One2many(related='selected_proposal.covers_rel_ids')
@@ -307,9 +258,10 @@ class PolicyBroker(models.Model):
     fixed_commision = fields.Float(string="Fixed Brokerage", compute="_compute_fixed_commision")
     earl_commision = fields.Float(string="Early Collection" , compute="_compute_earl_commision")
     total_commision = fields.Float(string="total Brokerage", compute="_compute_sum")
+    new_risk_ids = fields.One2many("new.risks", 'policy_risk_id', string='RISKS' ,readonly=True)
+
 
     @api.multi
-    # @api.onchange("selected_proposal.premium")
     def _compute_t_premium(self):
         for rec in self:
             if rec.selected_proposal:
@@ -364,21 +316,10 @@ class PolicyBroker(models.Model):
             elif rec.onlayer == "l5":
                 rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer5 * rec.t_permimum) / 100
 
-    # @api.multi
-    # @api.onchange('selected_proposal ')
-    # def _compute_session_costs_control(self):
-    #     for record in self:
-    #         record.commision = (record.selected_proposal.product_pol.commision_id.product_commision * record.t_permimum)/100
 
     @api.multi
     @api.onchange("salesperson")
     def onchange_objectx(self):
-        # x = self.env['crm.team'].search([('user_id', '=', self.salesperson), ('member_ids', '=', self.salesperson)])
-        # x = self.env["crm.team"].browse(["user_id"])
-        # y = self.env["hr.department"].browse(["parent_id"])
-        # for rec in self.rel_user.name:
-        #     if rec.salesperson in rec.rel_user.member_ids:
-        #         leader = rec.rel_user.user_id
         for rec in self:
             self.rel_com_detail_id = [
                 (0, 0, {
@@ -403,14 +344,17 @@ class PolicyBroker(models.Model):
 class ExtraModel(models.Model):
     _name = "name.covers"
 
-    name = fields.Char(string='Name')
+    name = fields.Char(string='Name' )
     check1 = fields.Many2one('insurance.product')
     check = fields.Boolean()
     sum_insure = fields.Float(string="SI")
     rate = fields.Float(string="Rate")
     net_perimum = fields.Float(string="Net Perimum")
+    risk_brokerd_id = fields.Many2one("new.risks")
     rel_policy_broker_id = fields.Many2one("proposal.bb")
     rel_policy_brokerd_id = fields.Many2one("proposal.opp.bb")
+
+
 
     @api.multi
     def _nameget(self):
@@ -423,13 +367,13 @@ class ExtraModel(models.Model):
         for rec in self:
             rec.net_perimum = (rec.sum_insure * rec.rate) / 100
 
-    @api.multi
-    def unlink(self):
-        for rec in self:
-            if rec.name.required:
-                raise ValidationError(
-                    ('You cannot delete this record .'))
-            return super(ExtraModel, self).unlink()
+    # @api.multi
+    # def unlink(self):
+    #     for rec in self:
+    #         if rec.name.required:
+    #             raise ValidationError(
+    #                 ('You cannot delete this record .'))
+    #         return super(ExtraModel, self).unlink()
 
 
 class ShareCommition(models.Model):

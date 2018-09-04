@@ -1,0 +1,57 @@
+<odoo>
+    <data>
+        <record id="my_view_for_risk_form" model="ir.ui.view">
+            <field name="name">risk form</field>
+            <field name="model">new.risks</field>
+            <field name="arch" type="xml">
+                <form string="my new risk view">
+
+
+                    <div class="o_row">
+                        <label for="risk"/>
+                        <field name="risk"  />
+                        <label for="risk_description"/>
+                        <field name="risk_description"  />
+                        <field name="test"   invisible="1"/>
+                    </div>
+
+                    <group>
+                        <group string="Vehicle" attrs="{'invisible': [('test', '!=', 'vehicle')]}" >
+                            <field name="car_tybe" attrs="{'invisible': [('test', '!=', 'vehicle')]}" />
+                            <field name="motor_cc" attrs="{'invisible': [('test', '!=', 'vehicle')]}" />
+                            <field name="year_of_made" attrs="{'invisible': [('test', '!=', 'vehicle')]}" />
+                            <field name="Man" attrs="{'invisible': [('test', '!=', 'vehicle')]}"  />
+                            <field name="model"  attrs="{'invisible': [('test', '!=', 'vehicle')]}" />
+                        </group>
+
+
+                        <group string="Person" attrs="{'invisible': [('test', '!=', 'person')]}">
+                            <field name="name"  attrs="{'invisible': [('test', '!=', 'person')]}"  />
+                            <field name="DOB"    attrs="{'invisible': [('test', '!=', 'person')]}"/>
+                            <field name="job"   attrs="{'invisible': [('test', '!=', 'person')]}"/>
+                        </group>
+
+
+                        <group string="Cargo"  attrs="{'invisible': [('test', '!=', 'cargo')]}">
+                            <field name="From"   attrs="{'invisible': [('test', '!=', 'cargo')]}" />
+                            <field name="To"   attrs="{'invisible': [('test', '!=', 'cargo')]}" />
+                            <field name="cargo_type"   attrs="{'invisible': [('test', '!=', 'cargo')]}" />
+                            <field name="weight"    attrs="{'invisible': [('test', '!=', 'cargo')]}"/>
+
+                        </group>
+
+                        <!--<group>-->
+                        <!--<field name="group_name"   />-->
+                        <!--<field name="count"  widget="float" type="char"   />-->
+                        <!--<field name="file"    />-->
+
+                        <!--</group>-->
+
+
+                    </group>
+
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

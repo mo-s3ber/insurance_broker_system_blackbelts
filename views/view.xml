@@ -5,6 +5,11 @@
             <field name="model">policy.broker</field>
             <field name="arch" type="xml">
                 <form string="my policy form">
+                    <header>
+                        <button name="create_proposal" string="Generate Proposal" class="oe_highlight" type="object" />
+                        <button name="Set_risks" string="Set Risks" class="oe_highlight" type="object" />
+
+                    </header>
                     <sheet>
                         <group>
                             <group string="Header">
@@ -48,100 +53,60 @@
                                 <field name="group"  attrs="{'invisible': ['|',('ins_type', '!=', 'Group')]}"/>
                             </group>
 
-                            <label string="vehicle" attrs="{'invisible': [('test', '!=', 'vehicle')]}" style="font-size: 20px"/>
-                            <label string="Person" attrs="{'invisible': [('test', '!=', 'person')]}" style="font-size: 20px"/>
-                            <label string="Cargo" attrs="{'invisible': [('test', '!=', 'cargo')]}" style="font-size: 20px"/>
 
-                            <field name="objectvehicle"  string ='car' mode="tree,kanban" attrs="{'invisible': ['&amp;','|',('test', '!=', 'vehicle'),('ins_type', '!=', 'Individual'),'|',('test', '!=', 'vehicle'),'|',('ins_type', '!=', 'Group'),('group', '=', True)]}" >
+
+                            <!--<label string="vehicle" attrs="{'invisible': [('test', '!=', 'vehicle')]}" style="font-size: 20px"/>-->
+                            <!--<label string="Person" attrs="{'invisible': [('test', '!=', 'person')]}" style="font-size: 20px"/>-->
+                            <!--&lt;!&ndash;<label string="Cargo" attrs="{'invisible': [('test', '!=', 'cargo')]}" style="font-size: 20px"/>&ndash;&gt;mode="tree,kanban" attrs="{'invisible': ['&amp;','|',('test', '!=', 'vehicle'),('ins_type', '!=', 'Individual'),'|',('test', '!=', 'vehicle'),'|',('ins_type', '!=', 'Group'),('group', '=', True)]}" -->
+
+                            <field name="new_risk_ids"  nolabel="1" >
 
                                 <tree >
-                                    <field name="car_tybe"  />
-                                    <field name="motor_cc"  />
-                                    <field name="year_of_made"  />
-                                    <field name="Man"  />
-                                    <field name="model"  />
-
+                                    <field name="risk"  />
+                                    <field name="risk_description"  />
                                 </tree>
                                 <form>
                                     <group>
-                                        <field name="car_tybe"  />
-                                        <field name="motor_cc"  />
-                                        <field name="year_of_made"  />
-                                        <field name="Man"  />
-                                        <field name="model"  />
-                                    </group>
-                                </form>
+                                        <group>
+                                             <field name="risk"  />
+                                    <field name="risk_description"  />
+                                        </group>
+                                        <group>
+                                            <field name="car_tybe"  />
+                                            <field name="motor_cc"  />
+                                            <field name="year_of_made"  />
+                                            <field name="Man"  />
+                                            <field name="model"  />
+                                        </group>
 
 
+                                        <group>
+                                            <field name="name"  />
+                                            <field name="DOB"  />
+                                            <field name="job"  />
+                                        </group>
 
-                            </field>
 
-                            <field name="objectperson" string="person" mode="tree,kanban" attrs="{'invisible': ['&amp;','|',('test', '!=', 'person'),('ins_type', '!=', 'Individual'),'|',('test', '!=', 'person'),'|',('ins_type', '!=', 'Group'),('group', '=', True)]}" >
-                                <tree  >
-                                    <field name="name"  />
-                                    <field name="DOB"  />
-                                    <field name="job"  />
-                                    <!-- <field name="btn1"/>
-                                     <button name="get_proposal_person" string="View Proposal" class="oe_highlight" type="object"/>-->
+                                        <group>
+                                            <field name="From"  />
+                                            <field name="To"  />
+                                            <field name="cargo_type"  />
+                                            <field name="weight"  />
 
-                                </tree>
-                                <form>
-                                    <group>
-                                        <field name="name"  />
-                                        <field name="DOB"  />
-                                        <field name="job"  />
-                                    </group>
-                                </form>
+                                        </group>
 
-                            </field>
+                                        <group>
+                                            <field name="group_name"   />
+                                            <field name="count"  widget="float" type="char"   />
+                                            <field name="file"    />
 
-                            <field name="objectcargo" string="Cargo" mode="tree,kanban" attrs="{'invisible': ['&amp;','|',('test', '!=', 'cargo'),('ins_type', '!=', 'Individual'),'|',('test', '!=', 'cargo'),'|',('ins_type', '!=', 'Group'),('group', '=', True)]}">
-                                <tree>
-                                    <field name="From"  />
-                                    <field name="To"  />
-                                    <field name="cargo_type"  />
-                                    <field name="weight"  />
-                                    <!--<button name="get_proposal_cargo" string="View Proposal" class="oe_highlight" type="object"/>-->
+                                        </group>
 
-                                </tree>
-                                <form>
-                                    <group>
-                                        <field name="From"  />
-                                        <field name="To"  />
-                                        <field name="cargo_type"  />
-                                        <field name="weight"  />
+
                                     </group>
                                 </form>
 
                             </field>
-
-
-                            <field name="objectgroup"  string="Group" mode="tree,kanban" attrs="{'invisible': ['|',('ins_type', '!=', 'Group'),('group', '!=', True)]}" >
-
-                                <tree>
-                                    <field name="group_name"   />
-                                    <field name="count"  widget="float" type="char"   />
-                                    <field name="file"    />
-                                    <!-- <button name="get_proposal_group" string="View Proposal" class="oe_highlight" type="object"/>-->
-
-
-                                </tree>
-                                <form>
-                                    <group>
-                                        <field name="group_name"   />
-                                        <field name="count"  widget="float" type="char"   />
-                                        <field name="file"    />
-
-                                    </group>
-
-                                </form>
-
-                            </field>
-
-
-
-
-
 
                         </group>
 
@@ -157,75 +122,196 @@
 
 
                                     </tree>
-                                    <form>
+                                    <!--<form>-->
 
-                                        <div class="o_row">
-                                            <label for="Company"/>
-                                            <field name="Company"/>
-                                            <label for="product_pol"/>
-                                            <field name="product_pol"/>
-                                            <label for="premium"/>
-                                            <field name="premium"/>
-                                            <field name="test" invisible="1"/>
-                                            <field name="group" invisible="1"/>
-                                        </div>
-                                        <field name="car_proposal_test" attrs="{'invisible': ['|',('test', '!=', 'vehicle'),('group', '=', True)]}">
-                                            <tree >
-                                                <field name="Man"/>
-                                                <field name="model"/>
-                                                <field name="motor_cc"/>
-                                                <field name="year_of_made"/>
-                                            </tree>
-                                        </field>
-                                        <field name="person_proposal_test"  attrs="{'invisible': ['|',('test', '!=', 'person'),('group', '=', True)]}" >
+                                        <!--<div class="o_row">-->
+                                            <!--<label for="Company"/>-->
+                                            <!--<field name="Company"/>-->
+                                            <!--<label for="product_pol"/>-->
+                                            <!--<field name="product_pol"/>-->
+                                            <!--<label for="premium"/>-->
+                                            <!--<field name="premium"/>-->
+                                            <!--<field name="test" invisible="1"/>-->
+                                            <!--<field name="group" invisible="1"/>-->
+                                        <!--</div>-->
+                                        <!--<field name="car_proposal_test" attrs="{'invisible': ['|',('test', '!=', 'vehicle'),('group', '=', True)]}">-->
+                                            <!--<tree >-->
+                                                <!--<field name="Man"/>-->
+                                                <!--<field name="model"/>-->
+                                                <!--<field name="motor_cc"/>-->
+                                                <!--<field name="year_of_made"/>-->
+                                                <!--<field name="covers_car"  >-->
+                                                    <!--<tree>-->
+                                                        <!--<field name="name"/>-->
+                                                        <!--<field name="check"/>-->
+                                                        <!--<field name="sum_insure"/>-->
+                                                        <!--<field name="rate"/>-->
+                                                        <!--<field name="net_perimum"/>-->
+                                                    <!--</tree>-->
+                                                <!--</field>-->
+                                            <!--</tree>-->
+                                            <!--<form>-->
 
-                                            <tree>
-                                                <field name="name"  />
-                                                <field name="DOB"  />
-                                                <field name="job"  />
-                                            </tree>
-                                        </field>
-                                        <field name="cargo_proposal_test"  attrs="{'invisible': ['|',('test', '!=', 'cargo'),('group', '=', True)]}" >
+                                                <!--<field name="covers_car"   >-->
+                                                    <!--<tree>-->
+                                                        <!--<field name="name"/>-->
+                                                        <!--<field name="check"/>-->
+                                                        <!--<field name="sum_insure"/>-->
+                                                        <!--<field name="rate"/>-->
+                                                        <!--<field name="net_perimum"/>-->
+                                                    <!--</tree>-->
+                                                    <!--<form>-->
+                                                        <!--<group>-->
+                                                            <!--<field name="name"   />-->
+                                                            <!--&lt;!&ndash;context="{'default_name': 'insurance_broker_system_blackbelts.product_pol.coverage.Name'}"&ndash;&gt;-->
+                                                            <!--<field name="check"/>-->
+                                                            <!--<field name="sum_insure"/>-->
+                                                            <!--<field name="rate"/>-->
+                                                            <!--<field name="net_perimum"/>-->
+                                                        <!--</group>-->
+                                                    <!--</form>-->
 
-                                            <tree>
-                                                <field name="From"  />
-                                                <field name="To"  />
-                                                <field name="cargo_type"  />
-                                                <field name="weight"  />
-                                            </tree>
-                                        </field>
-                                        <field name="group_proposal"  attrs="{'invisible': [('group', '!=', True)]}" >
+                                                <!--</field>-->
+                                            <!--</form>-->
+                                        <!--</field>-->
+                                        <!--<field name="person_proposal_test"  attrs="{'invisible': ['|',('test', '!=', 'person'),('group', '=', True)]}" >-->
 
-                                            <tree>
-                                                <field name="group_name"   />
-                                                <field name="count"  widget="float" type="char"   />
-                                                <field name="file"    />
-                                            </tree>
-                                        </field>
+                                            <!--<tree>-->
+                                                <!--<field name="name"  />-->
+                                                <!--<field name="DOB"  />-->
+                                                <!--<field name="job"  />-->
+                                                <!--<field name="covers_person" >-->
+                                                    <!--<tree>-->
+                                                        <!--<field name="name"/>-->
+                                                        <!--<field name="check"/>-->
+                                                        <!--<field name="sum_insure"/>-->
+                                                        <!--<field name="rate"/>-->
+                                                        <!--<field name="net_perimum"/>-->
+                                                    <!--</tree>-->
+                                                <!--</field>-->
+                                            <!--</tree>-->
+                                            <!--<form>-->
+                                                <!--<field name="covers_person" >-->
+                                                    <!--<tree>-->
+                                                        <!--<field name="name"/>-->
+                                                        <!--<field name="check"/>-->
+                                                        <!--<field name="sum_insure"/>-->
+                                                        <!--<field name="rate"/>-->
+                                                        <!--<field name="net_perimum"/>-->
+                                                    <!--</tree>-->
+                                                    <!--<form>-->
+                                                        <!--<group>-->
+                                                            <!--<field name="name"/>-->
+                                                            <!--<field name="check"/>-->
+                                                            <!--<field name="sum_insure"/>-->
+                                                            <!--<field name="rate"/>-->
+                                                            <!--<field name="net_perimum"/>-->
+                                                        <!--</group>-->
+                                                    <!--</form>-->
+                                                <!--</field>-->
+                                            <!--</form>-->
+                                        <!--</field>-->
+                                        <!--<field name="cargo_proposal_test"  attrs="{'invisible': ['|',('test', '!=', 'cargo'),('group', '=', True)]}" >-->
 
-                                        <field name="covers_rel_ids">
-                                            <tree>
-                                                <field name="check" invisible="1"  />
-                                                <field name="name" attrs="{'readonly': [('check', '=', True)]}"  force_save="1"  />
-                                                <field name="sum_insure"  attrs="{'readonly': [('check', '=', True)]}" force_save="1"  />
-                                                <field name="rate" attrs="{'readonly': [('check', '=', True)]}"  force_save="1"  />
-                                                <field name="net_perimum" attrs="{'readonly': [('check', '=', True)]}" force_save="1"   />
+                                            <!--<tree>-->
+                                                <!--<field name="From"  />-->
+                                                <!--<field name="To"  />-->
+                                                <!--<field name="cargo_type"  />-->
+                                                <!--<field name="weight"  />-->
+                                                <!--<field name="covers_cargo" >-->
+                                                    <!--<tree>-->
+                                                        <!--<field name="name"/>-->
+                                                        <!--<field name="check"/>-->
+                                                        <!--<field name="sum_insure"/>-->
+                                                        <!--<field name="rate"/>-->
+                                                        <!--<field name="net_perimum"/>-->
+                                                    <!--</tree>-->
+                                                <!--</field>-->
+                                            <!--</tree>-->
+                                            <!--<form>-->
+                                                <!--<field name="covers_cargo" >-->
+                                                    <!--<tree>-->
+                                                        <!--<field name="name"/>-->
+                                                        <!--<field name="check"/>-->
+                                                        <!--<field name="sum_insure"/>-->
+                                                        <!--<field name="rate"/>-->
+                                                        <!--<field name="net_perimum"/>-->
+                                                    <!--</tree>-->
+                                                    <!--<form>-->
+                                                        <!--<group>-->
+                                                            <!--<field name="name"/>-->
+                                                            <!--<field name="check"/>-->
+                                                            <!--<field name="sum_insure"/>-->
+                                                            <!--<field name="rate"/>-->
+                                                            <!--<field name="net_perimum"/>-->
+                                                        <!--</group>-->
+                                                    <!--</form>-->
+                                                <!--</field>-->
 
-                                            </tree>
-                                            <form>
-                                                <group>
-                                                    <field name="check" invisible="0" />
-                                                    <field name="name" attrs="{'readonly': [('check', '=', True)]}" force_save="1"  />
-                                                    <field name="sum_insure"  attrs="{'readonly': [('check', '=', True)]}" force_save="1"  />
-                                                    <field name="rate" attrs="{'readonly': [('check', '=', True)]}"  force_save="1"  />
-                                                    <field name="net_perimum"  attrs="{'readonly': [('check', '=', True)]}" force_save="1" />
+                                            <!--</form>-->
+                                        <!--</field>-->
+                                        <!--<field name="group_proposal"  attrs="{'invisible': [('group', '!=', True)]}" >-->
 
-                                                </group>
-                                            </form>
-                                        </field>
+                                            <!--<tree>-->
+                                                <!--<field name="group_name"   />-->
+                                                <!--<field name="count"  widget="float" type="char"   />-->
+                                                <!--<field name="file"    />-->
+                                                <!--<field name="covers_group" >-->
+                                                    <!--<tree>-->
+                                                        <!--<field name="name"/>-->
+                                                        <!--<field name="check"/>-->
+                                                        <!--<field name="sum_insure"/>-->
+                                                        <!--<field name="rate"/>-->
+                                                        <!--<field name="net_perimum"/>-->
+                                                    <!--</tree>-->
+                                                <!--</field>-->
+                                            <!--</tree>-->
+                                            <!--<form>-->
+                                                <!--<field name="covers_group" >-->
+                                                    <!--<tree>-->
+                                                        <!--<field name="name"/>-->
+                                                        <!--<field name="check"/>-->
+                                                        <!--<field name="sum_insure"/>-->
+                                                        <!--<field name="rate"/>-->
+                                                        <!--<field name="net_perimum"/>-->
+                                                    <!--</tree>-->
+                                                    <!--<form>-->
+                                                        <!--<group>-->
+                                                            <!--<field name="name"/>-->
+                                                            <!--<field name="check"/>-->
+                                                            <!--<field name="sum_insure"/>-->
+                                                            <!--<field name="rate"/>-->
+                                                            <!--<field name="net_perimum"/>-->
+                                                        <!--</group>-->
+
+                                                    <!--</form>-->
+                                                <!--</field>-->
+                                            <!--</form>-->
+                                        <!--</field>-->
+
+                                        <!--<field name="covers_rel_ids">-->
+                                            <!--<tree>-->
+                                                <!--<field name="check" invisible="1"  />-->
+                                                <!--<field name="name" attrs="{'readonly': [('check', '=', True)]}"  force_save="1"  />-->
+                                                <!--<field name="sum_insure"  attrs="{'readonly': [('check', '=', True)]}" force_save="1"  />-->
+                                                <!--<field name="rate" attrs="{'readonly': [('check', '=', True)]}"  force_save="1"  />-->
+                                                <!--<field name="net_perimum" attrs="{'readonly': [('check', '=', True)]}" force_save="1"   />-->
+
+                                            <!--</tree>-->
+                                            <!--<form>-->
+                                                <!--<group>-->
+                                                    <!--<field name="check" invisible="0" />-->
+                                                    <!--<field name="name" attrs="{'readonly': [('check', '=', True)]}" force_save="1"  />-->
+                                                    <!--<field name="sum_insure"  attrs="{'readonly': [('check', '=', True)]}" force_save="1"  />-->
+                                                    <!--<field name="rate" attrs="{'readonly': [('check', '=', True)]}"  force_save="1"  />-->
+                                                    <!--<field name="net_perimum"  attrs="{'readonly': [('check', '=', True)]}" force_save="1" />-->
+
+                                                <!--</group>-->
+                                            <!--</form>-->
+                                        <!--</field>-->
 
 
-                                    </form>
+                                    <!--</form>-->
 
                                 </field>
 
@@ -319,8 +405,6 @@
                                         <field name="paid" />
                                     </tree>
                                 </field>
-                            </page>
-                            <page string='Invoice'>
                             </page>
                         </notebook>
                     </sheet>

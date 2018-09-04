@@ -2,41 +2,83 @@ from odoo import api, fields, models
 
 class Proposals(models.Model):
     _name='proposal.bb'
+    _rec_name="Company"
+
+
+
+
+
+
+
+
+
 
     proposal_policy=fields.Many2one("policy.broker")
     Company = fields.Many2one('res.partner', domain="[('insurer_type','=',1)]", string="Insurer")
     product_pol = fields.Many2one('insurance.product',domain="[('insurer','=',Company)]", string="Product")
-    premium = fields.Float('Premium')
+    premium = fields.Float('Premium', compute="compute_premiume")
     test=fields.Char(string='type')
     group = fields.Boolean('Groups')
-    # ben=fields.One2many(related='product_pol.coverage', invisible=True)
-    covers_rel_ids = fields.One2many("name.covers", "rel_policy_broker_id")
+    covers_rel_ids = fields.One2many("name.covers", "rel_policy_broker_id",compute="compute_covers")
+    bool = fields.Boolean()
+    new_proposal_test_ids = fields.One2many("new.risks", 'proposal__risk_id',readonly=True)
+    risk_proposal_select_id = fields.Many2one("new.risks")
+    select = fields.Many2one('policy.broker')
 
     @api.multi
-    @api.onchange("covers_rel_ids")
-    def _check_preimum(self):
-        for rec in self:
-            total = 0.0
-            for reco in rec.covers_rel_ids:
-                total += reco.net_perimum
+    @api.onchange('Company')
+    def get_carrrr_proposal(self):
+        result = []
+        for car in self.proposal_policy.new_risk_ids:
+            result.append( car.id )
 
-            rec.premium = total
+        self.new_proposal_test_ids = [(6,0, result)]
 
-    @api.multi
-    @api.onchange("Company","product_pol")
-    def onchange_num_covers_rel_ids(self):
-        ids=self.env['insurance.product.coverage'].search([('product_id', '=',self.product_pol.id)])
-       # print(ids)
-        res=[]
-        for rec in ids:
-            res.append((0, 0, {
-                            "name": rec.Name,
-                            "sum_insure": rec.defaultvalue,
-                            "check":rec.readonly,
-                           # "rate": rec.product_id.name_cover_ids.covers_rel_ids.rate,
-                            "net_perimum": rec.readonly and rec.defaultvalue
-                        }))
-        self.covers_rel_ids = res
+    @api.onchange('product_pol')
+    def setcoversweee_person(self):
+        print('i enter')
+        if self.new_proposal_test_ids:
+            print('xxx')
+            for person in self.new_proposal_test_ids:
+                res = []
+                person.name_cover_risk_ids=False
+                ids = self.env['insurance.product.coverage'].search(
+                    [('product_id', '=', self.product_pol.id)])
+                for rec in ids:
+                    res.append((0, 0, {
+                        "name": rec.Name,
+                        "sum_insure": rec.defaultvalue,
+                        "check": rec.readonly,
+                        "net_perimum": rec.readonly and rec.defaultvalue
+                    }))
+                person.name_cover_risk_ids = res
+
+    @api.one
+    def compute_covers(self):
+        print("old")
+        for lead in self:
+            covers_ids = []
+            if lead.new_proposal_test_ids:
+                for rec in lead.new_proposal_test_ids:
+                    covers_ids = rec[0].name_cover_risk_ids.ids
+                    for record in lead.risk_proposal_select_id:
+                        covers_ids = record.name_cover_risk_ids.ids
+            lead.covers_rel_ids = [(6, 0, covers_ids)]
+
+
+
+    @api.one
+    @api.depends("product_pol")
+    def compute_premiume(self):
+        total=0.0
+        for line in self.new_proposal_test_ids:
+            print("iii")
+            for rec in line.name_cover_risk_ids:
+                total += rec.net_perimum
+        self.premium=total
+
+
+
 
 
 
@@ -49,28 +91,23 @@ class Proposals(models.Model):
     def setgroup(self):
         self.group = self.proposal_policy.group
 
-    # car_proposal_test = fields.One2many('vehicle.object.opp', 'proposal_car_opp', compute=get_car_proposal)
-    # person_proposal_test = fields.One2many('person.object.opp', 'proposal_person_opp', compute=get_person_proposal)
-    # cargo_proposal_test = fields.One2many('cargo.object.opp', 'proposal_cargo_opp', compute=get_cargo_proposal)
-    # group_proposal = fields.One2many('group.group.opp', 'proposal_group_opp', string='group proposal', readonly=True)
 
     @api.multi
-    @api.depends('Company')
+    @api.onchange('Company')
     def get_car_proposal(self):
         result = []
         for car in self.proposal_policy.objectvehicle:
             result.append((0, 0, {
-                'Man': car.Man, ' model': car.model, 'motor_cc': car.motor_cc, "year_of_made": car.year_of_made
+                "car_tybe": car.car_tybe,'motor_cc': car.motor_cc, "year_of_made": car.year_of_made,' model': car.model, 'Man': car.Man
             }))
 
         self.car_proposal_test = result
 
     @api.multi
-    @api.depends('Company')
+    @api.onchange('Company')
     def get_person_proposal(self):
         result = []
-        # import pdb;
-        # pdb.set_trace()test check for other is it working or not
+
         for person in self.proposal_policy.objectperson:
             result.append((0, 0, {
                 'name': person.name, 'DOB': person.DOB, 'job': person.job
@@ -79,7 +116,7 @@ class Proposals(models.Model):
         self.person_proposal_test = result
 
     @api.multi
-    @api.depends('Company')
+    @api.onchange('Company')
     def get_cargo_proposal(self):
         result = []
         for cargo in self.proposal_policy.objectcargo:
@@ -89,46 +126,15 @@ class Proposals(models.Model):
 
         self.cargo_proposal_test = result
 
-    select=fields.Many2one('policy.broker')
-    car_proposal_test = fields.One2many('vehicle.object', 'proposal_car', compute=get_car_proposal)
-    person_proposal_test = fields.One2many('person.object', 'proposal_person',compute=get_person_proposal )
-    cargo_proposal_test = fields.One2many('cargo.object', 'proposal_cargo', compute=get_cargo_proposal)
-    group_proposal = fields.One2many('group.group', 'proposal_group', string='group proposal', readonly=True)
+
+
 
     @api.multi
     def select_proposal(self):
         # self.proposal_policy.test1 = True
         self.proposal_policy.prop_id = self.id
 
-    @api.onchange('Company')
-    def person(self):
-        ids = self.env['person.object'].search([('id', 'in',
-                                                 self.proposal_policy.objectperson.ids)]).ids  # can you please let me know what are redcord the return this sarch....
-
-        print("**********************************")
-        print(ids)
-
-        self.person_proposal = [(6, 0, ids)]
-
-    @api.onchange('Company')
-    def cargo(self):
-        ids = self.env['cargo.object'].search([('id', 'in',
-                                                self.proposal_policy.objectcargo.ids)]).ids  # can you please let me know what are redcord the return this sarch....
-
-
-        self.cargo_proposal = [(6, 0, ids)]
-
-    @api.onchange('Company')
-    def showgroup(self):
-        ids = self.env['group.group'].search([('id', 'in',
-                                               self.proposal_policy.objectgroup.ids)]).ids
-        self.group_proposal = [(6, 0, ids)]
-
-    @api.onchange('Company')
-    def showgroup(self):
-        ids = self.env['group.group'].search([('id', 'in',
-                                               self.proposal_policy.objectvehicle.ids)]).ids
-        self.car_proposal = [(6, 0, ids)]
-
-
-
+    @api.multi
+    def create_covers(self):
+        self.bool = True
+        return True
