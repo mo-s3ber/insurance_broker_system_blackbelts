@@ -46,6 +46,7 @@ class claimAction(models.Model):
 
 class coverage(models.Model):
     _name='insurance.product.coverage'
+    _rec_name="Name"
 
     Name=fields.Char('Cover Name')
     defaultvalue=fields.Char('Default Sum Insured')
