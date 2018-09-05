@@ -27,7 +27,7 @@ class claimPolicy(models.Model):
     customer_policy=fields.Many2one('res.partner',related='policy_number.customer',string='Customer',store=True,readonly=True)
     insured=fields.Char(string='Insured',store=True)
     beneficiary = fields.Char(string='Beneficiary', store=True,readonly=True)
-    currencycode = fields.Char(string='Currencycode', store=True,readonly=True)
+    currencycode = fields.Char(string='Currency Code', store=True,readonly=True)
     lob = fields.Many2one('insurance.line.business',related='policy_number.line_of_bussines', string='Line of Business', store=True,readonly=True)
     product = fields.Many2one('insurance.product',related='policy_number.selected_proposal.product_pol', string='Product', store=True,
                               readonly=True)
