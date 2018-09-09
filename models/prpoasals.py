@@ -91,44 +91,44 @@ class Proposals(models.Model):
     def setgroup(self):
         self.group = self.proposal_policy.group
 
-
-    @api.multi
-    @api.onchange('Company')
-    def get_car_proposal(self):
-        result = []
-        for car in self.proposal_policy.objectvehicle:
-            result.append((0, 0, {
-                "car_tybe": car.car_tybe,'motor_cc': car.motor_cc, "year_of_made": car.year_of_made,' model': car.model, 'Man': car.Man
-            }))
-
-        self.car_proposal_test = result
-
-    @api.multi
-    @api.onchange('Company')
-    def get_person_proposal(self):
-        result = []
-
-        for person in self.proposal_policy.objectperson:
-            result.append((0, 0, {
-                'name': person.name, 'DOB': person.DOB, 'job': person.job
-            }))
-
-        self.person_proposal_test = result
-
-    @api.multi
-    @api.onchange('Company')
-    def get_cargo_proposal(self):
-        result = []
-        for cargo in self.proposal_policy.objectcargo:
-            result.append((0, 0, {
-                'From': cargo.From, 'To': cargo.To, 'cargo_type': cargo.cargo_type, "weight": cargo.weight
-            }))
-
-        self.cargo_proposal_test = result
-
-
-
-
+    #
+    # @api.multi
+    # @api.onchange('Company')
+    # def get_car_proposal(self):
+    #     result = []
+    #     for car in self.proposal_policy.objectvehicle:
+    #         result.append((0, 0, {
+    #             "car_tybe": car.car_tybe,'motor_cc': car.motor_cc, "year_of_made": car.year_of_made,' model': car.model, 'Man': car.Man
+    #         }))
+    #
+    #     self.car_proposal_test = result
+    #
+    # @api.multi
+    # @api.onchange('Company')
+    # def get_person_proposal(self):
+    #     result = []
+    #
+    #     for person in self.proposal_policy.objectperson:
+    #         result.append((0, 0, {
+    #             'name': person.name, 'DOB': person.DOB, 'job': person.job
+    #         }))
+    #
+    #     self.person_proposal_test = result
+    #
+    # @api.multi
+    # @api.onchange('Company')
+    # def get_cargo_proposal(self):
+    #     result = []
+    #     for cargo in self.proposal_policy.objectcargo:
+    #         result.append((0, 0, {
+    #             'From': cargo.From, 'To': cargo.To, 'cargo_type': cargo.cargo_type, "weight": cargo.weight
+    #         }))
+    #
+    #     self.cargo_proposal_test = result
+    #
+    #
+    #
+    #
     @api.multi
     def select_proposal(self):
         # self.proposal_policy.test1 = True

@@ -70,8 +70,6 @@ class PolicyBroker(models.Model):
         res['std_id'] = lead.policy_number
         return res
 
-
-<<<<<<< HEAD
     @api.model
     def default_get(self, fields):
         res = super(PolicyBroker, self).default_get(fields)
@@ -109,10 +107,6 @@ class PolicyBroker(models.Model):
         res['propoasl_ids'] = records_proposal
 
         return res
-=======
->>>>>>> cb962d448862a8d489435064fcfef1ea333cafe1
-
-
     @api.onchange("term", "number")
     def _cmpute_date_and_amount(self):
         if self.term == "onetime":
@@ -180,9 +174,6 @@ class PolicyBroker(models.Model):
 
         if total > 100:
             raise ValidationError("Your share percentage must be under percentage")
-
-<<<<<<< HEAD
-=======
     _sql_constraints = [('std_id_uniq', 'unique(std_id)', 'This policy number already exists !')]
 
     # @api.model
@@ -190,7 +181,6 @@ class PolicyBroker(models.Model):
     #     seq = self.env['ir.sequence'].next_by_code('policy.broker') or '/'
     #     vals['std_id'] = seq
     #     return super(PolicyBroker, self).create(vals)
->>>>>>> cb962d448862a8d489435064fcfef1ea333cafe1
 
     edit_number = fields.Integer(string="Edit Number", readonly=True)
     edit_decr = fields.Text(string='Edit Description', readonly=True)
@@ -331,11 +321,8 @@ class PolicyBroker(models.Model):
 class ExtraModel(models.Model):
     _name = "name.covers"
 
-<<<<<<< HEAD
     name = fields.Char(string='Name' )
-=======
     name = fields.Char('')
->>>>>>> cb962d448862a8d489435064fcfef1ea333cafe1
     check1 = fields.Many2one('insurance.product')
     check = fields.Boolean()
     sum_insure = fields.Float(string="SI")
@@ -350,12 +337,6 @@ class ExtraModel(models.Model):
     selected=fields.Many2one('proposal.opp.bb')
     risks=fields.Many2one('risks.opp')
 
-
-
-
-<<<<<<< HEAD
-
-=======
     # @api.onchange('user_id')
     # def onchange_user_id(self):
     #   if self.user_id and self.env.uid != 1 :
@@ -370,7 +351,7 @@ class ExtraModel(models.Model):
     #         rec = self.env['insurance.product.coverage'].search(
     #             [('product_id', '=', self.prod1.id)])
     #         return  {'domain':{'name': [('id','in',rec.ids)]}}
->>>>>>> cb962d448862a8d489435064fcfef1ea333cafe1
+
     @api.multi
     def _nameget(self):
         for rec in self:
