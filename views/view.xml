@@ -66,7 +66,26 @@
                                 <field name="issue_date"/>
                                 <field name="start_date"/>
                                 <field name="end_date"/>
+<<<<<<< HEAD
+                                <field name="customer"/>
+                                  <!--<field name="test_computed"/>-->
+                                <field name="holding_cam"/>
+                                <field name="renwal_check" readonly="1"/>
+                                <field name="policy_number" attrs="{'invisible': [('renwal_check', '!=', True)]}"/>
+                            </group>
+                            <group string="commision">
+                                <field name="gross_perimum"/>
+                                <field name="t_permimum"/>
+                                <field name="term"/>
+                                <field name="number"  attrs="{'invisible': [('term', '!=', 'year')]}"/>
+                                <field name="edit_number"/>
+                                <!--<field name="ediet_number" attrs="{'invisible': [('edit_number', '=', 0)]}"/>-->
+
+                                <field name="edit_decr"  attrs="{'invisible': [('edit_number', '=', True)]}"/>
+
+=======
                                 <field name="benefit"/>
+>>>>>>> 60da00b23ccb9222cf1ccd4ce21144593f9a4117
 
                                 <field name="salesperson"/>
                                 <field name="onlayer"/>

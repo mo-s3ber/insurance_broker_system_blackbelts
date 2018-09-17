@@ -52,13 +52,21 @@ class crm_leads(models.Model):
 
     proposal_opp=fields.One2many('proposal.opp.bb','proposal_crm',string='Final proposla')
 
+    coverage_line=fields.One2many('coverage.line','covers_crm','Coverage lines')
+
     selected_proposal=fields.One2many('proposal.opp.bb','select_crm' ,compute='proposalselected')
     prop_id=fields.Integer('',readonly=True)
     my_notes=fields.Text('Under writting')
 
     # covers=fields.One2many(related='selected_proposal.proposals_covers')
 
-    policy_opp=fields.Many2one('policy.broker')
+    # policy_opp=fields.Many2one('policy.broker')
+    selected_coverage = fields.Many2one('coverage.line',domain="[('covers_crm','=',id)]")
+    set_covers=fields.Boolean('')
+    test_computed=fields.Char('',compute='testcom')
+    @api.depends('ins_type')
+    def testcom(self):
+        self.test_computed='Islam'
 
 
 
@@ -73,34 +81,38 @@ class crm_leads(models.Model):
         self.selected_proposal = [(6, 0, ids)]
 
     @api.multi
-    def Insured_button(self):
-        form_view = self.env.ref('insurance_broker_system_blackbelts.Risks_form')
+    def covers_button(self):
+        self.set_covers=True
+        # self.coverage_line.covers_crm=self.id
+        return True
+        # form_view = self.env.ref('insurance_broker_system_blackbelts.Risks_form')
 
-        return {
-            'name': ('Risk Details'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'views': [(form_view.id, 'form')],
-            'res_model': 'risks.opp',
-            'target': 'current',
-            'type': 'ir.actions.act_window',
-            'context': {'default_risks_crm': self.id},
-        }
+        # return {
+        #     'name': ('Risk Details'),
+        #     'view_type': 'form',
+        #     'view_mode': 'form',
+        #     'views': [(form_view.id, 'form')],
+        #     'res_model': 'risks.opp',
+        #     'target': 'inline',
+        #     'type': 'ir.actions.act_window',
+        #     'context': {'default_risks_crm': self.id},
+        #     'flags': {'form': {'action_buttons': True}}
+
 
     @api.multi
     def proposal_button(self):
-            form_view = self.env.ref('insurance_broker_system_blackbelts.form_proposal_opp')
+        form_view = self.env.ref('insurance_broker_system_blackbelts.form_proposal_opp')
 
-            return {
-                'name': ('Proposals'),
-                'view_type': 'form',
-                'view_mode': 'form',
-                'views': [(form_view.id, 'form')],
-                'res_model': 'proposal.opp.bb',
-                'target': 'current',
-                'type': 'ir.actions.act_window',
-                'context': {'default_proposal_crm':self.id},
-            }
+        return {
+            'name': ('Proposals'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'views': [(form_view.id, 'form')],
+            'res_model': 'proposal.opp.bb',
+            'target': 'current',
+            'type': 'ir.actions.act_window',
+            'context': {'default_proposal_crm':self.id},
+        }
 
 
     # objectcar_selected = fields.Many2one('car.object', string='car')
@@ -157,7 +169,7 @@ class crm_leads(models.Model):
             raise ValidationError(
                 ('You Must Enter the Policy Number .'))
 
-                # , 'default_objectperson':records_person ,'default_objectcar':records_car},
+            # , 'default_objectperson':records_person ,'default_objectcar':records_car},
 
         # # write tree and form view id here.
         # proposal_car_tree  form_proposal
