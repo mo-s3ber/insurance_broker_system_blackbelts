@@ -44,53 +44,55 @@
                             <field name="policy_number" widget="selection"/>
                             <field name="endorsement" widget="selection"/>
                             <field name="related_policy" invisible="1"/>
-                            <field name="customer_policy"/>
+                            <field name="customer_policy" readonly="1" force_save="1"/>
                             <field name="insured" readonly="1" force_save="1"/>
-                            <field name="beneficiary"/>
-                            <field name="currencycode"/>
-                            <field name="lob"/>
-                            <field name="product"/>
-                            <field name="insurer"/>
-                            <field name="insurer_branch"/>
+                            <field name="beneficiary" readonly="1" force_save="1"/>
+                            <field name="currencycode" readonly="1" force_save="1"/>
+                            <field name="lob" readonly="1" force_save="1"/>
+                            <field name="product" readonly="1" force_save="1"/>
+                            <field name="insurer" readonly="1" force_save="1"/>
+                            <field name="insurer_branch" readonly="1" force_save="1"/>
                             <field name="insurer_contact"/>
-                            <field name="total_paid_amount"/>
+                            <field name="total_paid_amount" readonly="1" force_save="1"/>
                             <field name="settlement_type"/>
                         </group>
-                        <group colspan="2">
-                            <field name="settle_history">
-                                <tree>
-                                    <field name="risk_type"/>
-                                    <field name="risk_id" />
-                                    <field name="risk_details"/>
-                                    <field name="coverage"/>
-                                    <field name="sum_insured"/>
-                                    <field name="settle_amount"/>
-                                    <field name="settle_date"/>
-                                    <field name="status"/>
-                                </tree>
-                            </field>
-                        </group>
-                        <group colspan="2">
-                            <field name="payment_history">
-                                <tree>
-                                    <field name="payment_date"/>
-                                    <field name="paid_amount"/>
-                                    <field name="currency"/>
-                                    <field name="check_bank"/>
-                                    <field name="check_number"/>
-                                    <field name="payee"/>
-                                </tree>
-                            </field>
-                        </group>
-                        <group colspan="2">
-                            <field name="claim_action">
-                                <tree>
-                                    <field name="action"/>
-                                    <field name="completed"/>
-                                    <field name="comments"/>
-                                </tree>
-                            </field>
-                        </group>
+                        <div class="oe_title">
+                            <h3>Settle History</h3>
+                        </div>
+                        <field name="settle_history">
+                            <tree>
+                                <field name="risk_id" />
+                                <field name="risk_details"/>
+                                <field name="coverage"/>
+                                <field name="sum_insured"/>
+                                <field name="settle_amount"/>
+                                <field name="settle_date"/>
+                                <field name="status"/>
+                            </tree>
+                        </field>
+                        <div class="oe_title">
+                            <h3>Payment History</h3>
+                        </div>
+                        <field name="payment_history">
+                            <tree>
+                                <field name="payment_date"/>
+                                <field name="paid_amount"/>
+                                <field name="currency"/>
+                                <field name="check_bank"/>
+                                <field name="check_number"/>
+                                <field name="payee"/>
+                            </tree>
+                        </field>
+                        <div class="oe_title">
+                            <h3>Claim Procedure</h3>
+                        </div>
+                        <field name="claim_action">
+                            <tree>
+                                <field name="action"/>
+                                <field name="completed"/>
+                                <field name="comments"/>
+                            </tree>
+                        </field>
                     </group>
                 </sheet>
             </form>
@@ -112,6 +114,42 @@
         <field name="padding">3</field>
         <field name="company_id" eval="False"/>
     </record>
+    <record id="view_settle_wizard_form" model="ir.ui.view">
+        <field name="name">Settle History form</field>
+        <field name="model">settle.history</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="oe_title">
+                    <h1>
+                        <field name="risk_type"/>
+                    </h1>
+                </div>
+                <group>
+                    <field name="risk_id" />
+                    <field name="risk_details"/>
+                    <field name="coverage"/>
+                    <field name="sum_insured"/>
+                    <field name="settle_amount"/>
+                    <field name="settle_date"/>
+                    <field name="status"/>
+                    <field name="claim_item">
+                        <tree>
+                            <field name="claim_item"/>
+                            <field name="amount"/>
+                        </tree>
+                    </field>
+                    <field name="claimheader" invisible="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <act_window id="settle_wizard_wizard"
+        name="settle_history"
+        src_model="settle.history"
+        res_model="settle.history"
+        view_mode="form"
+        target="new"/>
+
     <record id="view_payment_history_wizard_form" model="ir.ui.view">
         <field name="name">Payment History form</field>
         <field name="model">payment.history</field>

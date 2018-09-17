@@ -9,37 +9,22 @@ class PolicyBroker(models.Model):
     _name = "policy.broker"
     _rec_name = "std_id"
 
-    @api.multi
-    def create_proposal(self):
-        form_view = self.env.ref('insurance_broker_system_blackbelts.my_view_for_policy_form2')
-        return {
-            'name': ('policy Form2'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'views': [(form_view.id, 'form')],
-            'res_model': 'proposal.bb',
-            'target': 'current',
-            'type': 'ir.actions.act_window',
-            'context': {"default_proposal_policy":self.id
+    # @api.multi
+    # def create_proposal(self):
+    #     form_view = self.env.ref('insurance_broker_system_blackbelts.my_view_for_policy_form2')
+    #     return {
+    #         'name': ('policy Form2'),
+    #         'view_type': 'form',
+    #         'view_mode': 'form',
+    #         'views': [(form_view.id, 'form')],
+    #         'res_model': 'proposal.bb',
+    #         'target': 'current',
+    #         'type': 'ir.actions.act_window',
+    #         'context': {"default_proposal_policy":self.id
+    #
+    #         }
+    #     }
 
-            }
-        }
-
-    @api.multi
-    def Set_risks(self):
-        form_view = self.env.ref('insurance_broker_system_blackbelts.my_view_for_risk_form')
-        return {
-            'name': ('risk form'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'views': [(form_view.id, 'form')],
-            'res_model': "new.risks",
-            'target': 'current',
-            'type': 'ir.actions.act_window',
-            'context': {"default_policy_risk_id":self.id,"default_test":self.test
-
-                        }
-        }
 
 
 
@@ -116,6 +101,7 @@ class PolicyBroker(models.Model):
 
         return res
 
+<<<<<<< HEAD
 
 
     # @api.model
@@ -156,8 +142,54 @@ class PolicyBroker(models.Model):
     #
     #     return res
 
+=======
+<<<<<<< HEAD
+
+=======
+>>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
+    @api.model
+    def default_get(self, fields):
+        res = super(PolicyBroker, self).default_get(fields)
+        lead = self.env['renewal.again'].browse(self._context.get('active_id'))
+
+        riskrecord = self.env["new.risks"].search([('id', 'in', lead.old_number.new_risk_ids.ids)])
+        records_cargoo = []
+        for rec in riskrecord:
+            objectcargoo = (
+                0, 0, {'risk': rec.risk, 'risk_description': rec.risk_description})
+            records_cargoo.append(objectcargoo)
 
 
+        recordproposal = self.env['proposal.bb'].search([('id', 'in', lead.old_number.propoasl_ids.ids)])
+        records_proposal = []
+        for rec in recordproposal:
+            proposal_opp = (
+                0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
+            records_proposal.append(proposal_opp)
+
+        res['policy_number'] = lead.new_number
+        res['std_id'] = lead.old_number.std_id
+        res['issue_date'] = lead.issue_date
+        res['start_date'] = lead.start_date
+        res['end_date'] = lead.end_date
+        # res['Test'] = lead.old_number.Test
+
+        res['customer'] = lead.old_number.customer.id
+        res['holding_cam'] = lead.old_number.holding_cam
+        res['insurance_type'] = lead.old_number.insurance_type
+        res['line_of_bussines'] = lead.old_number.line_of_bussines.id
+        res['ins_type'] = lead.old_number.ins_type
+
+        res['new_risk_ids'] = records_cargoo
+        res['propoasl_ids'] = records_proposal
+
+        return res
+<<<<<<< HEAD
+>>>>>>> 60da00b23ccb9222cf1ccd4ce21144593f9a4117
+
+
+=======
+>>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
     @api.onchange("term", "number")
     def _cmpute_date_and_amount(self):
         if self.term == "onetime":
@@ -207,14 +239,15 @@ class PolicyBroker(models.Model):
                 duration = duration + timedelta(days=30)
             self.rella_installment_id = phone_numbers
 
-    def proposalselected(self):
-        ids = self.env['proposal.bb'].search([('id', '=', self.prop_id)]).ids
-        self.selected_proposal = [(6, 0, ids)]
+    # def proposalselected(self):
+    #     ids = self.env['proposal.bb'].search([('id', '=', self.prop_id)]).ids
+    #     self.selected_proposal = [(6, 0, ids)]
 
     @api.onchange('line_of_bussines')
     def _compute_comment(self):
         for record in self:
-            record.test = record.line_of_bussines.object
+            record.check_item = record.line_of_bussines.object
+
 
     @api.multi
     @api.constrains('share_policy_rel_ids')
@@ -225,7 +258,37 @@ class PolicyBroker(models.Model):
 
         if total > 100:
             raise ValidationError("Your share percentage must be under percentage")
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+
+    @api.multi
+    @api.onchange('bool')
+    def setcovers_veh(self):
+        ids = self.env['insurance.product.coverage'].search(
+            [('product_id', '=', self.product_policy.id)])
+        print(ids)
+        if self.bool:
+            print('xxx')
+            for record in self.new_risk_ids:
+                 for rec in ids:
+                     print('i enter')
+                     record.name_cover_risk_ids =(0, 0, {
+                         "name": rec.Name,
+                         "sum_insure": rec.defaultvalue,
+                         "check": rec.readonly,
+                         # "rate": rec.product_id.name_cover_ids.covers_rel_ids.rate,
+                         "net_perimum": rec.readonly and rec.defaultvalue
+                     })
+
+
+    bool = fields.Boolean()
+    edit_number = fields.Integer(string="Endorsement Number", readonly=True)
+    edit_decr = fields.Text('Endorsement Description', readonly=True)
+    ediet_number = fields.Char('Endorsement Policy Number')
+=======
+>>>>>>> 60da00b23ccb9222cf1ccd4ce21144593f9a4117
     _sql_constraints = [('std_id_uniq', 'unique(std_id)', 'This policy number already exists !')]
 
     # @api.model
@@ -233,37 +296,49 @@ class PolicyBroker(models.Model):
     #     seq = self.env['ir.sequence'].next_by_code('policy.broker') or '/'
     #     vals['std_id'] = seq
     #     return super(PolicyBroker, self).create(vals)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 60da00b23ccb9222cf1ccd4ce21144593f9a4117
 
     edit_number = fields.Integer(string="Edit Number", readonly=True)
     edit_decr = fields.Text(string='Edit Description', readonly=True)
     ediet_number = fields.Char(string='Edit Policy Number')
+>>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
 
     policy_number = fields.Char(string="Renewal Policy Number")
     renwal_check = fields.Boolean(string="Renewal")
     holding_cam = fields.Char(string="Holding Campany")
 
-    std_id = fields.Char(string="Policy Number")
+    std_id = fields.Char(string="Policy Number" ,required=True)
     issue_date = fields.Date(string="Issue Date")
     start_date = fields.Date(string="Coverage Start On", required=True)
     end_date = fields.Date(string="Coverage End On")
+
+
+
     term = fields.Selection(
         [("onetime", "One Time"), ("year", "yearly"), ("quarter", "Quarterly"), ("month", "Monthly")],
         string="payment frequency")
     number = fields.Integer(string="No Of Years", default=1)
+    barnche = fields.Char("Branch")
 
     gross_perimum = fields.Float(string="Gross Perimum")
     t_permimum = fields.Float(string="Net Permium", compute="_compute_t_premium")
 
     salesperson = fields.Many2one('res.users', string='Salesperson', index=True, default=lambda self: self.env.user)
     onlayer = fields.Selection(related="salesperson.layer", string="Sales Layer")
-    personcom = fields.Integer(string="commition", compute="_compute_personcom")
+    personcom = fields.Integer(string="commission",compute="_compute_personcom")
     rel_com_detail_id = fields.One2many("layers.layer", "policy_rel_do_id")
     rella_installment_id = fields.One2many("installment.installment", "installment_rel_id")
     share_policy_rel_ids = fields.One2many("share.commition", "share_commition_rel_id")
     customer = fields.Many2one('res.partner', 'Customer')
 
+<<<<<<< HEAD
     test_computed=fields.Char('')
+=======
+
+>>>>>>> 60da00b23ccb9222cf1ccd4ce21144593f9a4117
 
     insurance_type = fields.Selection([('life', 'Life'),
                                        ('p&c', 'P&C'),
@@ -271,18 +346,19 @@ class PolicyBroker(models.Model):
                                       'Insurance Type', track_visibility='onchange')
     ins_type = fields.Selection([('Individual', 'Individual'),
                                  ('Group', 'Group'), ],
-                                'insured State', track_visibility='onchange')
+                                'I&G', track_visibility='onchange')
     policy_dur = fields.Selection([('Every 6 Months', 'Every 6 Months'),
                                    ('Every Year', 'Every Year'), ],
                                   'Policy Duration', track_visibility='onchange')
     line_of_bussines = fields.Many2one('insurance.line.business', string='Line of business',
                                        domain="[('insurance_type','=',insurance_type)]")
-    test = fields.Char()
+
+    check_item = fields.Char()
     group = fields.Boolean()
 
     propoasl_ids = fields.One2many("proposal.bb", "proposal_policy", readonly=True)
     selected_proposal = fields.One2many('proposal.bb', 'select', compute='proposalselected')
-    prop_id = fields.Integer(readonly=True)
+    # prop_id = fields.Integer(readonly=True)
     covers = fields.One2many(related='selected_proposal.covers_rel_ids')
 
     commision = fields.Float(string="Basic Brokerage", compute="_compute_brokerage")
@@ -290,43 +366,62 @@ class PolicyBroker(models.Model):
     fixed_commision = fields.Float(string="Fixed Brokerage", compute="_compute_fixed_commision")
     earl_commision = fields.Float(string="Early Collection" , compute="_compute_earl_commision")
     total_commision = fields.Float(string="total Brokerage", compute="_compute_sum")
-    new_risk_ids = fields.One2many("new.risks", 'policy_risk_id', string='RISKS' ,readonly=True)
+    new_risk_ids = fields.One2many("new.risks", 'policy_risk_id', string='Risk')
+    company = fields.Many2one('res.partner', domain="[('insurer_type','=',1)]", string="Insurer")
+    product_policy = fields.Many2one('insurance.product',domain="[('insurer','=',company)]", string="Product")
+    hamda = fields.Many2one("new.risks")
+
+    name_cover_rel_ids = fields.One2many("covers.lines","policy_rel_id",string="Covers Details" )
+    name_rel_ids = fields.One2many("name.covers","policy_name_cover_id")
+    currency_id = fields.Many2one("res.currency","Currency Code")
+    benefit =fields.Char("Beneifciary")
+
+    checho = fields.Boolean()
+    count_claim = fields.Integer()
+
+
+    # @api.multi
+    # def _onchang_risk(self):
+    #     res = []
+    #     ids = self.env["new.risks"].search([('id', '=', self.hamda.id)])
+    #     for id in ids:
+    #         print(id.name_cover_risk_ids.ids)
+    #         self.name_cover_rel_ids = [(6, 0, id.name_cover_risk_ids.ids)]
 
 
     @api.multi
+    @api.depends("name_cover_rel_ids")
     def _compute_t_premium(self):
-        for rec in self:
-            if rec.selected_proposal:
-                rec.t_permimum = rec.selected_proposal.premium
+        total = 0.0
+        for line in self.name_cover_rel_ids:
+            total += line.net_perimum
+        self.t_permimum = total
+
 
     @api.multi
+    @api.depends("product_policy")
     def _compute_brokerage(self):
         for rec in self:
-            if rec.selected_proposal:
-                rec.commision = (
-                                        rec.selected_proposal.product_pol.brokerage.basic_commission * rec.selected_proposal.premium) / 100
+            rec.commision = (rec.product_policy.brokerage.basic_commission * rec.t_permimum) / 100
 
     @api.multi
+    @api.depends("product_policy")
     def _compute_com_commision(self):
         for rec in self:
-            if rec.selected_proposal:
-                rec.com_commision = (
-                                            rec.selected_proposal.product_pol.brokerage.complementary_commission * rec.selected_proposal.premium) / 100
+            rec.com_commision = (rec.product_policy.brokerage.complementary_commission * rec.t_permimum) / 100
 
     @api.multi
+    @api.depends("product_policy")
     def _compute_earl_commision(self):
         for rec in self:
-            if rec.selected_proposal:
-                rec.earl_commision = (
-                                             rec.selected_proposal.product_pol.brokerage.early_collection * rec.selected_proposal.premium) / 100
+                rec.earl_commision = (rec.product_policy.brokerage.early_collection * rec.t_permimum) / 100
 
 
     @api.multi
+    @api.depends("product_policy")
     def _compute_fixed_commision(self):
         for rec in self:
-            if rec.selected_proposal:
-                rec.fixed_commision = (
-                                              rec.selected_proposal.product_pol.brokerage.fixed_commission * rec.selected_proposal.premium) / 100
+                rec.fixed_commision = (rec.product_policy.brokerage.fixed_commission * rec.t_permimum) / 100
 
     @api.multi
     def _compute_sum(self):
@@ -334,19 +429,18 @@ class PolicyBroker(models.Model):
             rec.total_commision = rec.commision + rec.com_commision + rec.fixed_commision
 
     @api.multi
-    # @api.onchange("salesperson","onlayer","commision")
+    @api.depends("salesperson","onlayer","t_permimum")
     def _compute_personcom(self):
-        for rec in self:
-            if rec.onlayer == "l1":
-                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer1 * rec.t_permimum) / 100
-            elif rec.onlayer == "l2":
-                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer2 * rec.t_permimum) / 100
-            elif rec.onlayer == "l3":
-                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer3 * rec.t_permimum) / 100
-            elif rec.onlayer == "l4":
-                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer4 * rec.t_permimum) / 100
-            elif rec.onlayer == "l5":
-                rec.personcom = (rec.selected_proposal.product_pol.commision_id.layer5 * rec.t_permimum) / 100
+        if self.onlayer == "l1":
+            self.personcom = (self.product_policy.commision_id.layer1 * self.t_permimum) / 100
+        elif self.onlayer == "l2":
+            self.personcom = (self.product_policy.commision_id.layer2 * self.t_permimum) / 100
+        elif self.onlayer == "l3":
+            self.personcom = (self.product_policy.commision_id.layer3 * self.t_permimum) / 100
+        elif self.onlayer == "l4":
+            self.personcom = (self.product_policy.commision_id.layer4 * self.t_permimum) / 100
+        elif self.onlayer == "l5":
+            self.personcom = (self.product_policy.commision_id.layer5 * self.t_permimum) / 100
 
 
     @api.multi
@@ -372,32 +466,164 @@ class PolicyBroker(models.Model):
                     "amount": rec.share_policy_rel_ids.amount
                 })]
 
+    @api.multi
+    def generate_covers(self):
+        self.checho = True
+        return True
 
-class ExtraModel(models.Model):
-    _name = "name.covers"
+class Extra_Covers(models.Model):
+    _name = "covers.lines"
+    _rec_name="riskk"
 
+
+    rel_risk = fields.Many2one("new.risks")
+    risko = fields.Char(related="rel_risk.risk")
+
+<<<<<<< HEAD
 
     name = fields.Char(string='Name' )
 
     name = fields.Char('')
 
+=======
+<<<<<<< HEAD
+    riskk = fields.Many2one("new.risks", "Risk ID")
+    risk_description = fields.Text(string="Risk Description")
+    #
+    insurerd = fields.Many2one(related="policy_rel_id.company")
+    prod_product = fields.Many2one(related="policy_rel_id.product_policy",domain="[('insurer','=',insurerd)]")
+
+    name1 = fields.Many2one("insurance.product.coverage",string="Cover", domain="[('product_id', '=' , prod_product)]")
+    check = fields.Boolean(related="name1.readonly")
+=======
+    name = fields.Char(string='Name' )
+    name = fields.Char('')
+>>>>>>> 60da00b23ccb9222cf1ccd4ce21144593f9a4117
     check1 = fields.Many2one('insurance.product')
     check = fields.Boolean()
+>>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
     sum_insure = fields.Float(string="SI")
     rate = fields.Float(string="Rate")
     net_perimum = fields.Float(string="Net Perimum")
+    policy_rel_id = fields.Many2one("policy.broker")
+
+
+    @api.onchange("check")
+    def _nameget(self):
+        if self.check == True:
+            self.net_perimum = self.sum_insure
+
+
+    @api.onchange('policy_rel_id')
+    def onchange_field_id(self):
+        if self.policy_rel_id:
+           return {'domain': {"riskk": [('id', 'in', self.policy_rel_id.new_risk_ids.ids)]}}
+
+    # @api.onchange('policy_rel_id')
+    # def _change_domain(self):
+    #     if self.policy_rel_id:
+    #         ids = self.env["policy.broker"].search([])
+    #         return {
+    #             "domain":{
+    #                 "riskk":[('risk','in',[ids.new_risk_ids.ids])]
+    #             }
+    #         }
+
+    @api.onchange('name1')
+    def onchange_covers(self):
+        if self.name1:
+            self.sum_insure = self.name1.defaultvalue
+
+    @api.onchange('rate')
+    def compute_premium(self):
+        if self.name1:
+            self.net_perimum = (self.sum_insure * self.rate) / 100
+
+    @api.onchange('riskk')
+    def onchange_risc_desc(self):
+        if self.riskk:
+            self.risk_description = self.riskk.risk_description
+
+    #     res = {}
+    #     self.riskk = False
+    #     if self.policy_rel_id.new_risk_ids:
+    #         print("khaled")
+    #         ids = self.env["policy.broker"].browse([self.policy_rel_id.new_risk_ids])
+    #         print(ids)
+    #         # ids = self.policy_rel_id.new_risk_ids.mapped('id')
+    #         # print(ids)
+    #         # for rec in ids:
+    #         #     self.riskk = rec.risk
+    #     #     res['domain'] = {'riskk': [('risk', 'in', ids)]}
+    #     #     print(res)
+    #     # return res
+
+    # @api.multi
+    # def _compute_risk(self):
+    #     bns = self.env["new.risks"].search([('risk', '=', self.policy_rel_id.new_risk_ids.id)])
+    #     print(bns.ids)
+    #     for rec in bns.ids:
+    #         self.riskk = rec.risk
+
+
+    # @api.multi
+    # def _compute_coverage(self):
+    #     obj = self.env['insurance.product.coverage'].search([('product_id','=',self.policy_rel_id.product_policy.id)])
+    #     print(obj.ids)
+    #     for rec in obj.ids:
+    #         self.name = rec.Name
+    #         self.check = rec.readonly
+    #         self.sum_insure = rec.defaultvalue
+
+
+
+
+class ExtraModel(models.Model):
+    _name = "name.covers"
+    # _rec_name="name"
+    #
+    # name = fields.Char(string='Name' )
+    # check1 = fields.Many2one('insurance.product')
+    # check = fields.Boolean()
+    # sum_insure = fields.Float(string="SI")
+    # rate = fields.Float(string="Rate")
+    # net_perimum = fields.Float(string="Net Perimum")
+    #
+    #
+
+
+
+
+
+
+
     risk_brokerd_id = fields.Many2one("new.risks")
+    policy_name_cover_id = fields.Many2one("policy.broker")
+
     rel_policy_broker_id = fields.Many2one("proposal.bb")
-    # rel_policy_brokerd_id = fields.Many2one("proposal.opp.bb")
+    rel_policy_brokerd_id = fields.Many2one("proposal.opp.bb")
     vechile=fields.Many2one('vehicle.object.opp')
     person = fields.Many2one('person.object.opp')
     cargo=fields.Many2one('cargo.object.opp')
     selected=fields.Many2one('proposal.opp.bb')
     risks=fields.Many2one('risks.opp')
 
+<<<<<<< HEAD
 
 
 
+<<<<<<< HEAD
+=======
+    # @api.multi
+    # def _nameget(self):
+    #     for rec in self:
+    #         if rec.check == True:
+    #             rec.net_perimum = rec.sum_insure
+    #
+    # @api.onchange("sum_insure", "rate")
+    # def _onchangerate(self):
+=======
+>>>>>>> 60da00b23ccb9222cf1ccd4ce21144593f9a4117
     # @api.onchange('user_id')
     # def onchange_user_id(self):
     #   if self.user_id and self.env.uid != 1 :
@@ -412,6 +638,10 @@ class ExtraModel(models.Model):
     #         rec = self.env['insurance.product.coverage'].search(
     #             [('product_id', '=', self.prod1.id)])
     #         return  {'domain':{'name': [('id','in',rec.ids)]}}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 60da00b23ccb9222cf1ccd4ce21144593f9a4117
     @api.multi
     def _nameget(self):
         for rec in self:
@@ -425,7 +655,13 @@ class ExtraModel(models.Model):
 
     # @api.multi
     # def unlink(self):
+>>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
     #     for rec in self:
+    #         rec.net_perimum = (rec.sum_insure * rec.rate) / 100
+    #
+    # # @api.multi
+    # # def unlink(self):
+    # #     for rec in self:
     #         if rec.name.required:
     #             raise ValidationError(
     #                 ('You cannot delete this record .'))

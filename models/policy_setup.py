@@ -31,6 +31,7 @@ class Product(models.Model):
     brokerage=fields.One2many('insurance.product.brokerage','product_id',string='Brokerage')
     commision_id = fields.One2many("commision.setup","policy_relation_id")
     claim_action=fields.One2many('product.claim.action','product')
+    name_cover_id = fields.Many2one("name.cover")
 
 class claimAction(models.Model):
     _name='product.claim.action'
@@ -46,10 +47,10 @@ class claimAction(models.Model):
 
 class coverage(models.Model):
     _name='insurance.product.coverage'
-    _rec_name="Name"
+    _rec_name= "Name"
 
     Name=fields.Char('Cover Name')
-    defaultvalue=fields.Char('Default Sum Insured')
+    defaultvalue=fields.Float('Default Sum Insured')
     required=fields.Boolean('Required')
     deductible = fields.Integer('Deductible')
     limitone=fields.Integer('Limit in One')

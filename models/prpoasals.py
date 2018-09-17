@@ -67,72 +67,82 @@ class Proposals(models.Model):
 
 
 
-    @api.one
-    @api.depends("product_pol")
-    def compute_premiume(self):
-        total=0.0
-        for line in self.new_proposal_test_ids:
-            print("iii")
-            for rec in line.name_cover_risk_ids:
-                total += rec.net_perimum
-        self.premium=total
+    # @api.one
+    # @api.depends("product_pol")
+    # def compute_premiume(self):
+    #     total=0.0
+    #     for line in self.new_proposal_test_ids:
+    #         print("iii")
+    #         for rec in line.name_cover_risk_ids:
+    #             total += rec.net_perimum
+    #     self.premium=total
 
 
 
 
 
 
+<<<<<<< HEAD
 
-    @api.onchange('Company')
-    def settest(self):
-        self.test = self.proposal_policy.test
-
-    @api.onchange('Company')
-    def setgroup(self):
-        self.group = self.proposal_policy.group
-
-
-    @api.multi
-    @api.onchange('Company')
-    def get_car_proposal(self):
-        result = []
-        for car in self.proposal_policy.objectvehicle:
-            result.append((0, 0, {
-                "car_tybe": car.car_tybe,'motor_cc': car.motor_cc, "year_of_made": car.year_of_made,' model': car.model, 'Man': car.Man
-            }))
-
-        self.car_proposal_test = result
-
-    @api.multi
-    @api.onchange('Company')
-    def get_person_proposal(self):
-        result = []
-
-        for person in self.proposal_policy.objectperson:
-            result.append((0, 0, {
-                'name': person.name, 'DOB': person.DOB, 'job': person.job
-            }))
-
-        self.person_proposal_test = result
-
-    @api.multi
-    @api.onchange('Company')
-    def get_cargo_proposal(self):
-        result = []
-        for cargo in self.proposal_policy.objectcargo:
-            result.append((0, 0, {
-                'From': cargo.From, 'To': cargo.To, 'cargo_type': cargo.cargo_type, "weight": cargo.weight
-            }))
-
-        self.cargo_proposal_test = result
+    # @api.onchange('Company')
+    # def settest(self):
+    #     self.test = self.proposal_policy.test
+    #
+    # @api.onchange('Company')
+    # def setgroup(self):
+    #     self.group = self.proposal_policy.group
 
 
 
-
+    #
+    # @api.multi
+    # def select_proposal(self):
+    #     # self.proposal_policy.test1 = True
+    #     self.proposal_policy.prop_id = self.id
+=======
+    #
+    # @api.multi
+    # @api.onchange('Company')
+    # def get_car_proposal(self):
+    #     result = []
+    #     for car in self.proposal_policy.objectvehicle:
+    #         result.append((0, 0, {
+    #             "car_tybe": car.car_tybe,'motor_cc': car.motor_cc, "year_of_made": car.year_of_made,' model': car.model, 'Man': car.Man
+    #         }))
+    #
+    #     self.car_proposal_test = result
+    #
+    # @api.multi
+    # @api.onchange('Company')
+    # def get_person_proposal(self):
+    #     result = []
+    #
+    #     for person in self.proposal_policy.objectperson:
+    #         result.append((0, 0, {
+    #             'name': person.name, 'DOB': person.DOB, 'job': person.job
+    #         }))
+    #
+    #     self.person_proposal_test = result
+    #
+    # @api.multi
+    # @api.onchange('Company')
+    # def get_cargo_proposal(self):
+    #     result = []
+    #     for cargo in self.proposal_policy.objectcargo:
+    #         result.append((0, 0, {
+    #             'From': cargo.From, 'To': cargo.To, 'cargo_type': cargo.cargo_type, "weight": cargo.weight
+    #         }))
+    #
+    #     self.cargo_proposal_test = result
+    #
+    #
+    #
+    #
     @api.multi
     def select_proposal(self):
         # self.proposal_policy.test1 = True
         self.proposal_policy.prop_id = self.id
+>>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
 
     @api.multi
     def create_covers(self):
