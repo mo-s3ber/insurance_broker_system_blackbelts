@@ -17,7 +17,7 @@ class New_Risks(models.Model):
     # #     self.proposal__risk_id.risk_proposal_select_id = self.id
 
     @api.multi
-    @api.depends('policy_risk_id')
+    @api.onchange('risk')
     def _compute_risk_descriptionn(self):
         for rec in self:
 
@@ -36,7 +36,7 @@ class New_Risks(models.Model):
     policy_risk_id = fields.Many2one("policy.broker")
 
     risk = fields.Char("Risk ID" ,required=True)
-    risk_description = fields.Text("Risk Description",compute="_compute_risk_descriptionn",store=True)
+    risk_description = fields.Text("Risk Description")
     proposal__risk_id = fields.Many2one('proposal.bb')
     name_cover_risk_ids=fields.One2many("name.covers", "risk_brokerd_id")
     test = fields.Char(related="policy_risk_id.check_item")

@@ -86,19 +86,11 @@ class settleHistory(models.Model):
     _name ="settle.history"
 
     risk_type=fields.Char(related='claimheader.insured',string='Risk Type',readonly=True,store=True)
-<<<<<<< HEAD
     risk_id = fields.Many2one('vehicle.object',string='Risk')
     risk_details =fields.Char(string='Risk Details')
     coverage = fields.Many2one('insurance.product.coverage',string='Coverage')
     sum_insured=fields.Float(related='coverage.defaultvalue',string='Sum Insured',store=True,readonly=True)
     settle_amount=fields.Float(string='Settle Amount')
-=======
-    risk_id = fields.Many2one('new.risks',string='Risk')
-    risk_details =fields.Text(related='risk_id.risk_description',string='Risk Description')
-    coverage = fields.Many2one('name.covers',string='Coverage',)
-    sum_insured=fields.Float(related='coverage.sum_insure',string='Sum Insured',store=True,readonly=True)
-    settle_amount=fields.Float(string='Settle Amount',compute = '_onchange_settle_amount')
->>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
     settle_date=fields.Date(string='Settle Date')
     status=fields.Many2one('insurance.setup',string='Status',domain="[('setup_type','=','ssta')]")
     claimheader=fields.Many2one('insurance.claim')

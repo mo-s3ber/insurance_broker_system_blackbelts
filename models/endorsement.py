@@ -20,17 +20,11 @@ class Endorsement_edit(models.Model):
         riskrecordd = self.env["new.risks"].search([('id', 'in', self.number_policy.new_risk_ids.ids)])
         records_cargo = []
         for rec in riskrecordd:
-                objectcargo = (
+            objectcargo = (
                     0, 0, {'risk': rec.risk, 'risk_description': rec.risk_description})
-                records_cargo.append(objectcargo)
-            # # .......
-            #
-        recordproposal = self.env['proposal.bb'].search([('id', 'in', self.number_policy.propoasl_ids.ids)])
-        records_proposal = []
-        for rec in recordproposal:
-                proposal_opp = (
-                    0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
-                records_proposal.append(proposal_opp)
+            records_cargo.append(objectcargo)
+
+
 
         if self.number_edit:
             return {
@@ -44,13 +38,21 @@ class Endorsement_edit(models.Model):
                 'context': {
                     'default_std_id': self.number_policy.std_id,
                     'default_customer':self.number_policy.customer.id,
+                    'default_issue_date':self.number_policy.issue_date,
+                    'default_start_date':self.number_policy.start_date,
+                    'default_end_date':self.number_policy.end_date,
+                    'default_barnche':self.number_policy.barnche,
+                    'default_salesperson':self.number_policy.salesperson.id,
+                    'default_onlayer':self.number_policy.onlayer,
+                    'default_currency_id':self.number_policy.currency_id.id,
+                    'default_benefit':self.number_policy.benefit,
                     'default_edit_number':self.number_edit ,
                     'default_edit_decr':self.reasonedit ,
                     'default_insurance_type': self.number_policy.insurance_type,
                     'default_line_of_bussines':self.number_policy.line_of_bussines.id ,
                     'default_ins_type': self.number_policy.ins_type,
-                    'default_new_risk_ids':records_cargo ,
-                    'default_propoasl_ids':records_proposal,
+                    'default_new_risk_ids':records_cargo,
+
 
                             }
             }

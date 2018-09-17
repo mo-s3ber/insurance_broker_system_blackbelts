@@ -55,52 +55,44 @@ class PolicyBroker(models.Model):
         res['std_id'] = lead.policy_number
         return res
 
-<<<<<<< HEAD
 
-=======
->>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
-    @api.model
-    def default_get(self, fields):
-        res = super(PolicyBroker, self).default_get(fields)
-        lead = self.env['renewal.again'].browse(self._context.get('active_id'))
-
-        riskrecord = self.env["new.risks"].search([('id', 'in', lead.old_number.new_risk_ids.ids)])
-        records_cargoo = []
-        for rec in riskrecord:
-            objectcargoo = (
-                0, 0, {'risk': rec.risk, 'risk_description': rec.risk_description})
-            records_cargoo.append(objectcargoo)
+    # @api.model
+    # def default_get(self, fields):
+    #     res = super(PolicyBroker, self).default_get(fields)
+    #     lead = self.env['renewal.again'].browse(self._context.get('active_id'))
+    #
+    #     riskrecord = self.env["new.risks"].search([('id', 'in', lead.old_number.new_risk_ids.ids)])
+    #     records_cargoo = []
+    #     for rec in riskrecord:
+    #         objectcargoo = (
+    #             0, 0, {'risk': rec.risk, 'risk_description': rec.risk_description})
+    #         records_cargoo.append(objectcargoo)
 
 
-        recordproposal = self.env['proposal.bb'].search([('id', 'in', lead.old_number.propoasl_ids.ids)])
-        records_proposal = []
-        for rec in recordproposal:
-            proposal_opp = (
-                0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
-            records_proposal.append(proposal_opp)
+        # recordproposal = self.env['proposal.bb'].search([('id', 'in', lead.old_number.propoasl_ids.ids)])
+        # records_proposal = []
+        # for rec in recordproposal:
+        #     proposal_opp = (
+        #         0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
+        #     records_proposal.append(proposal_opp)
 
-        res['policy_number'] = lead.new_number
-        res['std_id'] = lead.old_number.std_id
-        res['issue_date'] = lead.issue_date
-        res['start_date'] = lead.start_date
-        res['end_date'] = lead.end_date
-        # res['Test'] = lead.old_number.Test
+        # res['policy_number'] = lead.new_number
+        # res['std_id'] = lead.old_number.std_id
+        # res['issue_date'] = lead.issue_date
+        # res['start_date'] = lead.start_date
+        # res['end_date'] = lead.end_date
+        # # res['Test'] = lead.old_number.Test
+        #
+        # res['customer'] = lead.old_number.customer.id
+        # res['insurance_type'] = lead.old_number.insurance_type
+        # res['line_of_bussines'] = lead.old_number.line_of_bussines.id
+        # res['ins_type'] = lead.old_number.ins_type
+        #
+        # res['new_risk_ids'] = records_cargoo
 
-        res['customer'] = lead.old_number.customer.id
-        res['holding_cam'] = lead.old_number.holding_cam
-        res['insurance_type'] = lead.old_number.insurance_type
-        res['line_of_bussines'] = lead.old_number.line_of_bussines.id
-        res['ins_type'] = lead.old_number.ins_type
-
-        res['new_risk_ids'] = records_cargoo
-        res['propoasl_ids'] = records_proposal
 
         return res
-<<<<<<< HEAD
 
-
-=======
->>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
     @api.onchange("term", "number")
     def _cmpute_date_and_amount(self):
         if self.term == "onetime":
@@ -169,7 +161,6 @@ class PolicyBroker(models.Model):
 
         if total > 100:
             raise ValidationError("Your share percentage must be under percentage")
-<<<<<<< HEAD
 
     @api.multi
     @api.onchange('bool')
@@ -195,19 +186,10 @@ class PolicyBroker(models.Model):
     edit_number = fields.Integer(string="Endorsement Number", readonly=True)
     edit_decr = fields.Text('Endorsement Description', readonly=True)
     ediet_number = fields.Char('Endorsement Policy Number')
-=======
-    _sql_constraints = [('std_id_uniq', 'unique(std_id)', 'This policy number already exists !')]
 
-    # @api.model
-    # def create(self, vals):
-    #     seq = self.env['ir.sequence'].next_by_code('policy.broker') or '/'
-    #     vals['std_id'] = seq
-    #     return super(PolicyBroker, self).create(vals)
 
-    edit_number = fields.Integer(string="Edit Number", readonly=True)
-    edit_decr = fields.Text(string='Edit Description', readonly=True)
-    ediet_number = fields.Char(string='Edit Policy Number')
->>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
+
+
 
     policy_number = fields.Char(string="Renewal Policy Number")
     renwal_check = fields.Boolean(string="Renewal")
@@ -246,19 +228,19 @@ class PolicyBroker(models.Model):
     ins_type = fields.Selection([('Individual', 'Individual'),
                                  ('Group', 'Group'), ],
                                 'I&G', track_visibility='onchange')
-    policy_dur = fields.Selection([('Every 6 Months', 'Every 6 Months'),
-                                   ('Every Year', 'Every Year'), ],
-                                  'Policy Duration', track_visibility='onchange')
+    # policy_dur = fields.Selection([('Every 6 Months', 'Every 6 Months'),
+    #                                ('Every Year', 'Every Year'), ],
+    #                               'Policy Duration', track_visibility='onchange')
     line_of_bussines = fields.Many2one('insurance.line.business', string='Line of business',
                                        domain="[('insurance_type','=',insurance_type)]")
 
     check_item = fields.Char()
     group = fields.Boolean()
 
-    propoasl_ids = fields.One2many("proposal.bb", "proposal_policy", readonly=True)
-    selected_proposal = fields.One2many('proposal.bb', 'select', compute='proposalselected')
+    # propoasl_ids = fields.One2many("proposal.bb", "proposal_policy", readonly=True)
+    # selected_proposal = fields.One2many('proposal.bb', 'select', compute='proposalselected')
     # prop_id = fields.Integer(readonly=True)
-    covers = fields.One2many(related='selected_proposal.covers_rel_ids')
+    # covers = fields.One2many(related='selected_proposal.covers_rel_ids')
 
     commision = fields.Float(string="Basic Brokerage", compute="_compute_brokerage")
     com_commision = fields.Float(string="Complementary  Brokerage", compute="_compute_com_commision")
@@ -378,7 +360,6 @@ class Extra_Covers(models.Model):
     rel_risk = fields.Many2one("new.risks")
     risko = fields.Char(related="rel_risk.risk")
 
-<<<<<<< HEAD
     riskk = fields.Many2one("new.risks", "Risk ID")
     risk_description = fields.Text(string="Risk Description")
     #
@@ -387,12 +368,9 @@ class Extra_Covers(models.Model):
 
     name1 = fields.Many2one("insurance.product.coverage",string="Cover", domain="[('product_id', '=' , prod_product)]")
     check = fields.Boolean(related="name1.readonly")
-=======
-    name = fields.Char(string='Name' )
-    name = fields.Char('')
-    check1 = fields.Many2one('insurance.product')
-    check = fields.Boolean()
->>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
+    # name = fields.Char(string='Name' )
+    # check1 = fields.Many2one('insurance.product')
+    # check = fields.Boolean()
     sum_insure = fields.Float(string="SI")
     rate = fields.Float(string="Rate")
     net_perimum = fields.Float(string="Net Perimum")
@@ -499,7 +477,6 @@ class ExtraModel(models.Model):
     selected=fields.Many2one('proposal.opp.bb')
     risks=fields.Many2one('risks.opp')
 
-<<<<<<< HEAD
 
 
 
@@ -511,7 +488,6 @@ class ExtraModel(models.Model):
     #
     # @api.onchange("sum_insure", "rate")
     # def _onchangerate(self):
-=======
     # @api.onchange('user_id')
     # def onchange_user_id(self):
     #   if self.user_id and self.env.uid != 1 :
@@ -540,7 +516,6 @@ class ExtraModel(models.Model):
 
     # @api.multi
     # def unlink(self):
->>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
     #     for rec in self:
     #         rec.net_perimum = (rec.sum_insure * rec.rate) / 100
     #
