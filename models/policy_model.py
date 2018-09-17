@@ -55,7 +55,10 @@ class PolicyBroker(models.Model):
         res['std_id'] = lead.policy_number
         return res
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
     @api.model
     def default_get(self, fields):
         res = super(PolicyBroker, self).default_get(fields)
@@ -93,8 +96,11 @@ class PolicyBroker(models.Model):
         res['propoasl_ids'] = records_proposal
 
         return res
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
     @api.onchange("term", "number")
     def _cmpute_date_and_amount(self):
         if self.term == "onetime":
@@ -163,6 +169,7 @@ class PolicyBroker(models.Model):
 
         if total > 100:
             raise ValidationError("Your share percentage must be under percentage")
+<<<<<<< HEAD
 
     @api.multi
     @api.onchange('bool')
@@ -188,6 +195,19 @@ class PolicyBroker(models.Model):
     edit_number = fields.Integer(string="Endorsement Number", readonly=True)
     edit_decr = fields.Text('Endorsement Description', readonly=True)
     ediet_number = fields.Char('Endorsement Policy Number')
+=======
+    _sql_constraints = [('std_id_uniq', 'unique(std_id)', 'This policy number already exists !')]
+
+    # @api.model
+    # def create(self, vals):
+    #     seq = self.env['ir.sequence'].next_by_code('policy.broker') or '/'
+    #     vals['std_id'] = seq
+    #     return super(PolicyBroker, self).create(vals)
+
+    edit_number = fields.Integer(string="Edit Number", readonly=True)
+    edit_decr = fields.Text(string='Edit Description', readonly=True)
+    ediet_number = fields.Char(string='Edit Policy Number')
+>>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
 
     policy_number = fields.Char(string="Renewal Policy Number")
     renwal_check = fields.Boolean(string="Renewal")
@@ -358,6 +378,7 @@ class Extra_Covers(models.Model):
     rel_risk = fields.Many2one("new.risks")
     risko = fields.Char(related="rel_risk.risk")
 
+<<<<<<< HEAD
     riskk = fields.Many2one("new.risks", "Risk ID")
     risk_description = fields.Text(string="Risk Description")
     #
@@ -366,6 +387,12 @@ class Extra_Covers(models.Model):
 
     name1 = fields.Many2one("insurance.product.coverage",string="Cover", domain="[('product_id', '=' , prod_product)]")
     check = fields.Boolean(related="name1.readonly")
+=======
+    name = fields.Char(string='Name' )
+    name = fields.Char('')
+    check1 = fields.Many2one('insurance.product')
+    check = fields.Boolean()
+>>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
     sum_insure = fields.Float(string="SI")
     rate = fields.Float(string="Rate")
     net_perimum = fields.Float(string="Net Perimum")
@@ -472,6 +499,7 @@ class ExtraModel(models.Model):
     selected=fields.Many2one('proposal.opp.bb')
     risks=fields.Many2one('risks.opp')
 
+<<<<<<< HEAD
 
 
 
@@ -483,6 +511,36 @@ class ExtraModel(models.Model):
     #
     # @api.onchange("sum_insure", "rate")
     # def _onchangerate(self):
+=======
+    # @api.onchange('user_id')
+    # def onchange_user_id(self):
+    #   if self.user_id and self.env.uid != 1 :
+    #        return {'domain':{'user_id': [('id','in',[self.env.uid,1])]}}
+
+    # @api.multi
+    # @api.onchange('prod1')
+    # def coversname(self):
+    #     print('fvdsv')
+    #     if self.prod1:
+    #         print('vrennnnnnnn')
+    #         rec = self.env['insurance.product.coverage'].search(
+    #             [('product_id', '=', self.prod1.id)])
+    #         return  {'domain':{'name': [('id','in',rec.ids)]}}
+
+    @api.multi
+    def _nameget(self):
+        for rec in self:
+            if rec.check == True:
+                rec.net_perimum = rec.sum_insure
+
+    @api.onchange("sum_insure", "rate")
+    def _onchangerate(self):
+        for rec in self:
+            rec.net_perimum = (rec.sum_insure * rec.rate) / 100
+
+    # @api.multi
+    # def unlink(self):
+>>>>>>> b77b9a302b8e16e1aec30841b5e7856c066daaad
     #     for rec in self:
     #         rec.net_perimum = (rec.sum_insure * rec.rate) / 100
     #
