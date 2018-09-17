@@ -18,6 +18,7 @@
                                 <field name="start_date"/>
                                 <field name="end_date"/>
                                 <field name="customer"/>
+                                  <!--<field name="test_computed"/>-->
                                 <field name="holding_cam"/>
                                 <field name="renwal_check" readonly="1"/>
                                 <field name="policy_number" attrs="{'invisible': [('renwal_check', '!=', True)]}"/>

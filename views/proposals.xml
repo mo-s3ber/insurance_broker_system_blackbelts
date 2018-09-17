@@ -21,63 +21,21 @@
             <field name="model">proposal.opp.bb</field>
             <field name="arch" type="xml">
                 <form>
-                    <div class="o_row">
-                        <label for="Company"/>
+                    <group string="proposal">
+                        <!--<label for="Company"/>-->
+                        <field name="proposal_id"/>
                         <field name="Company"/>
-                        <label for="product_pol"/>
+                        <!--<label for="product_pol"/>-->
                         <field name="product_pol"/>
-                        <label for="premium"/>
+                        <!--<label for="premium"/>-->
                         <field name="premium"/>
                         <field name="proposal_crm" invisible="1"/>
                         <field name="show_risks_covers" invisible="1"/>
                         <field name="test" invisible="1"/>
                         <field name="group"  invisible="1"/>
-                        <button name="save" string="Generate Proposal" class="oe_highlight" type="object" />
+                        <!--<button name="save" string="Generate Proposal" class="oe_highlight" type="object" />-->
 
-                    </div>
-                    <label string="Risks" attrs="{'invisible': [('show_risks_covers', '!=', True)]}"/>
-                    <field name="proposal_risks" attrs="{'invisible': [('show_risks_covers', '!=', True)]}">
-                        <tree>
-                            <field name="risk_id"/>
-                            <field name="risk_desc"/>
-                            <button name="get_covers_risk" string="View covers" class="oe_highlight" type="object"/>
-                        </tree>
-                        <form>
-                            <group>
-                                <field name="risks_covers" >
-                                    <tree>
-                                        <field name="check" invisible="1"  />
-                                        <field name="name" attrs="{'readonly': [('check', '=', True)]}" force_save="1"  />
-                                        <field name="sum_insure"  attrs="{'readonly': [('check', '=', True)]}"  force_save="1" />
-                                        <field name="rate" attrs="{'readonly': [('check', '=', True)]}"  force_save="1" />
-                                        <field name="net_perimum" attrs="{'readonly': [('check', '=', True)]}"   force_save="1"  />
-                                    </tree>
-                                    <form>
-                                        <group>
-                                            <field name="check" invisible="0" />
-                                            <field name="name" attrs="{'readonly': [('check', '=', True)]}"  force_save="1"  />
-                                            <field name="sum_insure"  attrs="{'readonly': [('check', '=', True)]}"  force_save="1"/>
-                                            <field name="rate" attrs="{'readonly': [('check', '=', True)]}"   force_save="1" />
-                                            <field name="net_perimum"  attrs="{'readonly': [('check', '=', True)]}" force_save="1"/>
-                                        </group>
-                                    </form>
-
-                                </field>
-                            </group>
-                        </form>
-
-                    </field>
-                    <label string="Covers" attrs="{'invisible': [('show_risks_covers', '!=', True)]}"/>
-                    <field name="selected_risk_covers" attrs="{'invisible': [('show_risks_covers', '!=', True)]}" >
-                        <tree>
-                            <field name="check" invisible="1"  />
-                            <field name="name" attrs="{'readonly': [('check', '=', True)]}" force_save="1"  />
-                            <field name="sum_insure"  attrs="{'readonly': [('check', '=', True)]}"  force_save="1" />
-                            <field name="rate" attrs="{'readonly': [('check', '=', True)]}"  force_save="1" />
-                            <field name="net_perimum" attrs="{'readonly': [('check', '=', True)]}"   force_save="1"  />
-
-                        </tree>
-                    </field>
+                    </group>
                 </form>
 
             </field>
@@ -87,13 +45,10 @@
             <field name="name">Risk Details</field>
             <field name="model">risks.opp</field>
             <field name="arch" type="xml">
-                <form>
-                    <group string="Basic_info">
-                        <field name="risks_crm"/>
-                        <field name="risk_id"/>
-                        <field name="risk_desc"/>
-                        <field name="type_risk"/>
-                    </group>
+                <form >
+
+
+
 
                     <group string="vechile"  attrs="{'invisible': ['|',('type_risk', '!=', 'vehicle')]}" >
 
@@ -116,9 +71,38 @@
                         <field name="cargo_type"  />
                         <field name="weight"  />
                     </group>
+
+                    <group string="Basic_info">
+                        <field name="risks_crm" invisible="1"/>
+                        <field name="risk_id" required="1"/>
+                        <field name="risk_desc" invisible="1" />
+                        <!--<button name="saverecord" string="Save " class="oe_highlight" type="object" />-->
+                        <field name="type_risk" invisible="1"/>
+                    </group>
+                    <!--<footer>-->
+                    <!--<button name="your_test_method" string="My Button" type="object" class="btn-primary" invisible="1"/>-->
+                    <!--<button string="Cancel" class="btn-default" special="cancel" invisible="1"/>-->
+                    <!--</footer>-->
                 </form>
             </field>
         </record>
+
+        <!--<record model="ir.ui.view" id="Risks_form">-->
+            <!--<field name="name">coverage.line</field>-->
+            <!--<field name="model">coverage.line</field>-->
+             <!--<field name="context">{"default_covers_crm":id}</field>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<form>-->
+                    <!--<group>-->
+                        <!--<field name="proposal_id"/>-->
+                        <!--<field name="risk_id"/>-->
+                        <!--<field name="risk_desc"/>-->
+                        <!--<field name="covers_crm" />-->
+
+                    <!--</group>-->
+                <!--</form>-->
+            <!--</field>-->
+        <!--</record>-->
 
     </data>
 </odoo>

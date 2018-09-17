@@ -4,8 +4,10 @@ from datetime import datetime,timedelta
 
 class Proposals_opp(models.Model):
     _name='proposal.opp.bb'
+    _rec_name='proposal_id'
 
     proposal_crm = fields.Many2one("crm.lead")
+    proposal_id=fields.Char('ID')
     Company = fields.Many2one('res.partner', domain="[('insurer_type','=',1)]", string="Insurer")
     product_pol = fields.Many2one('insurance.product',domain="[('insurer','=',Company)]", string="Product")
     premium = fields.Float('Premium',compute='set_prem',force_save=True)
@@ -205,13 +207,19 @@ class Proposals_opp(models.Model):
     #             cargo.covers_cargo = res
 
     @api.one
-    @api.depends('Company')
+    @api.depends('proposal_crm.coverage_line')
     def set_prem(self):
-        if self.proposal_risks:
+        if self.proposal_crm.coverage_line:
+            print ('mostafa')
             self.premium=0
-            for rec in self.proposal_risks:
-               for risk in rec.risks_covers:
-                    self.premium += risk.net_perimum
+            for rec in self:
+                ids = self.env['coverage.line'].search(
+                                [('proposal_id', '=', rec.proposal_id)])
+                for coverrecord in ids:
+                    self.premium+=coverrecord.net_premium
+
+                print (ids)
+
 
     def save(self):
         self.show_risks_covers = True

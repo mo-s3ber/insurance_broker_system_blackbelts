@@ -50,7 +50,7 @@ class New_Risks(models.Model):
 
 
     risk = fields.Char("Risk ID")
-    risk_description = fields.Text("Risk Description" ,compute="_compute_risk_description")
+    risk_description = fields.Char("Risk Description" ,compute="_compute_risk_description")
     proposal__risk_id = fields.Many2one('proposal.bb')
     name_cover_risk_ids=fields.One2many("name.covers", "risk_brokerd_id")
     test = fields.Char(related="policy_risk_id.test")

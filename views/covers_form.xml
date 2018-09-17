@@ -1,5 +1,23 @@
 <odoo>
     <data>
+
+
+
+        <record id="tree_covers" model="ir.ui.view">
+            <field name="name">covers_tree</field>
+            <field name="model">name.covers</field>
+            <field name="arch" type="xml">
+                <tree >
+
+                    <field name="name"   />
+                    <field name="sum_insure" />
+                    <field name="rate"  />
+                    <field name="net_perimum" />
+
+                </tree>
+
+            </field>
+        </record>
         <record id="my_view_for_covers_edit_cover" model="ir.ui.view">
             <field name="name">poroposal </field>
             <field name="model">name.covers</field>
@@ -16,5 +34,7 @@
                 </form>
             </field>
         </record>
+
+
     </data>
 </odoo>
