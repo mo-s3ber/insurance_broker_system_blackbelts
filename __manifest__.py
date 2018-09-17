@@ -29,20 +29,21 @@
     # always loaded
     'data': [
         'views/policy_setup_view.xml',
-        'views/new_risk_form.xml',
-        'views/covers_form.xml',
+
+        # 'views/new_risk_form.xml',
+        # 'views/covers_form.xml',
         'views/endorsement.xml',
         'views/renewal_view.xml',
         'views/claimform_view.xml',
-        'views/proposals.xml',
+        # 'views/proposals.xml',
         "views/users_views.xml",
-        "views/view.xml",
         "views/insurer_partner.xml",
         "views/installments_view.xml",
         "views/views.xml",
         "views/application_menu.xml",
-        'views/edit_covers.xml',
-        "views/form_porposal.xml",
+        "views/view.xml",
+
+        # 'views/edit_covers.xml',
 
     ],
     # only loaded in demonstration mode

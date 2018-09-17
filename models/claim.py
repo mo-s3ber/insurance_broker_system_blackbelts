@@ -62,7 +62,7 @@ class settleHistory(models.Model):
     risk_id = fields.Many2one('vehicle.object',string='Risk')
     risk_details =fields.Char(string='Risk Details')
     coverage = fields.Many2one('insurance.product.coverage',string='Coverage')
-    sum_insured=fields.Char(related='coverage.defaultvalue',string='Sum Insured',store=True,readonly=True)
+    sum_insured=fields.Float(related='coverage.defaultvalue',string='Sum Insured',store=True,readonly=True)
     settle_amount=fields.Float(string='Settle Amount')
     settle_date=fields.Date(string='Settle Date')
     status=fields.Many2one('insurance.setup',string='Status',domain="[('setup_type','=','ssta')]")
