@@ -6,15 +6,6 @@ class New_Risks(models.Model):
     _name="new.risks"
     _rec_name="risk"
 
-    # @api.multi
-    # def generate_covers(self):
-    #     return True
-    #
-    #
-    # #
-    # # @api.multi
-    # # def get_covers(self):
-    # #     self.proposal__risk_id.risk_proposal_select_id = self.id
 
     @api.multi
     @api.onchange('risk')
@@ -35,19 +26,10 @@ class New_Risks(models.Model):
 
     policy_risk_id = fields.Many2one("policy.broker")
 
-<<<<<<< HEAD
-    risk = fields.Char("Risk ID")
-    risk_description = fields.Char("Risk Description" ,compute="_compute_risk_description")
-=======
+
     risk = fields.Char("Risk ID" ,required=True)
-<<<<<<< HEAD
     risk_description = fields.Text("Risk Description")
-=======
-    risk_description = fields.Text("Risk Description",compute="_compute_risk_descriptionn",store=True)
->>>>>>> 60da00b23ccb9222cf1ccd4ce21144593f9a4117
->>>>>>> 04c237543c50c9224795509ef5da60e0ab3603fc
-    proposal__risk_id = fields.Many2one('proposal.bb')
-    name_cover_risk_ids=fields.One2many("name.covers", "risk_brokerd_id")
+
     test = fields.Char(related="policy_risk_id.check_item")
 
 

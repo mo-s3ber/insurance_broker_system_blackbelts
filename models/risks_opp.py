@@ -42,7 +42,7 @@ class Risks_object(models.Model):
     risk_desc=fields.Char('Risk Description',compute=_set_risk_desc,store=True)
     type_risk=fields.Char(related='risks_crm.test')
     proposal_risks_opp = fields.Many2one('proposal.opp.bb', string='proposal')
-    risks_covers=fields.One2many('name.covers','risks',force_save=True)
+    # risks_covers=fields.One2many('name.covers','risks',force_save=True)
 
     my_button = fields.Boolean('Label')
 

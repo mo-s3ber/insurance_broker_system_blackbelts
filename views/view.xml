@@ -10,9 +10,9 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                             <button class="oe_stat_button" type="action"
-                                context="{}"
-                                     name="%(insurance_broker_system_blackbelts.tree_insurance_claim)d"
+                             <button class="oe_inline oe_stat_button" type="action"
+                                context="{'search_default_policy_number': active_id}"
+                                     name="%(insurance_broker_system_blackbelts.claim_view_action)d"
                                      icon='fa-star'>
                                  <field name="count_claim" string="Claims" widget="statinfo"/>
 
@@ -41,9 +41,9 @@
                             </h2>
                             <h3  class="o_row">
                                 <div>
-                                    <label for="edit_decr" attrs="{'invisible': [('edit_number', '!=', True)]}" />
+                                    <label for="edit_decr" attrs="{'invisible': [('edit_number', '&lt;=', 0)]}" />
                                     <div class="o_row">
-                                        <field name="edit_decr" attrs="{'invisible': [('edit_number', '!=', True)]}"/>
+                                        <field name="edit_decr" attrs="{'invisible': [('edit_number', '&lt;=', 0)]}"/>
                                     </div>
                                 </div>
                                 <div>
@@ -66,34 +66,23 @@
                                 <field name="issue_date"/>
                                 <field name="start_date"/>
                                 <field name="end_date"/>
-<<<<<<< HEAD
-                                <field name="customer"/>
-                                  <!--<field name="test_computed"/>-->
-                                <field name="holding_cam"/>
-                                <field name="renwal_check" readonly="1"/>
-                                <field name="policy_number" attrs="{'invisible': [('renwal_check', '!=', True)]}"/>
-                            </group>
-                            <group string="commision">
-                                <field name="gross_perimum"/>
-                                <field name="t_permimum"/>
-                                <field name="term"/>
-                                <field name="number"  attrs="{'invisible': [('term', '!=', 'year')]}"/>
-                                <field name="edit_number"/>
-                                <!--<field name="ediet_number" attrs="{'invisible': [('edit_number', '=', 0)]}"/>-->
-
-                                <field name="edit_decr"  attrs="{'invisible': [('edit_number', '=', True)]}"/>
-
-=======
                                 <field name="benefit"/>
->>>>>>> 60da00b23ccb9222cf1ccd4ce21144593f9a4117
-
                                 <field name="salesperson"/>
                                 <field name="onlayer"/>
                                 <field name="personcom"/>
 
 
-
                             </group>
+                            <!--<group string="commision">-->
+                                <!--<field name="gross_perimum"/>-->
+                                <!--<field name="t_permimum"/>-->
+                                <!--<field name="term"/>-->
+                                <!--<field name="number"  attrs="{'invisible': [('term', '!=', 'year')]}"/>-->
+                                <!---->
+
+
+
+                            <!--</group>-->
                             <group >
                                 <field name="insurance_type"/>
                                 <field name="line_of_bussines"/>
@@ -114,13 +103,12 @@
                             <group>
                                 <field name="check_item" invisible="1"/>
                                 <field name="group" invisible="1"/>
-                                <!--<button name="Set_risks" string="Set Risks" class="oe_highlight" type="object" />-->
 
                             </group>
                             <field name="new_risk_ids"  >
                                 <tree>
                                     <field name="risk"/>
-                                    <field name="risk_description" />
+                                    <field name="risk_description"  />
                                 </tree>
                                 <form>
                                     <group>
@@ -129,20 +117,20 @@
                                     <group string="Vehicle" attrs="{'invisible': [('test', '!=', 'vehicle')]}" >
                                         <field name="car_tybe" attrs="{'invisible': [('test', '!=', 'vehicle')]}" />
                                         <field name="motor_cc" attrs="{'invisible': [('test', '!=', 'vehicle')]}" />
-                                        <field name="year_of_made" attrs="{'invisible': [('test', '!=', 'vehicle')]}" />
+                                        <field name="year_of_made" attrs="{'invisible': [('test', '!=', 'vehicle')]}"  />
                                         <field name="Man" attrs="{'invisible': [('test', '!=', 'vehicle')]}"  />
                                         <field name="model"  attrs="{'invisible': [('test', '!=', 'vehicle')]}" />
                                     </group>
-                                    <group string="Person" attrs="{'invisible': [('test', '!=', 'person')]}">
+                                    <group string="Person" attrs="{'invisible': [('test', '!=', 'person')]}" >
                                         <field name="name"  attrs="{'invisible': [('test', '!=', 'person')]}"  />
-                                        <field name="DOB"    attrs="{'invisible': [('test', '!=', 'person')]}"/>
-                                        <field name="job"   attrs="{'invisible': [('test', '!=', 'person')]}"/>
+                                        <field name="DOB"    attrs="{'invisible': [('test', '!=', 'person')]}" />
+                                        <field name="job"   attrs="{'invisible': [('test', '!=', 'person')]}"  />
                                     </group>
-                                    <group string="Cargo"  attrs="{'invisible': [('test', '!=', 'cargo')]}">
-                                        <field name="From"   attrs="{'invisible': [('test', '!=', 'cargo')]}" />
-                                        <field name="To"   attrs="{'invisible': [('test', '!=', 'cargo')]}" />
-                                        <field name="cargo_type"   attrs="{'invisible': [('test', '!=', 'cargo')]}" />
-                                        <field name="weight"    attrs="{'invisible': [('test', '!=', 'cargo')]}"/>
+                                    <group string="Cargo"  attrs="{'invisible': [('test', '!=', 'cargo')]}" >
+                                        <field name="From"   attrs="{'invisible': [('test', '!=', 'cargo')]}"  />
+                                        <field name="To"   attrs="{'invisible': [('test', '!=', 'cargo')]}"  />
+                                        <field name="cargo_type"   attrs="{'invisible': [('test', '!=', 'cargo')]}"  />
+                                        <field name="weight"    attrs="{'invisible': [('test', '!=', 'cargo')]}" />
                                     </group>
                                     <group>
                                         <field name="risk"/>
@@ -167,8 +155,6 @@
                                     <field name="policy_rel_id" invisible="1"/>
                                     <field name="insurerd" invisible="1"/>
                                     <field name="prod_product" invisible="1"/>
-                                    <field name="rel_risk" invisible="1"/>
-                                    <field name="risko" invisible="1"/>
 
                                     <field name="name1" options="{'no_create': True, 'no_open': True}"/>
                                     <field name="check" invisible="1"/>
@@ -251,10 +237,15 @@
             <field name="arch" type="xml">
                 <tree string="my_tree_for_policy">
                     <field name="std_id"/>
+                    <field name="renwal_check"/>
+
                     <field name="issue_date"/>
                     <field name="start_date"/>
                     <field name="end_date"/>
                     <field name="gross_perimum"/>
+                    <field name="edit_number"/>
+
+
 
                 </tree>
             </field>
@@ -264,7 +255,7 @@
             <field name="model">policy.broker</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="holding_cam"/>
+                    <!--<field name="holding_cam"/>-->
                     <filter string="Salesperson" name="by_salesperson" domain="[('salesperson','=',uid)]"/>
 
                 </search>

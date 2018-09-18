@@ -15,7 +15,6 @@ class Proposals_opp(models.Model):
     group = fields.Boolean('Groups')
     risk_cover_selected= fields.Many2one('risks.opp')
     show_risks_covers=fields.Boolean('')
-    selected_risk_covers=fields.One2many('name.covers','selected',compute='get_covers')
     # selected_id=fields.Integer('')
 
     @api.multi
