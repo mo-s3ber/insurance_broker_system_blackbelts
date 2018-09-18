@@ -8,52 +8,30 @@ class New_Risks(models.Model):
 
 
     @api.multi
-    def Show_covers(self):
-        form_view = self.env.ref('insurance_broker_system_blackbelts.my_view_for_covers_edit')
-        form_view2 = self.env.ref('insurance_broker_system_blackbelts.my_view_for_covers_edit_cover')
-
-        return {
-            'name': ('poroposal '),
-            'view_type': 'form',
-            'view_mode': 'tree',
-            'views': [(form_view.id, 'tree'),(form_view2.id,'form')],
-            'res_model': 'name.covers',
-            'target': 'current',
-            'type': 'ir.actions.act_window',
-            'context': {"default_proposal__risk_id.covers_rel_ids": self.id},
-            'flags': {'tree': {'action_buttons': True}, 'form': {'action_buttons': True},
-                                  'action_buttons': True},
-            'domain': [('id', 'in', self.name_cover_risk_ids.ids)]
-
-
-        }
-
-    @api.multi
-    def get_covers(self):
-        self.proposal__risk_id.risk_proposal_select_id = self.id
-
-    @api.multi
-    def _compute_risk_description(self):
+    @api.onchange('risk')
+    def _compute_risk_descriptionn(self):
         for rec in self:
+
             if rec.test == "person":
-                rec.risk_description = str(rec.name) + "  " + str(rec.DOB)+ "  " + str(rec.job)
+                rec.risk_description = (str(rec.name) if rec.name  else " "+"_") + "  " + (str(rec.DOB) if rec.DOB else " "+"_")+ "  " + (str(rec.job) if rec.job  else " "+"_")
 
             if rec.test == "vehicle":
-                rec.risk_description = str(rec.car_tybe) + "  " +str(rec.motor_cc) + "  " +str(rec.year_of_made)+ "  " + str(rec.model)+ "  " + str(rec.Man)
+                rec.risk_description = (str(rec.car_tybe)  if rec.car_tybe  else " "+"_") + "  " +(str(rec.motor_cc)  if rec.motor_cc else " "+"_") + "  " +(str(rec.year_of_made)  if rec.year_of_made  else " "+"_")+ "  " + (str(rec.model)  if rec.model  else " "+"_") + "  " + (str(rec.Man)  if rec.Man  else" "+"_")
 
             if rec.test == "cargo":
-                rec.risk_description = str(rec.From)+ "  " + str(rec.To) + "  " + str(rec.cargo_type) + "  " + str(rec.weight)
+                rec.risk_description = (str(rec.From)  if rec.From else " "+"_")+ "  " + (str(rec.To)  if rec.To else " "+"_") + "  " + (str(rec.cargo_type)  if rec.cargo_type  else " "+"_") + "  " + (str(rec.weight)  if rec.weight else " "+"_")
             if rec.test == "location":
-                rec.risk_description = str(rec.group_name)  + "  " + str(rec.count)
+                rec.risk_description = (str(rec.group_name)  if rec.group_name  else" "+"_")  + "  " + (str(rec.count)  if rec.count  else " "+"_")
+
 
     policy_risk_id = fields.Many2one("policy.broker")
 
 
-    risk = fields.Char("Risk ID")
-    risk_description = fields.Text("Risk Description" ,compute="_compute_risk_description")
-    proposal__risk_id = fields.Many2one('proposal.bb')
-    name_cover_risk_ids=fields.One2many("name.covers", "risk_brokerd_id")
-    test = fields.Char(related="policy_risk_id.test")
+    risk = fields.Char("Risk ID" ,required=True)
+    risk_description = fields.Text("Risk Description")
+
+    test = fields.Char(related="policy_risk_id.check_item")
+
 
 
     #group car
@@ -86,3 +64,12 @@ class New_Risks(models.Model):
     count=fields.Char('Group Count')
 
     file = fields.Binary(string='Group Details File')
+
+
+    # @api.model
+    # def create(self,vals):
+    #     self.env["policy.broker"].create({"new_risk_ids.risk":self.risk,"new_risk_ids.risk_description":self.risk_description})
+    #
+    #
+    #     return super(New_Risks, self).create(vals)
+
