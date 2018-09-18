@@ -82,6 +82,7 @@ class claimPolicy(models.Model):
             total+=record.sum_insured
         self.totalsettled=total
 
+
 class settleHistory(models.Model):
     _name ="settle.history"
 

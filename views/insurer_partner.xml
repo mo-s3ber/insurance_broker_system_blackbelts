@@ -4,11 +4,12 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group/group/field[@name='type']" position="after">
-                <field name="insurer_type" readonly="1" force_save="1"/>
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="insurer_type" readonly="1" force_save="1" attrs="{'invisible': [('customer','=',True)]}"/>
                 <field name="insurer_branch" attrs="{'invisible': [('insurer_type','=',False)]}"/>
                 <field name="holding_type" attrs="{'invisible': [('company_type','!=','company')]}" readonly="1" force_save="1"/>
                 <field name="holding_company" attrs="{'invisible': [('company_type','!=','company'),('holding_type','!=',False)]}"/>
+                <field name="numberofchildren" attrs="{'invisible': [('company_type','=','company')]}"/>
             </xpath>
         </field>
     </record>
@@ -48,7 +49,7 @@
             </data>
         </field>
     </record>
-    <record id="res_partner_view_buttons" model="ir.ui.view">
+    <record id="res_partner_view_remove" model="ir.ui.view">
             <field name="name">res.partner.view.buttons</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form" />
@@ -56,6 +57,12 @@
             <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='%(sale.act_res_partner_2_sale_order)d']" position="attributes">
+                   <attribute name="invisible">1</attribute>
+               </xpath>
+                <xpath expr="//field[@name='parent_id']" position="attributes">
+                   <attribute name="invisible">1</attribute>
+               </xpath>
+                <xpath expr="//field[@name='vat']" position="attributes">
                    <attribute name="invisible">1</attribute>
                </xpath>
             </field>

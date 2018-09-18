@@ -9,3 +9,4 @@ from . import renewal
 from . import endorsement
 from . import new_risks
 from . import risks_opp
+from . import partner_inhirt
