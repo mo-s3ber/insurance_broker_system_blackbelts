@@ -8,7 +8,7 @@ class inhertResPartner(models.Model):
 
     insurer_type=fields.Boolean('Insurer')
     insurer_branch=fields.Many2one("res.partner",string="Insurer Branch")
-    holding_type=fields.Boolean("Holding",default=True)
+    holding_type=fields.Boolean("Holding")
     holding_company=fields.Many2one("res.partner",string="Holding Company")
     numberofchildren=fields.Integer('Number of Children')
     policy_count=fields.Integer(compute='_compute_policy_count')

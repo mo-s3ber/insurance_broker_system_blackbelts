@@ -47,7 +47,7 @@
                             <field name="customer_policy" readonly="1" force_save="1"/>
                             <field name="insured" readonly="1" force_save="1"/>
                             <field name="beneficiary" readonly="1" force_save="1"/>
-                            <field name="currencycode" readonly="1" force_save="1"/>
+                            <field name="currency" readonly="1" force_save="1"/>
                             <field name="lob" readonly="1" force_save="1"/>
                             <field name="product" readonly="1" force_save="1"/>
                             <field name="insurer" readonly="1" force_save="1"/>
@@ -125,10 +125,10 @@
                     </h1>
                 </div>
                 <group>
-                    <field name="risk_id" />
-                    <field name="risk_details"/>
-                    <field name="coverage"/>
-                    <field name="sum_insured"/>
+                    <field name="risk_id" widget="selection"/>
+                    <field name="risk_details" readonly="1" force_save="1"/>
+                    <field name="coverage" readonly="1" force_save="1"/>
+                    <field name="sum_insured" readonly="1" force_save="1"/>
                     <field name="settle_amount"/>
                     <field name="settle_date"/>
                     <field name="status"/>

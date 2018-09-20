@@ -32,20 +32,14 @@
         'views/endorsement.xml',
         'views/renewal_view.xml',
         'views/claimform_view.xml',
-
         'views/proposals.xml',
-
-
-
-        'views/renewal_view.xml',
-        'views/claimform_view.xml',
-
         "views/users_views.xml",
         "views/insurer_partner.xml",
         "views/installments_view.xml",
         "views/views.xml",
-        "views/application_menu.xml",
         "views/view.xml",
+        "views/application_menu.xml",
+
 
 
 

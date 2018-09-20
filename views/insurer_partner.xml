@@ -4,11 +4,11 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='parent_id']" position="after">
+            <xpath expr="//group/group" position="inside">
                 <field name="insurer_type" readonly="1" force_save="1" attrs="{'invisible': [('customer','=',True)]}"/>
                 <field name="insurer_branch" attrs="{'invisible': [('insurer_type','=',False)]}"/>
-                <field name="holding_type" attrs="{'invisible': [('company_type','!=','company')]}" readonly="1" force_save="1"/>
-                <field name="holding_company" attrs="{'invisible': [('company_type','!=','company'),('holding_type','!=',False)]}"/>
+                <field name="holding_type" attrs="{'invisible': [('company_type','!=','company')]}"  force_save="1"/>
+                <field name="holding_company" attrs="{'invisible': [('holding_type','=',False)]}"/>
                 <field name="numberofchildren" attrs="{'invisible': [('company_type','=','company')]}"/>
             </xpath>
         </field>

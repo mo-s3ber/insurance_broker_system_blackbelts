@@ -27,7 +27,7 @@ class claimPolicy(models.Model):
     customer_policy=fields.Many2one('res.partner',string='Customer',store=True,readonly=True)
     insured=fields.Char(string='Insured',store=True)
     beneficiary = fields.Char(string='Beneficiary', store=True,readonly=True)
-    currencycode = fields.Char(string='Currency Code', store=True,readonly=True)
+    currency = fields.Many2one('res.currency',string="Currency")
     lob = fields.Many2one('insurance.line.business', string='Line of Business', store=True,readonly=True)
     product = fields.Many2one('insurance.product', string='Product', store=True,readonly=True)
     insurer = fields.Many2one('res.partner', string='Insurer', store=True,readonly=True)
@@ -49,18 +49,22 @@ class claimPolicy(models.Model):
     @api.onchange('endorsement','policy_number')
     def _onchange_policy_details(self):
         if self.endorsement:
-            self.customer_policy=self.endorsement.customer
-            self.insured =self.endorsement.line_of_bussines.object
-            self.lob=self.endorsement.line_of_bussines
-            self.product=self.endorsement.selected_proposal.product_pol
-            self.insurer=self.endorsement.selected_proposal.product_pol.insurer
+            self.customer_policy = self.endorsement.customer
+            self.insured = self.endorsement.line_of_bussines.object
+            self.lob = self.endorsement.line_of_bussines
+            self.product = self.endorsement.product_policy
+            self.insurer = self.endorsement.company
+            self.beneficiary = self.endorsement.benefit
+            self.currency = self.endorsement.currency_id.id
 
         else:
             self.customer_policy=self.policy_number.customer
             self.insured =self.policy_number.line_of_bussines.object
             self.lob=self.policy_number.line_of_bussines
-            self.product=self.policy_number.selected_proposal.product_pol
-            self.insurer=self.policy_number.selected_proposal.product_pol.insurer
+            self.product=self.policy_number.product_policy
+            self.insurer=self.policy_number.company
+            self.beneficiary=self.policy_number.benefit
+            self.currency = self.policy_number.currency_id.id
 
     @api.one
     @api.depends('payment_history')
@@ -87,11 +91,11 @@ class settleHistory(models.Model):
     _name ="settle.history"
 
     risk_type=fields.Char(related='claimheader.insured',string='Risk Type',readonly=True,store=True)
-    risk_id = fields.Many2one('vehicle.object',string='Risk')
-    risk_details =fields.Char(string='Risk Details')
-    coverage = fields.Many2one('insurance.product.coverage',string='Coverage')
-    sum_insured=fields.Float(related='coverage.defaultvalue',string='Sum Insured',store=True,readonly=True)
-    settle_amount=fields.Float(string='Settle Amount')
+    risk_id = fields.Many2one('covers.lines',string='Risk')
+    risk_details =fields.Text(related='risk_id.risk_description',string='Risk Details')
+    coverage = fields.Many2one(related='risk_id.name1',string='Coverage')
+    sum_insured=fields.Float(related='risk_id.sum_insure',string='Sum Insured',store=True,readonly=True)
+    settle_amount=fields.Float(string='Settle Amount',compute='_onchange_settle_amount')
     settle_date=fields.Date(string='Settle Date')
     status=fields.Many2one('insurance.setup',string='Status',domain="[('setup_type','=','ssta')]")
     claimheader=fields.Many2one('insurance.claim')
@@ -99,8 +103,10 @@ class settleHistory(models.Model):
 
     @api.onchange('claimheader')
     def onchange_risk_id(self):
-      if self.claimheader.policy_number:
-           return {'domain':{'risk_id': [('policy_risk_id','=',self.claimheader.policy_number.id)]}}
+      if self.claimheader.endorsement:
+           return {'domain':{'risk_id': [('policy_rel_id','=',self.claimheader.endorsement.id)]}}
+      else:
+          return {'domain': {'risk_id': [('policy_rel_id', '=', self.claimheader.policy_number.id)]}}
 
     @api.one
     @api.depends('claim_item')
