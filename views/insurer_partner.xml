@@ -5,11 +5,15 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group/group" position="inside">
-                <field name="insurer_type" readonly="1" force_save="1" attrs="{'invisible': [('customer','=',True)]}"/>
-                <field name="insurer_branch" attrs="{'invisible': [('insurer_type','=',False)]}"/>
+                <field name="insurer_type" readonly="1" force_save="1" attrs="{'invisible': ['|',('customer','=',True),('agent','=',True)]}"/>
+                <field name="agent" readonly="1" force_save="1" attrs="{'invisible': ['|',('customer','=',True),('insurer_type','=',True)]}"/>
                 <field name="holding_type" attrs="{'invisible': [('company_type','!=','company')]}"  force_save="1"/>
                 <field name="holding_company" attrs="{'invisible': [('holding_type','=',False)]}"/>
-                <field name="numberofchildren" attrs="{'invisible': [('company_type','=','company')]}"/>
+                <field name="numberofchildren" attrs="{'invisible': ['|',('insurer_type','=',True),('agent','=',True)]}"/>
+            </xpath>
+            <xpath expr="//sheet/div/field[@name='company_type']" position="attributes">
+                <attribute name="attrs">{'readonly': ['|',('insurer_type', '=', True),('agent', '=', True)]}</attribute>
+                <!--<field name="company_type" widget="radio" class="oe_edit_only" options="{'horizontal': true}" attrs="{'invisible': [('insurer_type', '=', True)]}"/>-->
             </xpath>
         </field>
     </record>
@@ -65,6 +69,23 @@
                 <xpath expr="//field[@name='vat']" position="attributes">
                    <attribute name="invisible">1</attribute>
                </xpath>
+            </field>
+    </record>
+    <record id="view_partner_search" model="ir.ui.view">
+            <field name="name">Partner</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <filter name="customer" string="Individual Customer"
+                            domain="[('customer', '=', True)]"/>
+
+                   <filter name="insurer" string="Insurer"
+                            domain="[('insurer_type', '=', True)]"/>
+
+                   <filter name="agent" string="Agent"
+                           domain="[('agent', '=', True)]"/>
+                </xpath>
             </field>
     </record>
 </odoo>
