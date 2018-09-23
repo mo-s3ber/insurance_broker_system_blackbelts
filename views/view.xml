@@ -63,6 +63,7 @@
                             <group >
                                 <field name="customer"/>
                                 <field name="company"/>
+                                <field name="barnche" options="{'no_create': True, 'no_open': True}"/>
                                 <field name="issue_date"/>
                                 <field name="start_date"/>
                                 <field name="end_date"/>
@@ -90,7 +91,7 @@
                                 <field name="ins_type"/>
                                 <field name="currency_id"/>
                                 <field name="gross_perimum"/>
-                                <field name="barnche"/>
+
                                 <field name="t_permimum"/>
                                 <field name="term"/>
                                 <field name="number"  attrs="{'invisible': [('term', '!=', 'year')]}"/>

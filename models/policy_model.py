@@ -192,8 +192,8 @@ class PolicyBroker(models.Model):
 
     std_id = fields.Char(string="Policy Number" ,required=True)
     issue_date = fields.Date(string="Issue Date")
-    start_date = fields.Date(string="Coverage Start On", required=True)
-    end_date = fields.Date(string="Coverage End On")
+    start_date = fields.Date(string="Effective From", required=True)
+    end_date = fields.Date(string="Coverage To")
 
 
 
@@ -201,7 +201,7 @@ class PolicyBroker(models.Model):
         [("onetime", "One Time"), ("year", "yearly"), ("quarter", "Quarterly"), ("month", "Monthly")],
         string="payment frequency")
     number = fields.Integer(string="No Of Years", default=1)
-    barnche = fields.Char("Branch")
+
 
     gross_perimum = fields.Float(string="Gross Perimum")
     t_permimum = fields.Float(string="Net Permium", compute="_compute_t_premium")
@@ -249,6 +249,9 @@ class PolicyBroker(models.Model):
 
     checho = fields.Boolean()
     count_claim = fields.Integer(compute="compute_true")
+
+    barnche = fields.Many2one(related="company.insurer_branch", string="Branch")
+
 
 
 

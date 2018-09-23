@@ -6,9 +6,9 @@ class Renewal_Again(models.Model):
 
     old_number = fields.Many2one("policy.broker", string="Old Policy Number")
     new_number = fields.Char(string="New Policy Number")
-    issue_date = fields.Date(string="Effective Date")
-    start_date = fields.Date(string="Effective Start On")
-    end_date = fields.Date(string="Effective End On")
+    issue_date = fields.Date(string="Issue Date")
+    start_date = fields.Date(string="Effective From")
+    end_date = fields.Date(string="Effective To")
 
     @api.multi
     def create_renewal(self):
@@ -60,27 +60,44 @@ class Renewal_Again(models.Model):
                 'res_model': 'policy.broker',
                 'target': 'current',
                 'type': 'ir.actions.act_window',
+                # 'flags': {'form': {'options': {'mode': 'view'}}},
                 'context': {
                             'default_renwal_check': True,
                     'default_checho': True,
                     'default_company': self.old_number.company.id,
+
                     'default_product_policy': self.old_number.product_policy.id,
+
                     'default_policy_number':self.new_number,
+
                     'default_std_id': self.old_number.std_id,
+
                     'default_customer': self.old_number.customer.id,
+
                     'default_issue_date': self.issue_date,
+
                     'default_start_date': self.start_date,
+
                     'default_end_date': self.end_date,
-                    'default_barnche': self.old_number.barnche,
+
+                    'default_barnche': self.old_number.barnche.id,
+
                     'default_salesperson': self.old_number.salesperson.id,
+
                     'default_onlayer': self.old_number.onlayer,
+
                     'default_currency_id': self.old_number.currency_id.id,
+
                     'default_benefit': self.old_number.benefit,
 
                     'default_insurance_type': self.old_number.insurance_type,
+
                     'default_line_of_bussines': self.old_number.line_of_bussines.id,
+
                     'default_ins_type': self.old_number.ins_type,
+
                     'default_new_risk_ids': records_cargo,
+
                     'default_name_cover_rel_ids': value,
                             }
             }
