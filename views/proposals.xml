@@ -24,6 +24,9 @@
                     <group string="proposal">
                         <!--<label for="Company"/>-->
                         <field name="proposal_id"/>
+                        <field name="instype" invisible="1"/>
+                        <field name="line" invisible="1"/>
+
                         <field name="Company"/>
                         <!--<label for="product_pol"/>-->
                         <field name="product_pol"/>
@@ -41,51 +44,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="Risks_form">
-            <field name="name">Risk Details</field>
-            <field name="model">risks.opp</field>
-            <field name="arch" type="xml">
-                <form >
 
-
-
-
-                    <group string="vechile"  attrs="{'invisible': ['|',('type_risk', '!=', 'vehicle')]}" >
-
-                        <field name="Man"/>
-                        <field name="model"/>
-                        <field name="motor_cc"/>
-                        <field name="year_of_made"/>
-                    </group>
-
-
-
-                    <group string="Person" attrs="{'invisible': ['|',('type_risk', '!=', 'person')]}" >
-                        <field name="name"  />
-                        <field name="DOB"  />
-                        <field name="job"  />
-                    </group>
-                    <group string="Cargo" attrs="{'invisible': ['|',('type_risk', '!=', 'cargo')]}" >
-                        <field name="From"  />
-                        <field name="To"  />
-                        <field name="cargo_type"  />
-                        <field name="weight"  />
-                    </group>
-
-                    <group string="Basic_info">
-                        <field name="risks_crm" invisible="1"/>
-                        <field name="risk_id" required="1"/>
-                        <field name="risk_desc" invisible="1" />
-                        <!--<button name="saverecord" string="Save " class="oe_highlight" type="object" />-->
-                        <field name="type_risk" invisible="1"/>
-                    </group>
-                    <!--<footer>-->
-                    <!--<button name="your_test_method" string="My Button" type="object" class="btn-primary" invisible="1"/>-->
-                    <!--<button string="Cancel" class="btn-default" special="cancel" invisible="1"/>-->
-                    <!--</footer>-->
-                </form>
-            </field>
-        </record>
 
         <!--<record model="ir.ui.view" id="Risks_form">-->
             <!--<field name="name">coverage.line</field>-->
