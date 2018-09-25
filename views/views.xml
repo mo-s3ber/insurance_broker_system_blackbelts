@@ -119,9 +119,40 @@
 
                         <field name="objectrisks" >
                             <tree>
-                                <field name="risk_id"/>
-                                <field name="risk_desc"/>
+                                <field name="risk"/>
+                                <field name="risk_description"/>
                             </tree>
+                             <form>
+                                    <group>
+
+                                    </group>
+                                    <group string="Vehicle" attrs="{'invisible': ['|',('type_risk', '!=', 'vehicle')]}" >
+                                        <field name="car_tybe"/>
+                                        <field name="motor_cc"/>
+                                        <field name="year_of_made"/>
+                                        <field name="Man"/>
+                                        <field name="model"/>
+                                    </group>
+                                    <group string="Person" attrs="{'invisible': ['|',('type_risk', '!=', 'person')]}">
+                                        <field name="name"/>
+                                        <field name="DOB"/>
+                                        <field name="job"/>
+                                    </group>
+                                    <group string="Cargo"  attrs="{'invisible': ['|',('type_risk', '!=', 'cargo')]}">
+                                        <field name="From"  />
+                                        <field name="To"  />
+                                        <field name="cargo_type" />
+                                        <field name="weight"   />
+                                    </group>
+                                    <group>
+                                        <field name="risk"/>
+                                        <field name="risk_description" invisible="1"/>
+                                        <field name="risks_crm" invisible="1"/>
+                                        <field name="type_risk" invisible="1"/>
+
+                                    </group>
+
+                                </form>
                         </field>
 
                     </group>

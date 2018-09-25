@@ -19,7 +19,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">[('insurer_type','=', True)]</field>
-            <field name="context">{'search_default_supplier': 1,'default_customer': 0,'default_supplier': 1, 'default_insurer_type': 1,'default_company_type': 'company','default_is_company': 1}</field>
+            <field name="context">{'search_default_insurer': 1,'default_customer': 0,'default_supplier': 1, 'default_insurer_type': 1,'default_company_type': 'company','default_is_company': 1}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">Create the Insurer
                 </p>
@@ -30,8 +30,8 @@
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('customer','=', False),('supplier','=', False)]</field>
-            <field name="context">{'default_customer': 0,'default_supplier': 0}</field>
+            <field name="domain">[('customer','=', False),('supplier','=', False),('agent','=', True)]</field>
+            <field name="context">{'search_default_agent': 1,'default_customer': 0,'default_supplier': 0,'default_agent': 1}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">Create the Agent
                 </p>

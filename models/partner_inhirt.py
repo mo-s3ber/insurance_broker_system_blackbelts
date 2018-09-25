@@ -13,6 +13,7 @@ class inhertResPartner(models.Model):
     numberofchildren=fields.Integer('Number of Children')
     policy_count=fields.Integer(compute='_compute_policy_count')
     claim_count=fields.Integer(compute='_compute_claim_count')
+    agent=fields.Boolean("Agent")
 
     @api.multi
     def _compute_policy_count(self):

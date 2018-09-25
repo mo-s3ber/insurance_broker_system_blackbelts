@@ -47,56 +47,48 @@ class PolicyBroker(models.Model):
 
     @api.model
     def default_get(self, fields):
-        res = super(PolicyBroker, self).default_get(fields)
-        if self._context.get('active_model') == 'crm.lead':
-            # return res
+            res = super(PolicyBroker, self).default_get(fields)
+            if self._context.get('active_model') != 'crm.lead':
+                return res
             lead = self.env['crm.lead'].browse(self._context.get('active_id'))
 
-            recordrisks = self.env['risks.opp'].search([('id', 'in', lead.objectrisks.ids)])
+            recordrisks = self.env['new.risks'].search([('id', 'in', lead.objectrisks.ids)])
+            print(recordrisks)
             records_risks = []
             for rec in recordrisks:
-                objectrisks = (
-                    0, 0, {'risk': rec.risk_id, ' risk_description': rec.risk_desc})
-                records_risks.append(objectrisks)
+                records_risks.append(rec.id)
 
+            recordproposal = self.env['proposal.opp.bb'].search([('id', '=', lead.selected_coverage.id)])
+            print(recordproposal.proposal_id)
+            recordcovers = self.env['coverage.line'].search([('proposal_id', '=', recordproposal.proposal_id)])
 
+            records_covers = []
+            for rec in recordcovers:
+                coversline = (
+                    0, 0,
+                    {'riskk': rec.risk_id_covers.id, 'risk_description': rec.risk_desc, 'insurerd': rec.insurer.id,
+                     'prod_product': rec.product.id, 'name1': rec.covers.id, 'sum_insure': rec.sum_insured,
+                     'net_perimum': rec.net_premium, 'rate': rec.rate})
+                print(coversline)
+                records_covers.append(coversline)
+                print(records_covers)
 
+            # print(records_covers)
 
-            # recordproposal = self.env['proposal.opp.bb'].search([('id', 'in', lead.proposal_opp.ids)])
-            # records_proposal = []
-            # for rec in recordproposal:
-            #     proposal_opp = (
-            #     0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
-            #     records_proposal.append(proposal_opp)
-
+            res['new_risk_ids'] = [(6, 0, records_risks)]
             res['insurance_type'] = lead.insurance_type
             res['line_of_bussines'] = lead.LOB.id
             res['ins_type'] = lead.ins_type
             # res['propoasl_ids'] = records_proposal
-            res['new_risk_ids'] = records_risks
             res['customer'] = lead.partner_id.id
             res['salesperson'] = lead.user_id.id
             res['std_id'] = lead.policy_number
-            # res['test_computed'] = lead.test_computed
+            res['name_cover_rel_ids'] = records_covers
+            # res['checho'] = True
+            res['company'] = lead.selected_coverage.Company.id
+            res['product_policy'] = lead.selected_coverage.product_pol.id
 
-
-
-
-            res['policy_number'] = lead.new_number
-            res['std_id'] = lead.old_number.std_id
-            res['issue_date'] = lead.issue_date
-            res['start_date'] = lead.start_date
-            res['end_date'] = lead.end_date
-            res['test'] = lead.old_number.test
-
-            res['customer'] = lead.old_number.customer.id
-            res['holding_cam'] = lead.old_number.holding_cam
-            res['insurance_type'] = lead.old_number.insurance_type
-            res['line_of_bussines'] = lead.old_number.line_of_bussines.id
-            res['ins_type'] = lead.old_number.ins_type
-
-
-        return res
+            return res
 
 
 

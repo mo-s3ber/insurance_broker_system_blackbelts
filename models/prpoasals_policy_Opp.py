@@ -8,8 +8,10 @@ class Proposals_opp(models.Model):
 
     proposal_crm = fields.Many2one("crm.lead")
     proposal_id=fields.Char('ID')
+    instype=fields.Selection(related='proposal_crm.insurance_type')
+    line=fields.Many2one(related='proposal_crm.LOB',domain="[('insurance_type','=',instype)]")
     Company = fields.Many2one('res.partner', domain="[('insurer_type','=',1)]", string="Insurer")
-    product_pol = fields.Many2one('insurance.product',domain="[('insurer','=',Company)]", string="Product")
+    product_pol = fields.Many2one('insurance.product',domain="[('insurer','=',Company),('line_of_bus','=',line)]", string="Product")
     premium = fields.Float('Premium',compute='set_prem',force_save=True)
     test=fields.Char(string='type')
     group = fields.Boolean('Groups')
@@ -104,7 +106,7 @@ class Proposals_opp(models.Model):
     #     self.cargo_proposal_test = result
 
     select_crm = fields.Many2one('crm.lead')
-    proposal_risks = fields.One2many('risks.opp', 'proposal_risks_opp', force_save=True)
+    # proposal_risks = fields.One2many('risks.opp', 'proposal_risks_opp', force_save=True)
 
     # car_proposal_test_selected = fields.One2many(related='car')
    # group_proposal = fields.One2many('group.group.opp', 'proposal_group_opp', string='group proposal', readonly=True)
@@ -128,30 +130,7 @@ class Proposals_opp(models.Model):
     #             return {'domain': {'car_proposal_test2.covers_car.name': [('id', 'in', rec.ids)]}}
     #
 
-    @api.constrains('product_pol')
-    @api.onchange('product_pol')
-    def setcovers_veh(self):
-        print('i enter')
-        if self.proposal_risks:
-            print('xxx')
-            for veh in self.proposal_risks:
-                veh.risks_covers=False
-                res = []
-                ids = self.env['insurance.product.coverage'].search(
-                    [('product_id', '=', self.product_pol.id)])
-                # print(ids)
-                for rec in ids:
-                    res.append((0, 0, {
-                        "name": rec.Name,
-                        "sum_insure": rec.defaultvalue,
-                        "check": rec.readonly,
-                        # "rate": rec.product_id.name_cover_ids.covers_rel_ids.rate,
-                        "net_perimum": rec.readonly and rec.defaultvalue
-                    }))
-                    # import pdb;
-                    # pdb.set_trace()
 
-                veh.risks_covers = res
 
 
     # @api.constrains('product_pol')

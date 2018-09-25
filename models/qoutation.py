@@ -44,26 +44,24 @@ class crm_leads(models.Model):
     individual = fields.Boolean('Item by Item')
     test1=fields.Boolean(readonly=True)
 
-    objectrisks = fields.One2many('risks.opp', 'risks_crm', string='car')#where you are using this fiedl ? in xml
-
-
+    objectrisks = fields.One2many('new.risks', 'risks_crm', string='car')  # where you are using this fiedl ? in xml
 
     # objectgroup = fields.One2many('group.group.opp', 'object_group_crm', string='Group')
 
-    proposal_opp=fields.One2many('proposal.opp.bb','proposal_crm',string='Final proposla')
+    proposal_opp = fields.One2many('proposal.opp.bb', 'proposal_crm', string='Final proposla')
 
-    coverage_line=fields.One2many('coverage.line','covers_crm','Coverage lines')
+    coverage_line = fields.One2many('coverage.line', 'covers_crm', 'Coverage lines')
 
-    selected_proposal=fields.One2many('proposal.opp.bb','select_crm' ,compute='proposalselected')
-    prop_id=fields.Integer('',readonly=True)
-    my_notes=fields.Text('Under writting')
+    selected_proposal = fields.One2many('proposal.opp.bb', 'select_crm', compute='proposalselected')
+    prop_id = fields.Integer('', readonly=True)
+    my_notes = fields.Text('Under writting')
 
     # covers=fields.One2many(related='selected_proposal.proposals_covers')
 
     # policy_opp=fields.Many2one('policy.broker')
-    selected_coverage = fields.Many2one('coverage.line',domain="[('covers_crm','=',id)]")
-    set_covers=fields.Boolean('')
-    test_computed=fields.Char('',compute='testcom')
+    selected_coverage = fields.Many2one('proposal.opp.bb', domain="[('proposal_crm','=',id)]")
+    set_covers = fields.Boolean('')
+    test_computed = fields.Char('', compute='testcom')
     @api.depends('ins_type')
     def testcom(self):
         self.test_computed='Islam'
@@ -154,7 +152,7 @@ class crm_leads(models.Model):
     @api.multi
     def create_policy(self):
         form_view = self.env.ref('insurance_broker_system_blackbelts.my_view_for_policy_form_kmlo1')
-        if self.policy_number:
+        if self.policy_number and self.selected_coverage:
             return {
                 'name': ('Policy'),
                 'view_type': 'form',
@@ -167,7 +165,8 @@ class crm_leads(models.Model):
             }
         else:
             raise ValidationError(
-                ('You Must Enter the Policy Number .'))
+                ('You Must Enter the Policy Number '
+                 'OR select final proposal  .'))
 
             # , 'default_objectperson':records_person ,'default_objectcar':records_car},
 
