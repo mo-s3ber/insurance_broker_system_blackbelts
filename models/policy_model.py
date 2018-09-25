@@ -30,6 +30,18 @@ class PolicyBroker(models.Model):
     #
     #
 
+    @api.multi
+    def show_claim(self):
+        return {
+            'name': ('Claim'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'insurance.claim',  # model name ?yes true ok
+            'target': 'current',
+            'type': 'ir.actions.act_window',
+            'context': {'default_policy_number': self.id},
+            'domain': [('policy_number', '=', self.id)]
+        }
 
 
 
@@ -90,7 +102,7 @@ class PolicyBroker(models.Model):
 
 
 
-    @api.onchange("term", "number")
+    @api.onchange("t_permimum","term", "number")
     def _cmpute_date_and_amount(self):
         if self.term == "onetime":
             self.rella_installment_id = [(0, 0, {
@@ -193,7 +205,7 @@ class PolicyBroker(models.Model):
     std_id = fields.Char(string="Policy Number" ,required=True)
     issue_date = fields.Date(string="Issue Date")
     start_date = fields.Date(string="Effective From", required=True)
-    end_date = fields.Date(string="Coverage To")
+    end_date = fields.Date(string="Effective To")
 
 
 
@@ -262,13 +274,14 @@ class PolicyBroker(models.Model):
         for id in ids:
             self.count_claim +=1
 
-    @api.multi
+    @api.one
     @api.depends("name_cover_rel_ids")
     def _compute_t_premium(self):
         total = 0.0
-        for line in self.name_cover_rel_ids:
-            total += line.net_perimum
-        self.t_permimum = total
+        for rec in self:
+            for line in rec.name_cover_rel_ids:
+                total += line.net_perimum
+        rec.t_permimum = total
 
 
     @api.multi

@@ -68,12 +68,19 @@
                   parent="main_ibs_menu"/>
         <menuitem id="policy_view_menu" name="Policy" parent="portfolio_management_views_menu"
                   action="my_action_for_second_menu" sequence="0"/>
+        <menuitem id="menu_insured_vehicle" name="Insured Vehicle" parent="portfolio_management_views_menu"
+                  action="action_for_insured_vehicle" sequence="1"/>
+        <menuitem id="menu_insured_Person" name="Insured Person" parent="portfolio_management_views_menu"
+                  action="action_for_insured_Person" sequence="2"/>
+        <menuitem id="menu_insured_Cargo" name="Insured Cargo" parent="portfolio_management_views_menu"
+                  action="action_for_insured_Cargo" sequence="3"/>
+
         <menuitem id="endorsement_view_menu" name="Endorsement" parent="portfolio_management_views_menu"
-                  action="my_action_for_Endorsement" />
+                  action="my_action_for_Endorsement" sequence="4"/>
         <menuitem id="renewal_view_menu" name="Renewal" parent="portfolio_management_views_menu"
-                  action="my_action_for_second_menu_renewal_action"/>
+                  action="my_action_for_second_menu_renewal_action" sequence="5"/>
         <menuitem id="claim_view_menu" name="Claim" parent="portfolio_management_views_menu"
-                  action="claim_view_action"/>
+                  action="claim_view_action" sequence="6"/>
         <menuitem id="Print_out_portfolio_view_menu" name="Print out" parent="portfolio_management_views_menu"/>
         <menuitem id="configuration_portfolio_view_menu" name="Configuration" parent="portfolio_management_views_menu"/>
         <menuitem id="accounting_management_views_menu" name="Accounting Management"
