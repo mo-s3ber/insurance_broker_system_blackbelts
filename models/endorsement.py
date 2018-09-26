@@ -8,9 +8,9 @@ class Endorsement_edit(models.Model):
     number_policy=fields.Many2one("policy.broker", string="Edit policy number")
     number_edit = fields.Integer(string="Endorsement Number")
     reasonedit = fields.Text(string="Endorsement Reason")
-    issue_date = fields.Date(string="Effective Date")
-    start_date = fields.Date(string="Effective Start On")
-    end_date = fields.Date(string="Effective End On")
+    issue_date = fields.Date(string="Issue Date")
+    start_date = fields.Date(string="Effective From")
+    end_date = fields.Date(string="Effective To")
 
 
     @api.multi
@@ -62,6 +62,9 @@ class Endorsement_edit(models.Model):
                 'views': [(form_view.id, 'form')],
                 'res_model': 'policy.broker',
                 'target': 'current',
+                # 'store': False,
+                # 'create': False,
+                # 'edit': False ,
                 'type': 'ir.actions.act_window',
                 'context': {
                     'default_customer': self.number_policy.customer.id,
@@ -77,7 +80,7 @@ class Endorsement_edit(models.Model):
                     'default_issue_date':self.number_policy.issue_date,
                     'default_start_date':self.number_policy.start_date,
                     'default_end_date':self.number_policy.end_date,
-                    'default_barnche':self.number_policy.barnche,
+                    'default_barnche':self.number_policy.barnche.id,
 
                     'default_salesperson':self.number_policy.salesperson.id,
                     'default_onlayer':self.number_policy.onlayer,

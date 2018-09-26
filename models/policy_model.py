@@ -31,67 +31,71 @@ class PolicyBroker(models.Model):
     #
     #
 
+    @api.multi
+    def show_claim(self):
+        return {
+            'name': ('Claim'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'insurance.claim',  # model name ?yes true ok
+            'target': 'current',
+            'type': 'ir.actions.act_window',
+            'context': {'default_policy_number': self.id},
+            'domain': [('policy_number', '=', self.id)]
+        }
 
 
 
     @api.model
     def default_get(self, fields):
-        res = super(PolicyBroker, self).default_get(fields)
-        if self._context.get('active_model') == 'crm.lead':
-            # return res
+            res = super(PolicyBroker, self).default_get(fields)
+            if self._context.get('active_model') != 'crm.lead':
+                return res
             lead = self.env['crm.lead'].browse(self._context.get('active_id'))
 
-            recordrisks = self.env['risks.opp'].search([('id', 'in', lead.objectrisks.ids)])
+            recordrisks = self.env['new.risks'].search([('id', 'in', lead.objectrisks.ids)])
+            print(recordrisks)
             records_risks = []
             for rec in recordrisks:
-                objectrisks = (
-                    0, 0, {'risk': rec.risk_id, ' risk_description': rec.risk_desc})
-                records_risks.append(objectrisks)
+                records_risks.append(rec.id)
 
+            recordproposal = self.env['proposal.opp.bb'].search([('id', '=', lead.selected_coverage.id)])
+            print(recordproposal.proposal_id)
+            recordcovers = self.env['coverage.line'].search([('proposal_id', '=', recordproposal.proposal_id)])
 
+            records_covers = []
+            for rec in recordcovers:
+                coversline = (
+                    0, 0,
+                    {'riskk': rec.risk_id_covers.id, 'risk_description': rec.risk_desc, 'insurerd': rec.insurer.id,
+                     'prod_product': rec.product.id, 'name1': rec.covers.id, 'sum_insure': rec.sum_insured,
+                     'net_perimum': rec.net_premium, 'rate': rec.rate})
+                print(coversline)
+                records_covers.append(coversline)
+                print(records_covers)
 
+            # print(records_covers)
 
-            # recordproposal = self.env['proposal.opp.bb'].search([('id', 'in', lead.proposal_opp.ids)])
-            # records_proposal = []
-            # for rec in recordproposal:
-            #     proposal_opp = (
-            #     0, 0, {'Company': rec.Company.id, 'product_pol': rec.product_pol.id, 'premium': rec.premium})
-            #     records_proposal.append(proposal_opp)
-
+            res['new_risk_ids'] = [(6, 0, records_risks)]
             res['insurance_type'] = lead.insurance_type
             res['line_of_bussines'] = lead.LOB.id
             res['ins_type'] = lead.ins_type
             # res['propoasl_ids'] = records_proposal
-            res['new_risk_ids'] = records_risks
             res['customer'] = lead.partner_id.id
             res['salesperson'] = lead.user_id.id
             res['std_id'] = lead.policy_number
-            # res['test_computed'] = lead.test_computed
+            res['name_cover_rel_ids'] = records_covers
+            # res['checho'] = True
+            res['company'] = lead.selected_coverage.Company.id
+            res['product_policy'] = lead.selected_coverage.product_pol.id
 
-
-
-
-            res['policy_number'] = lead.new_number
-            res['std_id'] = lead.old_number.std_id
-            res['issue_date'] = lead.issue_date
-            res['start_date'] = lead.start_date
-            res['end_date'] = lead.end_date
-            res['test'] = lead.old_number.test
-
-            res['customer'] = lead.old_number.customer.id
-            res['holding_cam'] = lead.old_number.holding_cam
-            res['insurance_type'] = lead.old_number.insurance_type
-            res['line_of_bussines'] = lead.old_number.line_of_bussines.id
-            res['ins_type'] = lead.old_number.ins_type
-
-
-        return res
+            return res
 
 
 
 
 
-    @api.onchange("term", "number")
+    @api.onchange("t_permimum","term", "number")
     def _cmpute_date_and_amount(self):
         if self.term == "onetime":
             self.rella_installment_id = [(0, 0, {
@@ -194,8 +198,8 @@ class PolicyBroker(models.Model):
 
     std_id = fields.Char(string="Policy Number" ,required=True)
     issue_date = fields.Date(string="Issue Date")
-    start_date = fields.Date(string="Coverage Start On", required=True)
-    end_date = fields.Date(string="Coverage End On")
+    start_date = fields.Date(string="Effective From", required=True)
+    end_date = fields.Date(string="Effective To")
 
 
 
@@ -203,7 +207,7 @@ class PolicyBroker(models.Model):
         [("onetime", "One Time"), ("year", "yearly"), ("quarter", "Quarterly"), ("month", "Monthly")],
         string="payment frequency")
     number = fields.Integer(string="No Of Years", default=1)
-    barnche = fields.Char("Branch")
+
 
     gross_perimum = fields.Float(string="Gross Perimum")
     t_permimum = fields.Float(string="Net Permium", compute="_compute_t_premium")
@@ -252,6 +256,9 @@ class PolicyBroker(models.Model):
     checho = fields.Boolean()
     count_claim = fields.Integer(compute="compute_true")
 
+    barnche = fields.Many2one(related="company.insurer_branch", string="Branch")
+
+
 
 
     @api.multi
@@ -261,13 +268,14 @@ class PolicyBroker(models.Model):
         for id in ids:
             self.count_claim +=1
 
-    @api.multi
+    @api.one
     @api.depends("name_cover_rel_ids")
     def _compute_t_premium(self):
         total = 0.0
-        for line in self.name_cover_rel_ids:
-            total += line.net_perimum
-        self.t_permimum = total
+        for rec in self:
+            for line in rec.name_cover_rel_ids:
+                total += line.net_perimum
+        rec.t_permimum = total
 
 
     @api.multi

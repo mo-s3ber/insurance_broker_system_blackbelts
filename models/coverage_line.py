@@ -10,7 +10,7 @@ class Covers(models.Model):
 
     covers_crm=fields.Many2one('crm.lead','covers opp')
     proposal_id=fields.Many2one('proposal.opp.bb','proposal id')
-    risk_id_covers=fields.Many2one('risks.opp','Risk id')
+    risk_id_covers = fields.Many2one('new.risks', 'Risk id')
     risk_desc=fields.Char('')
     # Company = fields.Many2one('res.partner', domain="[('insurer_type','=',1)]", string="Insurer")
     # product_pol = fields.Many2one('insurance.product', domain="[('insurer','=',Company)]", string="Product")
@@ -47,6 +47,6 @@ class Covers(models.Model):
     @api.onchange('risk_id_covers')
     def onchange_risc_desc(self):
         if self.risk_id_covers:
-            self.risk_desc=self.risk_id_covers.risk_desc
+            self.risk_desc=self.risk_id_covers.risk_description
 
 
