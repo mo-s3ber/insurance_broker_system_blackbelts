@@ -274,5 +274,42 @@
         res_model="product.claim.action"
         view_mode="form"
         target="new"/>
+    <record model="ir.ui.view" id="tree_setup">
+        <field name="name">tree.insurance.setup</field>
+        <field name="model">insurance.setup</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <tree string="list">
+                <field name="setup_key"/>
+                <field name="setup_id"/>
+                <field name="setup_item"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="form_insurance_setup">
+        <field name="name">form.insurance.setup</field>
+        <field name="model">insurance.setup</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <form string="Idea form">
+                <group colspan="2">
+                    <separator string="Create" colspan="2"/>
+                    <field name="setup_key"/>
+                    <field name="setup_id"/>
+                    <field name="setup_item"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="insurance_setup_action">
+        <field name="name">Insurance Setup</field>
+        <field name="res_model">insurance.setup</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Create Insurance Setup
+            </p>
+        </field>
+    </record>
 
 </odoo>

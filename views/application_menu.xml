@@ -80,15 +80,14 @@
         <menuitem id="renewal_view_menu" name="Renewal" parent="portfolio_management_views_menu"
                   action="my_action_for_second_menu_renewal_action" sequence="5"/>
         <menuitem id="claim_view_menu" name="Claim" parent="portfolio_management_views_menu"
-<<<<<<< HEAD
                   action="claim_view_action"/>
+
         <menuitem id="settlements_view_menu" name="Settlements" parent="portfolio_management_views_menu"
                   action="action_settlement"/>
         <menuitem id="payment_view_menu" name="Payments" parent="portfolio_management_views_menu"
                   action="action_payment"/>
-=======
-                  action="claim_view_action" sequence="6"/>
->>>>>>> eb5726b4ab3c1ae9d1d95c5073f01ed39b06a6c7
+
+
         <menuitem id="Print_out_portfolio_view_menu" name="Print out" parent="portfolio_management_views_menu"/>
         <menuitem id="configuration_portfolio_view_menu" name="Configuration" parent="portfolio_management_views_menu"/>
         <menuitem id="accounting_management_views_menu" name="Accounting Management"
@@ -130,8 +129,8 @@
                   action="insurance_line_business_action"/>
         <menuitem id="product_view_menu" name="Products" parent="configuration_view_menu"
                   action="insurance_Products_action"/>
-        <!--<menuitem id="claim_item_view_menu" name="Claim Items" parent="configuration_view_menu"-->
-                  <!--action="claim_item_view_action"/>-->
+        <menuitem id="setup_item_view_menu" name="Setup Items" parent="configuration_view_menu"
+                  action="insurance_setup_action"/>
 
     </data>
 </odoo>

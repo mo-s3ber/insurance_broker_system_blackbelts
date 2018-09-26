@@ -66,12 +66,8 @@
 
                             <group >
                                 <field name="customer"/>
-<<<<<<< HEAD
                                 <field name="company" context="{'default_customer': 0,'default_supplier': 1, 'default_insurer_type': 1,'default_company_type': 'company','default_is_company': 1}"/>
-=======
-                                <field name="company"/>
                                 <field name="barnche" options="{'no_create': True, 'no_open': True}"/>
->>>>>>> eb5726b4ab3c1ae9d1d95c5073f01ed39b06a6c7
                                 <field name="issue_date"/>
                                 <field name="start_date"/>
                                 <field name="end_date"/>
@@ -79,8 +75,6 @@
                                 <field name="salesperson"/>
                                 <field name="onlayer"/>
                                 <field name="personcom"/>
-
-
                             </group>
                             <!--<group string="commision">-->
                                 <!--<field name="gross_perimum"/>-->

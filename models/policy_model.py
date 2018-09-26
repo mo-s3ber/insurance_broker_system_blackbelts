@@ -359,7 +359,7 @@ class PolicyBroker(models.Model):
                                       ('approve', 'Approve'), ],
                                      'Status', required=True, default='pending')
     hide_inv_button = fields.Boolean(copy=False)
-    invoice_ids = fields.One2many('account.invoice', 'insurance_id', string='Invoices', readonly=True)
+    # invoice_ids = fields.One2many('account.invoice', 'insurance_id', string='Invoices', readonly=True)
 
     @api.multi
     def confirm_policy(self):
@@ -372,24 +372,26 @@ class PolicyBroker(models.Model):
     @api.multi
     def create_invoices(self):
         for record in self.rella_installment_id:
-            self.env['account.invoice'].create({
-                'type': 'out_invoice',
-                'partner_id': self.customer.id,
-                'user_id': self.env.user.id,
-                'insurance_id': self.id,
-                'origin': self.policy_number,
-                'invoice_line_ids': [(0, 0, {
-                    'name': 'Invoice For Insurance',
-                    'quantity': 1,
-                    'price_unit': record.amount,
-                    'account_id': self.line_of_bussines.income_account.id,
-                })],
-            })
+            if record.amount !=0:
+                self.env['account.invoice'].create({
+                    'type': 'out_invoice',
+                    'partner_id': self.customer.id,
+                    'user_id': self.env.user.id,
+                    # 'insurance_id': self.id,
+                    'origin': self.policy_number,
+                    'invoice_line_ids': [(0, 0, {
+                        'name': 'Invoice For Insurance',
+                        'quantity': 1,
+                        'price_unit': record.amount,
+                        'account_id': self.line_of_bussines.income_account.id,
+                    })],
+                })
+
             self.env['account.invoice'].create({
                 'type': 'in_invoice',
                 'partner_id': self.company.id,
                 'user_id': self.env.user.id,
-                'insurance_id': self.id,
+                # 'insurance_id': self.id,
                 'origin': self.policy_number,
                 'invoice_line_ids': [(0, 0, {
                     'name': 'Bill For Insurance',
@@ -403,7 +405,7 @@ class PolicyBroker(models.Model):
                 'type': 'in_invoice',
                 'partner_id': record.agent.id,
                 'user_id': self.env.user.id,
-                'insurance_id': self.id,
+                # 'insurance_id': self.id,
                 'origin': self.policy_number,
                 'invoice_line_ids': [(0, 0, {
                     'name': 'Commission Insurance',
@@ -414,10 +416,10 @@ class PolicyBroker(models.Model):
             })
 
         self.env['account.invoice'].create({
-            'type': 'in_invoice',
+            'type': 'out_invoice',
             'partner_id': 1,
             'user_id': self.env.user.id,
-            'insurance_id': self.id,
+            # 'insurance_id': self.id,
             'origin': self.policy_number,
             'invoice_line_ids': [(0, 0, {
                 'name': 'Brokerage Insurance',
@@ -431,7 +433,7 @@ class PolicyBroker(models.Model):
 class AccountInvoiceRelate(models.Model):
     _inherit = 'account.invoice'
 
-    insurance_id = fields.Many2one('policy.broker', string='Insurance')
+    # insurance_id = fields.Many2one('policy.broker', string='Insurance')
     # claim_id = fields.Many2one('claim', string='Insurance')
 
 class Extra_Covers(models.Model):

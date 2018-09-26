@@ -65,7 +65,7 @@
                             <field name="settlement_type"/>
                         </group>
                         <br/>
-                        <div class="oe_title" style="color:blue;">
+                        <div>
                             <h3>Settle History</h3>
                         </div>
                         <br/>
@@ -81,7 +81,7 @@
                                 <field name="status"/>
                             </tree>
                         </field>
-                        <div class="oe_title" style="color:blue;">
+                        <div>
                             <h3>Payment History</h3>
                         </div>
                         <br/>
@@ -96,7 +96,7 @@
                                 <field name="payee"/>
                             </tree>
                         </field>
-                        <div class="oe_title" style="color:blue;">
+                        <div>
                             <h3>Claim Procedure</h3>
                         </div>
                         <br/>

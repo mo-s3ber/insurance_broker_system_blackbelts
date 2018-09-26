@@ -84,15 +84,22 @@ class Brokerage(models.Model):
 class insuranceSetup(models.Model):
     _name = 'insurance.setup'
 
-    setup_type=fields.Selection([('closs', 'Cause of Loss'),
-                          ('nloss', 'Nature of Loss'),
+    setup_key=fields.Selection([('closs', 'CLoss'),
+                          ('nloss', 'NLoss'),
                           ('goods', 'Goods'),
-                          ('cstatus', 'Claim Status'),
-                          ('setltype', 'Settlement'),
-                          ('ssta', 'Status'),
-                          ('clmitem', 'Claim Item'),],
-                         'Setup Type', track_visibility='onchange', required=True)
-    name=fields.Char(string='Name')
+                          ('setltype', 'SetlType'),
+                          ('state', 'State'),
+                          ('clmitem', 'CLMItem'),],
+                         'KEY', track_visibility='onchange', required=True)
+    setup_id=fields.Char(string='ID')
+    setup_item=fields.One2many('insurance.setup.item','setup_id',string='List Items')
+
+class insuranceSetupItem(models.Model):
+    _name = 'insurance.setup.item'
+
+    name=fields.Char('Item')
+    setup_id=fields.Many2one('insurance.setup')
+
 
 
 
