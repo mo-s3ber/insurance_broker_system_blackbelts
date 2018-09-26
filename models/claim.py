@@ -92,7 +92,7 @@ class settleHistory(models.Model):
 
     risk_type=fields.Char(related='claimheader.insured',string='Risk Type',readonly=True,store=True)
     risk_id=fields.Many2one('new.risks',string='Risk')
-    risk_details =fields.Text(related='risk_id.risk_description',string='Risk Details')
+    risk_details = fields.Char(related='risk_id.risk_description',string='Risk Details')
     coverage = fields.Many2one('covers.lines',string='Coverage')
     sum_insured=fields.Float(related='coverage.sum_insure',string='Sum Insured',store=True,readonly=True)
     settle_amount=fields.Float(string='Settle Amount',compute='_onchange_settle_amount')

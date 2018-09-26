@@ -11,7 +11,7 @@ class Covers(models.Model):
     covers_crm=fields.Many2one('crm.lead','covers opp')
     proposal_id=fields.Many2one('proposal.opp.bb','proposal id')
     risk_id_covers = fields.Many2one('new.risks', 'Risk id')
-    risk_desc=fields.Char('')
+    risk_desc=fields.Char('Risk Description')
     # Company = fields.Many2one('res.partner', domain="[('insurer_type','=',1)]", string="Insurer")
     # product_pol = fields.Many2one('insurance.product', domain="[('insurer','=',Company)]", string="Product")
     insurer = fields.Many2one(related='proposal_id.Company')

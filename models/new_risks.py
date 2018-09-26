@@ -34,7 +34,7 @@ class New_Risks(models.Model):
 
     policy_risk_id = fields.Many2one("policy.broker")
     risks_crm = fields.Many2one("crm.lead", string='Risks')
-
+    type_risk = fields.Char(related='risks_crm.test')
 
     risk = fields.Char("Risk ID" ,required=True)
     risk_description = fields.Char("Risk Description", compute="_compute_risk_descriptionn", store=True)
@@ -74,11 +74,6 @@ class New_Risks(models.Model):
 
     file = fields.Binary(string='Group Details File')
 
-
-
-
-    test = fields.Char(related="policy_risk_id.check_item")
-    type_risk = fields.Char(related='risks_crm.test')
 
     # @api.model
     # def create(self,vals):
