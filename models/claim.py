@@ -91,22 +91,34 @@ class settleHistory(models.Model):
     _name ="settle.history"
 
     risk_type=fields.Char(related='claimheader.insured',string='Risk Type',readonly=True,store=True)
-    risk_id = fields.Many2one('covers.lines',string='Risk')
+    risk_id=fields.Many2one('new.risks',string='Risk')
     risk_details =fields.Text(related='risk_id.risk_description',string='Risk Details')
-    coverage = fields.Many2one(related='risk_id.name1',string='Coverage')
-    sum_insured=fields.Float(related='risk_id.sum_insure',string='Sum Insured',store=True,readonly=True)
+    coverage = fields.Many2one('covers.lines',string='Coverage')
+    sum_insured=fields.Float(related='coverage.sum_insure',string='Sum Insured',store=True,readonly=True)
     settle_amount=fields.Float(string='Settle Amount',compute='_onchange_settle_amount')
     settle_date=fields.Date(string='Settle Date')
     status=fields.Many2one('insurance.setup',string='Status',domain="[('setup_type','=','ssta')]")
     claimheader=fields.Many2one('insurance.claim')
+    endorsement_related=fields.Many2one('policy.broker',store=True,readonly=True)
     claim_item=fields.One2many('insurance.claim.item','settle_history',string='Repair/Claim Items')
 
     @api.onchange('claimheader')
-    def onchange_risk_id(self):
+    def _onchange_endo(self):
       if self.claimheader.endorsement:
-           return {'domain':{'risk_id': [('policy_rel_id','=',self.claimheader.endorsement.id)]}}
+          self.endorsement_related=self.claimheader.endorsement.id
       else:
-          return {'domain': {'risk_id': [('policy_rel_id', '=', self.claimheader.policy_number.id)]}}
+          self.endorsement_related = self.claimheader.policy_number.id
+
+
+    @api.onchange('claimheader')
+    def _onchange_risk_id(self):
+      if self.endorsement_related:
+           return {'domain': {'risk_id': [('policy_risk_id','=',self.endorsement_related.id if self.endorsement_related else False)]}}
+
+    @api.onchange('risk_id')
+    def _onchange_cover(self):
+      if self.endorsement_related:
+          return {'domain': {'coverage': [('policy_rel_id', '=', self.endorsement_related.id if self.endorsement_related else False),('riskk', '=', self.risk_id.id if self.risk_id else False)]}}
 
     @api.one
     @api.depends('claim_item')

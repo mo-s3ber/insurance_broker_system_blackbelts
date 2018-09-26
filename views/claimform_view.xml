@@ -5,9 +5,17 @@
         <field name="priority" eval="16"/>
         <field name="arch" type="xml">
             <tree string="list">
-                <field name="name"/>
-                <field name="policy_number"/>
-                <field name="endorsement"/>
+                <field name="name" string="Number"/>
+                <field name="policy_number" string="Policy"/>
+                <field name="endorsement" string="Endorsement"/>
+                <field name="insured" string="Type"/>
+                <field name="lob" string="LOB"/>
+                <field name="product"/>
+                <field name="insurer"/>
+                <field name="totalclaimexp" string="Claim Exp"/>
+                <field name="totalsettled" string="Settlement"/>
+                <field name="total_paid_amount" string="Paid"/>
+                <field name="totalunpaid" string="Unpaid"/>
             </tree>
         </field>
     </record>
@@ -20,7 +28,7 @@
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name"/>
+                            <field name="name" />
                         </h1>
                     </div>
                     <group colspan="4">
@@ -36,8 +44,8 @@
                             <field name="remarks"/>
                             <field name="totalloss"/>
                             <field name="totalclaimexp"/>
-                            <field name="totalsettled"/>
-                            <field name="totalunpaid"/>
+                            <field name="totalsettled" style="color:green;"/>
+                            <field name="totalunpaid" style="color:red;"/>
                         </group>
                         <group colspan="1" col="2">
                             <field name="claimstatus"/>
@@ -53,12 +61,15 @@
                             <field name="insurer" readonly="1" force_save="1"/>
                             <field name="insurer_branch" readonly="1" force_save="1"/>
                             <field name="insurer_contact"/>
-                            <field name="total_paid_amount" readonly="1" force_save="1"/>
+                            <field name="total_paid_amount" readonly="1" force_save="1" style="color:green;"/>
                             <field name="settlement_type"/>
                         </group>
-                        <div class="oe_title">
+                        <br/>
+                        <div class="oe_title" style="color:blue;">
                             <h3>Settle History</h3>
                         </div>
+                        <br/>
+                        <br/>
                         <field name="settle_history">
                             <tree>
                                 <field name="risk_id" />
@@ -70,11 +81,13 @@
                                 <field name="status"/>
                             </tree>
                         </field>
-                        <div class="oe_title">
+                        <div class="oe_title" style="color:blue;">
                             <h3>Payment History</h3>
                         </div>
+                        <br/>
+                        <br/>
                         <field name="payment_history">
-                            <tree>
+                            <tree editable="1">
                                 <field name="payment_date"/>
                                 <field name="paid_amount"/>
                                 <field name="currency"/>
@@ -83,11 +96,13 @@
                                 <field name="payee"/>
                             </tree>
                         </field>
-                        <div class="oe_title">
+                        <div class="oe_title" style="color:blue;">
                             <h3>Claim Procedure</h3>
                         </div>
+                        <br/>
+                        <br/>
                         <field name="claim_action">
-                            <tree>
+                            <tree editable="1">
                                 <field name="action"/>
                                 <field name="completed"/>
                                 <field name="comments"/>
@@ -121,13 +136,15 @@
             <form>
                 <div class="oe_title">
                     <h1>
-                        <field name="risk_type"/>
+                        <field name="risk_type" style="color:black;"/>
+                        <span> of Policy Number </span>
+                        <field name="endorsement_related" readonly="1" force_save="1"/>
                     </h1>
                 </div>
                 <group>
                     <field name="risk_id" widget="selection"/>
                     <field name="risk_details" readonly="1" force_save="1"/>
-                    <field name="coverage" readonly="1" force_save="1"/>
+                    <field name="coverage" widget="selection"/>
                     <field name="sum_insured" readonly="1" force_save="1"/>
                     <field name="settle_amount"/>
                     <field name="settle_date"/>
@@ -173,6 +190,7 @@
         res_model="payment.history"
         view_mode="form"
         target="new"/>
+
     <record id="view_claim_item_wizard_form" model="ir.ui.view">
             <field name="name">Claim Item form</field>
             <field name="model">insurance.claim.item</field>
@@ -192,4 +210,73 @@
             res_model="insurance.claim.item"
             view_mode="form"
             target="new"/>
+
+    <record model="ir.ui.view" id="tree_settle_history">
+        <field name="name">tree.settle.history</field>
+        <field name="model">settle.history</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <tree string="Settlements">
+                <field name="claimheader" string="Claim No."/>
+                <field name="risk_type" />
+                <field name="risk_id" />
+                <field name="risk_details"/>
+                <field name="coverage"/>
+                <field name="sum_insured"/>
+                <field name="settle_amount"/>
+                <field name="settle_date"/>
+                <field name="status"/>
+                <field name="claim_item"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_settlement">
+         <field name="name">Settlement</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="res_model">settle.history</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+        <!--<field name="domain">[('type','=','out_invoice')]</field>-->
+        <field name="context">{'create':False,'edit':False}</field>
+         <!--<field name="help" type="html"> <p class="oe_view_nocontent_create"> Click here to create a Subscription.</p></field>-->
+    </record>
+    <record model="ir.actions.act_window.view" id="action_settlement_tree">
+         <field name="sequence" eval="1"/>
+         <field name="view_mode">tree</field>
+         <field name="view_id" ref="tree_settle_history"/>
+         <field name="act_window_id" ref="action_settlement"/>
+    </record>
+
+    <record model="ir.ui.view" id="tree_payment_history">
+        <field name="name">tree.payment.history</field>
+        <field name="model">payment.history</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <tree string="Payments">
+                <field name="header_payment" string="Claim No."/>
+                <field name="payment_date"/>
+                <field name="paid_amount"/>
+                <field name="currency"/>
+                <field name="check_bank"/>
+                <field name="check_number"/>
+                <field name="payee"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_payment">
+         <field name="name">Payments</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="res_model">payment.history</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+        <!--<field name="domain">[('type','=','out_invoice')]</field>-->
+        <field name="context">{'create':False,'edit':False}</field>
+         <!--<field name="help" type="html"> <p class="oe_view_nocontent_create"> Click here to create a Subscription.</p></field>-->
+    </record>
+    <record model="ir.actions.act_window.view" id="action_payment_history_tree">
+         <field name="sequence" eval="1"/>
+         <field name="view_mode">tree</field>
+         <field name="view_id" ref="tree_payment_history"/>
+         <field name="act_window_id" ref="action_payment"/>
+    </record>
 </odoo>

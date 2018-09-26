@@ -18,16 +18,6 @@
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <form string="Idea form">
-                    <header>
-                        <button name="create_inv" string="Create and View Invoice" type="object"
-                            class="btn-primary" attrs="{'invisible': [('paid','in',['inv','bill','brok','comm'])]}"/>
-                        <button name="create_bill" string="Create and View Bill" type="object"
-                            class="btn-primary" attrs="{'invisible': [('paid','in',['bill','brok','draft','comm'])]}"/>
-                        <button name="create_brok" string="Create and View Brokerage" type="object"
-                            class="btn-primary" attrs="{'invisible': [('paid','in',['inv','brok','draft','comm'])]}"/>
-                        <button name="create_commission_bills" string="Create Commission Bills" type="object"
-                            class="btn-primary" attrs="{'invisible': [('paid','in',['inv','comm','draft','bill'])]}"/>
-                    </header>
                     <group colspan="4">
                         <separator string="Installments" colspan="2"/>
                         <field name="date"/>

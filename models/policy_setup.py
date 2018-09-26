@@ -16,6 +16,8 @@ class Policy_Info(models.Model):
                           ('location', 'Location'),],
                          'Insured Object', track_visibility='onchange', required=True)
     desc = fields.Char(string='Description')
+    income_account=fields.Many2one('account.account','Income Account')
+    expense_account = fields.Many2one('account.account','Expense Account')
 
 
 class Product(models.Model):
@@ -25,8 +27,6 @@ class Product(models.Model):
     product_name=fields.Char('Product Name',required=True)
     insurer=fields.Many2one('res.partner', string="Insurer",domain="[('insurer_type','=',1)]")
     line_of_bus=fields.Many2one('insurance.line.business','Line of Business')
-    income_account=fields.Many2one('account.account','Income Account')
-    expense_account = fields.Many2one('account.account','Expense Account')
     coverage=fields.One2many('insurance.product.coverage','product_id',string='Coverage')
     brokerage=fields.One2many('insurance.product.brokerage','product_id',string='Brokerage')
     commision_id = fields.One2many("commision.setup","policy_relation_id")

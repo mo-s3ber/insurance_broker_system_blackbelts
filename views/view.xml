@@ -6,7 +6,11 @@
             <field name="arch" type="xml">
                 <form string="my policy form">
                     <header>
-
+                        <button name="confirm_policy" string="Approve" type="object"
+                                class="oe_highlight" attrs="{'invisible': [('policy_status', '=', 'approve')]}"/>
+                        <button name="create_invoices" string="Create Invoices" type="object" class="oe_highlight"
+                        attrs="{'invisible': [('hide_inv_button', '!=', True)]}"/>
+                       <field name="policy_status" widget="statusbar"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -30,6 +34,7 @@
                                     <label for="edit_number"  />
                                     <div class="o_row">
                                         <field name="edit_number" />
+                                        <field name="hide_inv_button" invisible="1"/>
                                     </div>
                                 </div>
                                 <div>
@@ -62,7 +67,7 @@
 
                             <group >
                                 <field name="customer"/>
-                                <field name="company"/>
+                                <field name="company" context="{'default_customer': 0,'default_supplier': 1, 'default_insurer_type': 1,'default_company_type': 'company','default_is_company': 1}"/>
                                 <field name="issue_date"/>
                                 <field name="start_date"/>
                                 <field name="end_date"/>
