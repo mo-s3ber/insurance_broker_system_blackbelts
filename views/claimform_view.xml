@@ -143,7 +143,21 @@
                 </div>
                 <group>
                     <field name="risk_id" widget="selection"/>
-                    <field name="risk_details" readonly="1" force_save="1"/>
+                    <field name="risk_details" readonly="1" force_save="1" invisible="1"/>
+
+                    <field name="vcar_type" attrs="{'invisible': [('risk_type', '!=', 'vehicle')]}" readonly="1" force_save="1"/>
+                    <field name="vmotor_cc" attrs="{'invisible': [('risk_type', '!=', 'vehicle')]}" readonly="1" force_save="1"/>
+                    <field name="vyear_of_made" attrs="{'invisible': [('risk_type', '!=', 'vehicle')]}" readonly="1" force_save="1"/>
+                    <field name="vmodel" attrs="{'invisible': [('risk_type', '!=', 'vehicle')]}" readonly="1" force_save="1"/>
+                    <field name="vbrande" attrs="{'invisible': [('risk_type', '!=', 'vehicle')]}" readonly="1" force_save="1"/>
+                    <field name="pname" attrs="{'invisible': [('risk_type', '!=', 'person')]}" readonly="1" force_save="1"/>
+                    <field name="p_birthday" attrs="{'invisible': [('risk_type', '!=', 'person')]}" readonly="1" force_save="1"/>
+                    <field name="pjob" attrs="{'invisible': [('risk_type', '!=', 'person')]}" readonly="1" force_save="1"/>
+                    <field name="cfrom" attrs="{'invisible': [('risk_type', '!=', 'cargo')]}" readonly="1" force_save="1"/>
+                    <field name="cto" attrs="{'invisible': [('risk_type', '!=', 'cargo')]}" readonly="1" force_save="1"/>
+                    <field name="ctype" attrs="{'invisible': [('risk_type', '!=', 'cargo')]}" readonly="1" force_save="1"/>
+                    <field name="cweight" attrs="{'invisible': [('risk_type', '!=', 'cargo')]}" readonly="1" force_save="1"/>
+
                     <field name="coverage" widget="selection"/>
                     <field name="sum_insured" readonly="1" force_save="1"/>
                     <field name="settle_amount"/>
@@ -211,42 +225,6 @@
             view_mode="form"
             target="new"/>
 
-    <record model="ir.ui.view" id="tree_settle_history">
-        <field name="name">tree.settle.history</field>
-        <field name="model">settle.history</field>
-        <field name="priority" eval="16"/>
-        <field name="arch" type="xml">
-            <tree string="Settlements">
-                <field name="claimheader" string="Claim No."/>
-                <field name="risk_type" />
-                <field name="risk_id" />
-                <field name="risk_details"/>
-                <field name="coverage"/>
-                <field name="sum_insured"/>
-                <field name="settle_amount"/>
-                <field name="settle_date"/>
-                <field name="status"/>
-                <field name="claim_item"/>
-            </tree>
-        </field>
-    </record>
-    <record model="ir.actions.act_window" id="action_settlement">
-         <field name="name">Settlement</field>
-         <field name="type">ir.actions.act_window</field>
-         <field name="res_model">settle.history</field>
-         <field name="view_type">form</field>
-         <field name="view_mode">tree,form</field>
-        <!--<field name="domain">[('type','=','out_invoice')]</field>-->
-        <field name="context">{'create':False,'edit':False}</field>
-         <!--<field name="help" type="html"> <p class="oe_view_nocontent_create"> Click here to create a Subscription.</p></field>-->
-    </record>
-    <record model="ir.actions.act_window.view" id="action_settlement_tree">
-         <field name="sequence" eval="1"/>
-         <field name="view_mode">tree</field>
-         <field name="view_id" ref="tree_settle_history"/>
-         <field name="act_window_id" ref="action_settlement"/>
-    </record>
-
     <record model="ir.ui.view" id="tree_payment_history">
         <field name="name">tree.payment.history</field>
         <field name="model">payment.history</field>
@@ -264,7 +242,7 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="action_payment">
-         <field name="name">Payments</field>
+         <field name="name">Payment</field>
          <field name="type">ir.actions.act_window</field>
          <field name="res_model">payment.history</field>
          <field name="view_type">form</field>
@@ -272,11 +250,5 @@
         <!--<field name="domain">[('type','=','out_invoice')]</field>-->
         <field name="context">{'create':False,'edit':False}</field>
          <!--<field name="help" type="html"> <p class="oe_view_nocontent_create"> Click here to create a Subscription.</p></field>-->
-    </record>
-    <record model="ir.actions.act_window.view" id="action_payment_history_tree">
-         <field name="sequence" eval="1"/>
-         <field name="view_mode">tree</field>
-         <field name="view_id" ref="tree_payment_history"/>
-         <field name="act_window_id" ref="action_payment"/>
     </record>
 </odoo>

@@ -82,8 +82,13 @@
         <menuitem id="claim_view_menu" name="Claim" parent="portfolio_management_views_menu"
                   action="claim_view_action"/>
 
-        <menuitem id="settlements_view_menu" name="Settlements" parent="portfolio_management_views_menu"
-                  action="action_settlement"/>
+        <menuitem id="settlements_view_menu" name="Settlements" parent="portfolio_management_views_menu"/>
+        <menuitem id="settlements_vehicle_view_menu" name="Vehicle" parent="settlements_view_menu"
+                  action="action_settlement_vehicle"/>
+        <menuitem id="settlements_person_view_menu" name="Person" parent="settlements_view_menu"
+                  action="action_settlement_person"/>
+        <menuitem id="settlements_cargo_view_menu" name="Cargo" parent="settlements_view_menu"
+                  action="action_settlement_cargo"/>
         <menuitem id="payment_view_menu" name="Payments" parent="portfolio_management_views_menu"
                   action="action_payment"/>
 

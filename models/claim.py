@@ -92,7 +92,23 @@ class settleHistory(models.Model):
 
     risk_type=fields.Char(related='claimheader.insured',string='Risk Type',readonly=True,store=True)
     risk_id=fields.Many2one('new.risks',string='Risk')
-    risk_details = fields.Char(related='risk_id.risk_description',string='Risk Details')
+    #Vehicle details
+    vcar_type = fields.Char(related='risk_id.car_tybe',string='Vehicle Type')
+    vmotor_cc = fields.Char(related='risk_id.motor_cc',string="Motor cc")
+    vyear_of_made = fields.Date(related='risk_id.year_of_made',string="Year of Made")
+    vmodel = fields.Char(related='risk_id.model',string="Motor Model")
+    vbrande = fields.Char(related='risk_id.Man',string='Vehicle Brande')
+    #Person details
+    pname = fields.Char(related='risk_id.name',string='Name')
+    p_birthday = fields.Date(related='risk_id.DOB',string='Date Of Birth')
+    pjob = fields.Char(related='risk_id.job',string='Job Tiltle')
+    #Cargo details
+    cfrom = fields.Char(related='risk_id.From',string='From')
+    cto = fields.Char(related='risk_id.To',string='To')
+    ctype = fields.Char(related='risk_id.cargo_type',string="Type Of Cargo")
+    cweight = fields.Float(related='risk_id.weight',string='Weight')
+
+    risk_details = fields.Char(related='risk_id.risk_description',string='Risk Description')
     coverage = fields.Many2one('covers.lines',string='Coverage')
     sum_insured=fields.Float(related='coverage.sum_insure',string='Sum Insured',store=True,readonly=True)
     settle_amount=fields.Float(string='Settle Amount',compute='_onchange_settle_amount')
